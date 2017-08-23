@@ -178,6 +178,7 @@ function find_optimal_linearization(network_data, to_approx, solver, cnst_gen_ma
     approximation["l0"] = l0_val
     approximation["l_pb"] = l_pb_val
     approximation["l_qb"] = l_qb_val
+    approximation["error"] = getvalue(z)
 
     return approximation
 end     # end of find optimal linearizaion
