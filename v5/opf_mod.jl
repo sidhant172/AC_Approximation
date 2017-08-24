@@ -148,6 +148,10 @@ end
 function variable_load(pm::GenericPowerModel)
     # Defining new variables for load real and reactive power
     load_inflation = pm.data["load_inflation"]
-	@variable(pm.model, (1-load_inflation)*pm.ref[:bus][i]["pd"] <= pd[i in keys(pm.ref[:bus])] <= (1+load_inflation)*pm.ref[:bus][i]["pd"])
-    @variable(pm.model, (1-load_inflation)*pm.ref[:bus][i]["qd"] <= qd[i in keys(pm.ref[:bus])] <= (1+load_inflation)*pm.ref[:bus][i]["qd"])
+	# @variable(pm.model, (1-load_inflation)*pm.ref[:bus][i]["pd"] <= pd[i in keys(pm.ref[:bus])] <= (1+load_inflation)*pm.ref[:bus][i]["pd"])
+    # @variable(pm.model, (1-load_inflation)*pm.ref[:bus][i]["qd"] <= qd[i in keys(pm.ref[:bus])] <= (1+load_inflation)*pm.ref[:bus][i]["qd"])
+    @variable(pm.model, min((1-load_inflation)*pm.ref[:bus][i]["pd"],(1+load_inflation)*pm.ref[:bus][i]["pd"]) <=
+        pd[i in keys(pm.ref[:bus])] <= max((1-load_inflation)*pm.ref[:bus][i]["pd"],(1+load_inflation)*pm.ref[:bus][i]["pd"]))
+    @variable(pm.model, min((1-load_inflation)*pm.ref[:bus][i]["qd"],(1+load_inflation)*pm.ref[:bus][i]["qd"]) <=
+        qd[i in keys(pm.ref[:bus])] <= max((1-load_inflation)*pm.ref[:bus][i]["qd"],(1+load_inflation)*pm.ref[:bus][i]["qd"]))
 end
