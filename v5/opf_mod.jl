@@ -139,7 +139,9 @@ end
 function add_power_factor_constraint(pm::PM.GenericPowerModel)
     pd = getindex(pm.model, :pd)
     qd = getindex(pm.model, :qd)
-    @constraint(pm.model, power_factor[i in keys(pm.ref[:bus])], qd[i]*pm.ref[:bus][i]["pd"] == pd[i]*pm.ref[:bus][i]["qd"])
+    # @constraint(pm.model, power_factor[i in keys(pm.ref[:bus])], qd[i]*pm.ref[:bus][i]["pd"] == pd[i]*pm.ref[:bus][i]["qd"])
+    @constraint(pm.model, power_factor_low[i in keys(pm.ref[:bus])], 0.95*pd[i]*pm.ref[:bus][i]["qd"] <= qd[i]*pm.ref[:bus][i]["pd"])
+    @constraint(pm.model, power_factor_high[i in keys(pm.ref[:bus])], qd[i]*pm.ref[:bus][i]["pd"] <= 1.05*pd[i]*pm.ref[:bus][i]["qd"])
 end
 
 # custom function to add load as variables
