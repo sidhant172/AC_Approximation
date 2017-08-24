@@ -26,8 +26,8 @@ load_inflation = 0.1    # defining range of generation conditions
 # quantity_to_approx = "line_reactive_power"
 # quantity_to_approx = "bus_voltage_magnitude"
 
-# network_data = PowerModels.parse_file("case24_ieee_rts.m")
-network_data = PowerModels.parse_file("case118.m")
+network_data = PowerModels.parse_file("case24_ieee_rts.m")
+# network_data = PowerModels.parse_file("case118.m")
 
 
 # line = (18,11,13)
