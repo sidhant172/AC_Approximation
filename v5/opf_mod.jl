@@ -22,7 +22,7 @@ function post_opf_mod(pm::PM.GenericPowerModel)
 
     add_objective(pm)   # custom function that adds objective
 
-    add_power_factor_constraint(pm)     # custom function that adds constant power factor constraint
+    # add_power_factor_constraint(pm)     # custom function that adds constant power factor constraint
 
 
     # Rest of the constraints using PowerModels in-built functions
