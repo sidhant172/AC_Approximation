@@ -26,8 +26,8 @@ load_inflation = 0.1    # defining range of generation conditions
 # quantity_to_approx = "line_reactive_power"
 # quantity_to_approx = "bus_voltage_magnitude"
 
-network_data = PowerModels.parse_file("case24_ieee_rts.m")
-# network_data = PowerModels.parse_file("case118.m")
+# network_data = PowerModels.parse_file("case24_ieee_rts.m")
+network_data = PowerModels.parse_file("case118.m")
 
 
 # line = (18,11,13)
@@ -44,22 +44,26 @@ inflation_factors["gen_inflation"] = gen_inflation
 inflation_factors["load_inflation"] = load_inflation
 
 to_approx_list = Dict{Int64,Any}()
-to_approx = Dict{String,Any}()
-to_approx["quantity"] = "line_real_power"
-to_approx["quantity_index"] = (18,11,13)
-to_approx_list[1] = to_approx
-to_approx = Dict{String,Any}()
-to_approx["quantity"] = "bus_voltage_magnitude"
-to_approx["quantity_index"] = 2
-to_approx_list[2] = to_approx
-to_approx = Dict{String,Any}()
-to_approx["quantity"] = "line_reactive_power"
-to_approx["quantity_index"] = (18,11,13)
-to_approx_list[3] = to_approx
+# to_approx = Dict{String,Any}()
+# to_approx["quantity"] = "line_real_power"
+# to_approx["quantity_index"] = (18,11,13)
+# to_approx_list[1] = to_approx
+# to_approx = Dict{String,Any}()
+# to_approx["quantity"] = "bus_voltage_magnitude"
+# to_approx["quantity_index"] = 2
+# to_approx_list[2] = to_approx
+# to_approx = Dict{String,Any}()
+# to_approx["quantity"] = "line_reactive_power"
+# to_approx["quantity_index"] = (18,11,13)
+# to_approx_list[3] = to_approx
 # to_approx = Dict{String,Any}()
 # to_approx["quantity"] = "line_real_power"
 # to_approx["quantity_index"] = (11,5,11)
 # to_approx_list[1] = to_approx
+to_approx = Dict{String,Any}()
+to_approx["quantity"] = "bus_voltage_magnitude"
+to_approx["quantity_index"] = 2
+to_approx_list[1] = to_approx
 
 
 linear_approximations = find_optimal_linearizations(network_data, to_approx_list, inflation_factors, solver_ipopt, cnst_gen_max_iter, tol)
