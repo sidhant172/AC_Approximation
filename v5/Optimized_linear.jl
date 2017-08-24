@@ -63,7 +63,7 @@ to_approx_list = Dict{Int64,Any}()
 # to_approx_list[1] = to_approx
 to_approx = Dict{String,Any}()
 to_approx["quantity"] = "bus_voltage_magnitude"
-to_approx["quantity_index"] = 2
+to_approx["quantity_index"] = 5
 to_approx_list[1] = to_approx
 
 
