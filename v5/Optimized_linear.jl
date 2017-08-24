@@ -34,8 +34,8 @@ network_data = PowerModels.parse_file("case24_ieee_rts.m")
 # line = (11,5,11)
 
 
-# solver_ipopt = IpoptSolver(print_level=0) # , linear_solver="ma97"
-solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
+solver_ipopt = IpoptSolver(print_level=0) # , linear_solver="ma97"
+# solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
 
 
 
