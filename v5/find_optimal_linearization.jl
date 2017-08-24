@@ -90,9 +90,9 @@ function find_optimal_linearization(network_data, to_approx, solver, cnst_gen_ma
     m = Model(solver=GurobiSolver())
 
     @variable(m, z >=0, start=0)  # maximum error
-    @variable(m,-50<=l_pb[i in active_buses]<=50, start = 0)
-    @variable(m,-50<=l_qb[i in active_buses]<=50, start = 0)
-    @variable(m, -50<=l0<=50, start = 0) # constant term
+    @variable(m,-5<=l_pb[i in active_buses]<=5, start = 0)
+    @variable(m,-5<=l_qb[i in active_buses]<=5, start = 0)
+    @variable(m, -5<=l0<=5, start = 0) # constant term
 
     @objective(m,Min,z)
 
