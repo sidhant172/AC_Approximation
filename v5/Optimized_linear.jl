@@ -37,8 +37,8 @@ network_data = PowerModels.parse_file("nesta_case300_ieee.m")
 
 
 # solver_ipopt = IpoptSolver(print_level=0) # , linear_solver="ma97"
-# solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
-solver_ipopt = IpoptSolver(linear_solver="ma97")
+solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
+# solver_ipopt = IpoptSolver(linear_solver="ma97")
 
 
 
