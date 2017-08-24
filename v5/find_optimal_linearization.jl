@@ -86,12 +86,13 @@ function find_optimal_linearization(network_data, to_approx, solver, cnst_gen_ma
     ind_branch = network_data["ind_branch"]
 
 ################################################################################
-    m = Model(solver=ClpSolver())   # JuMP model for master problem
+    # m = Model(solver=ClpSolver())   # JuMP model for master problem
+    m = Model(solver=GurobiSolver())
 
     @variable(m, z >=0, start=0)  # maximum error
-    @variable(m,l_pb[i in active_buses], start = 0)
-    @variable(m,l_qb[i in active_buses], start = 0)
-    @variable(m, l0, start = 0) # constant term
+    @variable(m,-50<=l_pb[i in active_buses]<=50, start = 0)
+    @variable(m,-50<=l_qb[i in active_buses]<=50, start = 0)
+    @variable(m, -50<=l0<=50, start = 0) # constant term
 
     @objective(m,Min,z)
 
