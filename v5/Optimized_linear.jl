@@ -28,7 +28,8 @@ load_inflation = 0.1    # defining range of generation conditions
 
 # network_data = PowerModels.parse_file("case24_ieee_rts.m")
 # network_data = PowerModels.parse_file("case118.m")
-network_data = PowerModels.parse_file("nesta_case57_ieee.m")
+# network_data = PowerModels.parse_file("nesta_case57_ieee.m")
+network_data = PowerModels.parse_file("nesta_case300_ieee.m")
 
 
 # line = (18,11,13)
