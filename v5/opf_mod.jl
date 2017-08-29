@@ -22,6 +22,8 @@ function post_opf_mod(pm::PM.GenericPowerModel)
 
     add_objective(pm)   # custom function that adds objective
 
+    add_slack_constraint(pm)
+
     # add_power_factor_constraint(pm)     # custom function that adds constant power factor constraint
 
 
@@ -112,24 +114,28 @@ function add_objective(pm::PM.GenericPowerModel)
 
     # get current linearization coefficients
     l0_val = pm.data["l0"]
+    l_v_val = pm.data["l_v"]
     l_pb_val = pm.data["l_pb"]
     l_qb_val = pm.data["l_qb"]
+    obj_tuning = pm.data["obj_tuning"]
+
+    slack = pm.data["slack"]
 
 
     if quantity == "line_real_power"
-        @objective(pm.model, Max, sign*p[quantity_index] - sign*(l0_val +
+        @objective(pm.model, Max, obj_tuning*(sign*p[quantity_index] - sign*(l0_val + l_v_val*v[slack] +
             sum(l_pb_val[string(i)]*(sum(pg[j] for j in pm.ref[:bus_gens][i]))  +  l_qb_val[string(i)]*(sum(qg[j] for j in pm.ref[:bus_gens][i]))   for i in gen_buses)
-            -  sum(l_pb_val[string(i)]*pd[i] + l_qb_val[string(i)]*qd[i]  for i in load_buses)  )
+            -  sum(l_pb_val[string(i)]*pd[i] + l_qb_val[string(i)]*qd[i]  for i in load_buses)  ))
             )
         elseif quantity == "line_reactive_power"
-            @objective(pm.model, Max, sign*q[quantity_index] - sign*(l0_val +
+            @objective(pm.model, Max, obj_tuning*(sign*q[quantity_index] - sign*(l0_val + l_v_val*v[slack] +
             sum(l_pb_val[string(i)]*(sum(pg[j] for j in pm.ref[:bus_gens][i]))  +  l_qb_val[string(i)]*(sum(qg[j] for j in pm.ref[:bus_gens][i]))   for i in gen_buses)
-            -  sum(l_pb_val[string(i)]*pd[i] + l_qb_val[string(i)]*qd[i]  for i in load_buses)  )
+            -  sum(l_pb_val[string(i)]*pd[i] + l_qb_val[string(i)]*qd[i]  for i in load_buses)  ))
             )
         elseif quantity == "bus_voltage_magnitude"
-            @objective(pm.model, Max, sign*v[quantity_index] - sign*(l0_val +
+            @objective(pm.model, Max, obj_tuning*(sign*v[quantity_index] - sign*(l0_val + l_v_val*v[slack] +
             sum(l_pb_val[string(i)]*(sum(pg[j] for j in pm.ref[:bus_gens][i]))  +  l_qb_val[string(i)]*(sum(qg[j] for j in pm.ref[:bus_gens][i]))   for i in gen_buses)
-            -  sum(l_pb_val[string(i)]*pd[i] + l_qb_val[string(i)]*qd[i]  for i in load_buses)  )
+            -  sum(l_pb_val[string(i)]*pd[i] + l_qb_val[string(i)]*qd[i]  for i in load_buses)  ))
             )
         else println("is not supported.")
     end
@@ -154,4 +160,9 @@ function variable_load(pm::GenericPowerModel)
         pd[i in keys(pm.ref[:bus])] <= max((1-load_inflation)*pm.ref[:bus][i]["pd"],(1+load_inflation)*pm.ref[:bus][i]["pd"]))
     @variable(pm.model, min((1-load_inflation)*pm.ref[:bus][i]["qd"],(1+load_inflation)*pm.ref[:bus][i]["qd"]) <=
         qd[i in keys(pm.ref[:bus])] <= max((1-load_inflation)*pm.ref[:bus][i]["qd"],(1+load_inflation)*pm.ref[:bus][i]["qd"]))
+end
+
+function add_slack_constraint(pm::GenericPowerModel)
+    t = getindex(pm.model, :t)
+    @constraint(pm.model, t[pm.data["slack"]] == 0)
 end
