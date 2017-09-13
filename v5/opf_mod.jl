@@ -102,6 +102,8 @@ function add_objective(pm::PM.GenericPowerModel)
 
     sign = (-1)^direction
 
+    # @show pm.model
+
     # access JuMP variables
     v = getindex(pm.model, :v)  # voltage magnitude variable
     t = getindex(pm.model, :t)  # voltage angle variable

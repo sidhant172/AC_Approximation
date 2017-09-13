@@ -52,8 +52,8 @@ function find_optimal_linearizations(network_data, to_approx_list, inflation_fac
     baseMVA = output["solution"]["baseMVA"]
 
     for i in ind_gen
-        pg_init[i] = output["solution"]["gen"][string(i)]["pg"]/baseMVA
-        qg_init[i] = output["solution"]["gen"][string(i)]["qg"]/baseMVA
+        pg_init[i] = output["solution"]["gen"][string(i)]["pg"]
+        qg_init[i] = output["solution"]["gen"][string(i)]["qg"]
         network_data["gen"][string(i)]["pmax"] = max(pg_init[i]*(1+gen_inflation),pg_init[i]*(1-gen_inflation))
         network_data["gen"][string(i)]["pmin"] = min(pg_init[i]*(1+gen_inflation),pg_init[i]*(1-gen_inflation))
         network_data["gen"][string(i)]["qmax"] = max(qg_init[i]*(1+gen_inflation),qg_init[i]*(1-gen_inflation))
@@ -155,15 +155,15 @@ function find_optimal_linearization(network_data, to_approx, solver, solver_lp, 
 
     ################################################################################
         network_data["direction"] = 0   # direction of maximization
-        (result, pm_model) = run_ac_opf_mod(network_data,solver)
+        (result, pm) = run_ac_opf_mod(network_data,solver)
 
-        @show lp_error = z_val - result["objective"]/obj_tuning
+        @show z_val - result["objective"]/obj_tuning
         #nlp_err[iter] = abs(z_val - s["objective"])
 
-        if lp_error < -tol
+        if (z_val - result["objective"]/obj_tuning) < -tol
             converged_flag = 0
 
-            current_sol = get_current_solution(result["solution"], pm_model, to_approx, ind_gen, ind_bus, ind_branch)
+            current_sol = get_current_solution(result["solution"], pm, to_approx, ind_gen, ind_bus, ind_branch)
             @show current_sol["val"]
 
             approximation["worst_case_lower"] = current_sol
@@ -172,25 +172,20 @@ function find_optimal_linearization(network_data, to_approx, solver, solver_lp, 
                 sum(l_pb[i]*( sum(current_sol["pg"][j] for j in gens_at_bus[string(i)]) ) + l_qb[i]*( sum(current_sol["qg"][j] for j in gens_at_bus[string(i)]) ) for i in gen_buses)
             -   sum(l_pb[i]*current_sol["pd"][i]  + l_qb[i]*current_sol["qd"][i] for i in load_buses) )
                 <= z)
-
-            # add neighborhood bundle cuts
-            if abs(lp_error) < 100*tol
-                add_bundle_cuts(m,current_sol,network_data,radius,num)
-            end
         end
     ################################################################################
 
     ################################################################################
         network_data["direction"] = 1   # direction of maximization
-        (result, pm_model) = run_ac_opf_mod(network_data,solver)
+        (result, pm) = run_ac_opf_mod(network_data,solver)
 
-        @show lp_error = z_val - result["objective"]/obj_tuning
+        @show z_val - result["objective"]/obj_tuning
         #nlp_err[iter] = abs(z_val - s["objective"])
 
-        if lp_error < -tol
+        if (z_val - result["objective"]/obj_tuning) < -tol
             converged_flag = 0
 
-            current_sol = get_current_solution(result["solution"], pm_model, to_approx, ind_gen, ind_bus, ind_branch)
+            current_sol = get_current_solution(result["solution"], pm, to_approx, ind_gen, ind_bus, ind_branch)
             @show current_sol["val"]
 
             approximation["worst_case_upper"] = current_sol
@@ -199,11 +194,6 @@ function find_optimal_linearization(network_data, to_approx, solver, solver_lp, 
             sum(l_pb[i]*( sum(current_sol["pg"][j] for j in gens_at_bus[string(i)]) ) + l_qb[i]*( sum(current_sol["qg"][j] for j in gens_at_bus[string(i)]) ) for i in gen_buses)
         -   sum(l_pb[i]*current_sol["pd"][i]  + l_qb[i]*current_sol["qd"][i] for i in load_buses) )
             <= z)
-
-            # add neighborhood bundle cuts
-            if abs(lp_error) < 100*tol
-                add_bundle_cuts(m,current_sol,network_data,radius,num)
-            end
         end
     ################################################################################
 
@@ -225,3 +215,72 @@ function find_optimal_linearization(network_data, to_approx, solver, solver_lp, 
 
     return approximation
 end     # end of find optimal linearizaion
+
+
+function find_maximum_error(network_data, to_approx, solver, obj_tuning)
+    ######### Defining indices and parameters ######################################
+    ind_bus = [parse(Int,key) for (key,b) in network_data["bus"]]
+    ind_branch = [parse(Int,key) for (key,b) in network_data["branch"]]
+    ind_gen = [parse(Int,key) for (key,b) in network_data["gen"]]
+    ################################################################################
+    ############## Mapping generators to buses #####################################
+    gen_buses = [network_data["gen"][i]["gen_bus"] for i in keys(network_data["gen"])]
+    gen_buses = unique(gen_buses)
+    load_buses = [parse(Int64,i) for i in keys(network_data["bus"]) if abs(network_data["bus"][i]["pd"]) + abs(network_data["bus"][i]["qd"]) > 1e-2]
+    active_buses = union(gen_buses,load_buses)
+
+    # remove the next 4 lines
+    # gen_buses = [network_data["gen"][i]["gen_bus"] for i in keys(network_data["gen"])]
+    # gen_buses = unique(gen_buses)
+    # load_buses = [parse(Int64,i) for i in keys(network_data["bus"]) if abs(network_data["bus"][i]["pd"]) + abs(network_data["bus"][i]["qd"]) > 1e-2]
+    # # active_buses = union(gen_buses,load_buses)
+    # active_buses = [b["index"] for (i,b) in network_data["bus"]]
+
+    gens_at_bus = Dict{String,Array{Int,1}}()
+    for i in gen_buses
+        gens_at_bus[string(i)] = [network_data["gen"][j]["index"] for j in keys(network_data["gen"]) if network_data["gen"][j]["gen_bus"] == i]
+    end
+    ################################################################################
+    network_data["ind_gen"] = ind_gen
+    network_data["ind_bus"] = ind_bus
+    network_data["ind_branch"] = ind_branch
+    network_data["gen_buses"] = gen_buses
+    network_data["load_buses"] = load_buses
+    network_data["active_buses"] = active_buses
+    network_data["gen_inflation"] = inflation_factors["gen_inflation"]
+    network_data["load_inflation"] = inflation_factors["load_inflation"]
+    network_data["gens_at_bus"] = gens_at_bus
+
+    slack = [bus["index"] for (i,bus) in network_data["bus"] if bus["bus_type"] == 3][1]
+    network_data["slack"] = slack
+
+    ############# tighten generator and load limits around OPF solution based on inflation_factors ######################
+    output = run_ac_opf(network_data, solver_ipopt)
+
+    gen_inflation = inflation_factors["gen_inflation"]
+    pg_init = Dict{Int,Float64}()
+    qg_init = Dict{Int,Float64}()
+    baseMVA = output["solution"]["baseMVA"]
+
+    for i in ind_gen
+        pg_init[i] = output["solution"]["gen"][string(i)]["pg"]/baseMVA
+        qg_init[i] = output["solution"]["gen"][string(i)]["qg"]/baseMVA
+        network_data["gen"][string(i)]["pmax"] = max(pg_init[i]*(1+gen_inflation),pg_init[i]*(1-gen_inflation))
+        network_data["gen"][string(i)]["pmin"] = min(pg_init[i]*(1+gen_inflation),pg_init[i]*(1-gen_inflation))
+        network_data["gen"][string(i)]["qmax"] = max(qg_init[i]*(1+gen_inflation),qg_init[i]*(1-gen_inflation))
+        network_data["gen"][string(i)]["qmin"] = min(qg_init[i]*(1+gen_inflation),qg_init[i]*(1-gen_inflation))
+    end
+    ################################################################################
+
+
+
+
+    l0_val = 0
+    l_v_val = 0
+    l_pb_val = Dict{String,Float64}()
+    l_qb_val = Dict{String,Float64}()
+    for i in active_buses
+        l_pb_val[string(i)] = 0.0
+        l_qb_val[string(i)] = 0.0
+    end
+end

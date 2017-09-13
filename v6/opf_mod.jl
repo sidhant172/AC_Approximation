@@ -7,7 +7,7 @@ PM = PowerModels
 function run_ac_opf_mod(data, solver)
     pm = build_generic_model(data, ACPPowerModel, post_opf_mod)
     solution = solve_generic_model(pm, solver; solution_builder = PowerModels.get_solution)
-    return solution, pm.model
+    return solution, pm
 end
 
 
@@ -29,6 +29,7 @@ function post_opf_mod(pm::PM.GenericPowerModel)
 
     # Rest of the constraints using PowerModels in-built functions
     PM.constraint_voltage(pm)
+    
     for (i,bus) in pm.ref[:ref_buses]
         PM.constraint_theta_ref(pm, bus)
     end
@@ -42,7 +43,7 @@ function post_opf_mod(pm::PM.GenericPowerModel)
         PM.constraint_ohms_yt_from(pm, branch)
         PM.constraint_ohms_yt_to(pm, branch)
 
-        PM.constraint_phase_angle_difference(pm, branch)
+        PM.constraint_voltage_angle_difference(pm, branch)
 
         PM.constraint_thermal_limit_from(pm, branch)
         PM.constraint_thermal_limit_to(pm, branch)
@@ -68,18 +69,30 @@ function constraint_kcl_shunt_mod{T <: PM.AbstractACPForm}(pm::PM.GenericPowerMo
     gs = bus["gs"]
     bs = bus["bs"]
 
-    v = getindex(pm.model, :v)[i]
-    p = getindex(pm.model, :p)
-    q = getindex(pm.model, :q)
-    pg = getindex(pm.model, :pg)
-    qg = getindex(pm.model, :qg)
-    p_dc = getindex(pm.model, :p_dc)
-    q_dc = getindex(pm.model, :q_dc)
+    # v = getindex(pm.model, :v)[i]
+    # p = getindex(pm.model, :p)
+    # q = getindex(pm.model, :q)
+    # pg = getindex(pm.model, :pg)
+    # qg = getindex(pm.model, :qg)
+    # p_dc = getindex(pm.model, :p_dc)
+    # q_dc = getindex(pm.model, :q_dc)
+
+    v = pm.var[:vm][i]
+    p = pm.var[:p]
+    q = pm.var[:q]
+    pg = pm.var[:pg]
+    qg = pm.var[:qg]
+    p_dc = pm.var[:p_dc]
+    q_dc = pm.var[:q_dc]
+
 
 
     pd_var = getindex(pm.model, :pd)[i]
     qd_var = getindex(pm.model, :qd)[i]
-    #q_dc = getindex(pm.model, :q_dc)
+
+    # pd_var = pm.var[:pd][i]
+    # qd_var = pm.var[:qd][i]
+
 
     c1 = @constraint(pm.model, sum(p[a] for a in bus_arcs) + sum(p_dc[a_dc] for a_dc in bus_arcs_dc) == sum(pg[g] for g in bus_gens) - pd_var - gs*v^2)
     c2 = @constraint(pm.model, sum(q[a] for a in bus_arcs) + sum(q_dc[a_dc] for a_dc in bus_arcs_dc) == sum(qg[g] for g in bus_gens) - qd_var + bs*v^2)
@@ -102,15 +115,29 @@ function add_objective(pm::PM.GenericPowerModel)
 
     sign = (-1)^direction
 
+    # @show pm.model
+
     # access JuMP variables
-    v = getindex(pm.model, :v)  # voltage magnitude variable
-    t = getindex(pm.model, :t)  # voltage angle variable
-    p = getindex(pm.model, :p)  # line active flow variables
-    q = getindex(pm.model, :q)  # line reactive flow variables
-    pg = getindex(pm.model, :pg)   # active generation variables
-    qg = getindex(pm.model, :qg)   # reactive generation variables
+    # v = getindex(pm.model, :v)  # voltage magnitude variable
+    # t = getindex(pm.model, :t)  # voltage angle variable
+    # p = getindex(pm.model, :p)  # line active flow variables
+    # q = getindex(pm.model, :q)  # line reactive flow variables
+    # pg = getindex(pm.model, :pg)   # active generation variables
+    # qg = getindex(pm.model, :qg)   # reactive generation variables
+    # pd = getindex(pm.model, :pd)
+    # qd = getindex(pm.model, :qd)
+
+
+    v = pm.var[:vm]
+    t = pm.var[:va]
+    p = pm.var[:p]
+    q = pm.var[:q]
+    pg = pm.var[:pg]
+    qg = pm.var[:qg]
     pd = getindex(pm.model, :pd)
     qd = getindex(pm.model, :qd)
+    # pd = pm.var[:pd]
+    # qd = pm.var[:qd]
 
     # get current linearization coefficients
     l0_val = pm.data["l0"]
@@ -145,6 +172,8 @@ end
 function add_power_factor_constraint(pm::PM.GenericPowerModel)
     pd = getindex(pm.model, :pd)
     qd = getindex(pm.model, :qd)
+    # pd = pm.var[:pd]
+    # qd = pm.var[:qd]
     @constraint(pm.model, power_factor[i in keys(pm.ref[:bus])], qd[i]*pm.ref[:bus][i]["pd"] == pd[i]*pm.ref[:bus][i]["qd"])
     # @constraint(pm.model, power_factor_low[i in keys(pm.ref[:bus])], 0.95*pd[i]*pm.ref[:bus][i]["qd"] <= qd[i]*pm.ref[:bus][i]["pd"])
     # @constraint(pm.model, power_factor_high[i in keys(pm.ref[:bus])], qd[i]*pm.ref[:bus][i]["pd"] <= 1.05*pd[i]*pm.ref[:bus][i]["qd"])
@@ -163,6 +192,7 @@ function variable_load(pm::GenericPowerModel)
 end
 
 function add_slack_constraint(pm::GenericPowerModel)
-    t = getindex(pm.model, :t)
+    # t = getindex(pm.model, :t)
+    t = pm.var[:va]
     @constraint(pm.model, t[pm.data["slack"]] == 0)
 end

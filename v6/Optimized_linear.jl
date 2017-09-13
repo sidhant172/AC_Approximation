@@ -58,10 +58,10 @@ inflation_factors["load_inflation"] = load_inflation
 
 to_approx_list = Dict{Int64,Any}()
 
-# to_approx = Dict{String,Any}()
-# to_approx["quantity"] = "line_real_power"
-# to_approx["quantity_index"] = (18,11,13)
-# to_approx_list[1] = to_approx
+to_approx = Dict{String,Any}()
+to_approx["quantity"] = "line_real_power"
+to_approx["quantity_index"] = (18,11,13)
+to_approx_list[1] = to_approx
 
 # to_approx = Dict{String,Any}()
 # to_approx["quantity"] = "bus_voltage_magnitude"
@@ -88,10 +88,10 @@ to_approx_list = Dict{Int64,Any}()
 # to_approx["quantity_index"] = (11,5,11)
 # to_approx_list[1] = to_approx
 
-to_approx = Dict{String,Any}()
-to_approx["quantity"] = "bus_voltage_magnitude"
-to_approx["quantity_index"] = 5
-to_approx_list[1] = to_approx
+# to_approx = Dict{String,Any}()
+# to_approx["quantity"] = "bus_voltage_magnitude"
+# to_approx["quantity_index"] = 5
+# to_approx_list[1] = to_approx
 
 tic()
 linear_approximations = find_optimal_linearizations(network_data, to_approx_list, inflation_factors, solver_ipopt, solver_lp, cnst_gen_max_iter, tol, obj_tuning)
