@@ -2,8 +2,8 @@ using PowerModels
 using JuMP
 using Ipopt
 # using Clp
-using GLPKMathProgInterface
-# using Gurobi
+# using GLPKMathProgInterface
+using Gurobi
 
 include("opf_mod.jl")
 include("support_functions.jl")
@@ -41,13 +41,13 @@ network_data = PowerModels.parse_file("case24_ieee_rts.m")
 # line = (11,5,11)
 
 
-solver_ipopt = IpoptSolver(print_level=0) # , linear_solver="ma97"
-# solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
+# solver_ipopt = IpoptSolver(print_level=0) # , linear_solver="ma97"
+solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
 # solver_ipopt = IpoptSolver(linear_solver="ma97")
 
-solver_lp = GLPKSolverLP()
+# solver_lp = GLPKSolverLP()
 # solver_lp = ClpSolver()
-# solver_lp = GurobiSolver()
+solver_lp = GurobiSolver()
 
 
 
