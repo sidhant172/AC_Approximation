@@ -106,4 +106,4 @@ linearation_coefficients["l_pb"] = linear_approximations[1]["l_pb"]
 linearation_coefficients["l_qb"] = linear_approximations[1]["l_qb"]
 linearation_coefficients["l_v"] = linear_approximations[1]["l_v"]
 
-(l,u) = find_linearization_error(network_data, to_approx, solver_ipopt, linearation_coefficients,inflation_factors)
+(l,u) = find_linearization_error(network_data, to_approx, solver_ipopt, linearation_coefficients, inflation_factors)

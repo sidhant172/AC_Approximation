@@ -18,21 +18,21 @@ function find_linearization_error(network_data, to_approx, solver, linearation_c
 
 
     ############# tighten generator and load limits around OPF solution based on inflation_factors ######################
-    output = run_ac_opf(network_data, solver_ipopt)
-
-    gen_inflation = network_data["gen_inflation"]
-    pg_init = Dict{Int,Float64}()
-    qg_init = Dict{Int,Float64}()
-    baseMVA = output["solution"]["baseMVA"]
-
-    for i in network_data["ind_gen"]
-        pg_init[i] = output["solution"]["gen"][string(i)]["pg"]
-        qg_init[i] = output["solution"]["gen"][string(i)]["qg"]
-        network_data["gen"][string(i)]["pmax"] = max(pg_init[i]*(1+gen_inflation),pg_init[i]*(1-gen_inflation))
-        network_data["gen"][string(i)]["pmin"] = min(pg_init[i]*(1+gen_inflation),pg_init[i]*(1-gen_inflation))
-        network_data["gen"][string(i)]["qmax"] = max(qg_init[i]*(1+gen_inflation),qg_init[i]*(1-gen_inflation))
-        network_data["gen"][string(i)]["qmin"] = min(qg_init[i]*(1+gen_inflation),qg_init[i]*(1-gen_inflation))
-    end
+    # output = run_ac_opf(network_data, solver_ipopt)
+    #
+    # gen_inflation = network_data["gen_inflation"]
+    # pg_init = Dict{Int,Float64}()
+    # qg_init = Dict{Int,Float64}()
+    # baseMVA = output["solution"]["baseMVA"]
+    #
+    # for i in network_data["ind_gen"]
+    #     pg_init[i] = output["solution"]["gen"][string(i)]["pg"]
+    #     qg_init[i] = output["solution"]["gen"][string(i)]["qg"]
+    #     network_data["gen"][string(i)]["pmax"] = max(pg_init[i]*(1+gen_inflation),pg_init[i]*(1-gen_inflation))
+    #     network_data["gen"][string(i)]["pmin"] = min(pg_init[i]*(1+gen_inflation),pg_init[i]*(1-gen_inflation))
+    #     network_data["gen"][string(i)]["qmax"] = max(qg_init[i]*(1+gen_inflation),qg_init[i]*(1-gen_inflation))
+    #     network_data["gen"][string(i)]["qmin"] = min(qg_init[i]*(1+gen_inflation),qg_init[i]*(1-gen_inflation))
+    # end
     ################################################################################
 
 
