@@ -95,6 +95,13 @@ to_approx_list[1] = to_approx
 # to_approx["quantity_index"] = 5
 # to_approx_list[1] = to_approx
 
+####### remove this ########
+pm = build_generic_model(data, ACPPowerModel, post_opf_mod)
+solution = solve_generic_model(pm, solver; solution_builder = PowerModels.get_solution)
+p_var = pm.var[:p][(18,11,13)]
+p_line_val = getvalue(p_var)
+############################
+
 tic()
 linear_approximations = find_optimal_linearizations(network_data, to_approx_list, inflation_factors, solver_ipopt, solver_lp, cnst_gen_max_iter, tol, obj_tuning)
 time = toc()
@@ -125,3 +132,12 @@ end
 
 @show norm_error_p = sqrt( sum( (lp[string(i)] - linear_approximations[1]["l_pb"][string(i)])^2 for i in network_data["active_buses"]   )  )
 @show norm_error_q = sqrt( sum( (lq[string(i)] - linear_approximations[1]["l_qb"][string(i)])^2 for i in network_data["active_buses"]   )  )
+
+
+linearation_coefficients = Dict{String,Any}()
+linearation_coefficients["l0"] = p_line_val
+linearation_coefficients["l_pb"] = lp
+linearation_coefficients["l_qb"] = lq
+linearation_coefficients["l_v"] = 0
+
+@show (l,u) = find_linearization_error(network_data, to_approx, solver_ipopt, linearation_coefficients, inflation_factors)
