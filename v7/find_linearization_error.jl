@@ -8,7 +8,7 @@ function find_linearization_error(network_data, to_approx, solver, linearation_c
     # append network_data with specific quantity being linearized
     network_data["quantity"] = to_approx["quantity"]
     network_data["quantity_index"] = to_approx["quantity_index"]
-    network_data["obj_tuning"] = 1.0
+    network_data["obj_tuning"] = 100
 
     network_data["l0"] = linearation_coefficients["l0"]
     network_data["l_v"] = linearation_coefficients["l_v"]
