@@ -80,7 +80,8 @@ function find_optimal_linearization(network_data, to_approx, solver, solver_lp, 
     @objective(m,Min,z)
 
     @constraint(m, l_pb[slack] == 0)
-    @constraint(m, l_qb[slack] == 0)
+    # @constraint(m, l_qb[slack] == 0)
+    @constraint(m, l_v ==0)
 
     # initialize all linearization coefficients to zero
     l0_val = 0
