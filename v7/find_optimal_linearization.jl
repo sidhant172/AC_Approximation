@@ -72,10 +72,10 @@ function find_optimal_linearization(network_data, to_approx, solver, solver_lp, 
     m = Model(solver = solver_lp)
 
     @variable(m, z >=0, start=0)  # maximum error
-    @variable(m,-5<=l_pb[i in active_buses]<=5, start = 0)
-    @variable(m,-5<=l_qb[i in active_buses]<=5, start = 0)
+    @variable(m,-1<=l_pb[i in active_buses]<=1, start = 0)
+    @variable(m,-1<=l_qb[i in active_buses]<=1, start = 0)
     @variable(m, -5<=l0<=5, start = 0) # constant term
-    @variable(m, -5<=l_v<=5, start=0)
+    @variable(m, -1<=l_v<=1, start=0)
 
     @objective(m,Min,z)
 
