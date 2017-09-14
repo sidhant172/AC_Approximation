@@ -123,5 +123,5 @@ for i in network_data["active_buses"]
     lq[string(i)] = lq_jac[i]
 end
 
-@show norm_error_p = sqrt( sum( (lp[string(i)] - linearization[1]["l_pb"][string(i)])^2 for i in network_data["active_buses"]   )  )
-@show norm_error_q = sqrt( sum( (lq[string(i)] - linearization[1]["l_qb"][string(i)])^2 for i in network_data["active_buses"]   )  )
+@show norm_error_p = sqrt( sum( (lp[string(i)] - linear_approximations[1]["l_pb"][string(i)])^2 for i in network_data["active_buses"]   )  )
+@show norm_error_q = sqrt( sum( (lq[string(i)] - linear_approximations[1]["l_qb"][string(i)])^2 for i in network_data["active_buses"]   )  )
