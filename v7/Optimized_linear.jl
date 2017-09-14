@@ -2,8 +2,8 @@ using PowerModels
 using JuMP
 using Ipopt
 # using Clp
-# using GLPKMathProgInterface
-using Gurobi
+using GLPKMathProgInterface
+# using Gurobi
 using MAT
 
 include("opf_mod.jl")
@@ -47,9 +47,9 @@ solver_ipopt = IpoptSolver(print_level=0) # , linear_solver="ma97"
 # solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
 # solver_ipopt = IpoptSolver(linear_solver="ma97")
 
-# solver_lp = GLPKSolverLP()
+solver_lp = GLPKSolverLP()
 # solver_lp = ClpSolver()
-solver_lp = GurobiSolver()
+# solver_lp = GurobiSolver()
 
 
 
@@ -96,8 +96,8 @@ to_approx_list[1] = to_approx
 # to_approx_list[1] = to_approx
 
 ####### remove this ########
-pm = build_generic_model(data, ACPPowerModel, post_opf_mod)
-solution = solve_generic_model(pm, solver; solution_builder = PowerModels.get_solution)
+pm = build_generic_model(network_data, ACPPowerModel, PowerModels.post_opf)
+solution = solve_generic_model(pm, solver_ipopt; solution_builder = PowerModels.get_solution)
 p_var = pm.var[:p][(18,11,13)]
 p_line_val = getvalue(p_var)
 ############################
@@ -114,7 +114,7 @@ linearation_coefficients["l_pb"] = linear_approximations[1]["l_pb"]
 linearation_coefficients["l_qb"] = linear_approximations[1]["l_qb"]
 linearation_coefficients["l_v"] = linear_approximations[1]["l_v"]
 
-(l,u) = find_linearization_error(network_data, to_approx, solver_ipopt, linearation_coefficients, inflation_factors)
+@show (l,u) = find_linearization_error(network_data, to_approx, solver_ipopt, linearation_coefficients, inflation_factors)
 
 
 ########## some post checking ###########
