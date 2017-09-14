@@ -4,6 +4,7 @@ using Ipopt
 # using Clp
 # using GLPKMathProgInterface
 using Gurobi
+using MAT
 
 include("opf_mod.jl")
 include("support_functions.jl")
@@ -107,3 +108,20 @@ linearation_coefficients["l_qb"] = linear_approximations[1]["l_qb"]
 linearation_coefficients["l_v"] = linear_approximations[1]["l_v"]
 
 (l,u) = find_linearization_error(network_data, to_approx, solver_ipopt, linearation_coefficients, inflation_factors)
+
+
+########## some post checking ###########
+variables = matread("ptdf_matrices.mat")
+lp_jac = variables["Hac_f"][18,:][1:24]
+lq_jac = ariables["Hac_f"][18,:][25:48]
+
+lp = Dict{String,Float64}()
+lq = Dict{String,Float64}()
+
+for i in network_data["active_buses"]
+    lp[string(i)] = lp_jac[i]
+    lq[string(i)] = lq_jac[i]
+end
+
+@show norm_error_p = sqrt( sum( (lp[string(i)] - linearization[1]["l_pb"][string(i)])^2 for i in network_data["active_buses"]   )  )
+@show norm_error_q = sqrt( sum( (lq[string(i)] - linearization[1]["l_qb"][string(i)])^2 for i in network_data["active_buses"]   )  )
