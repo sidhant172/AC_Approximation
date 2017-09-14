@@ -63,15 +63,15 @@ to_approx["quantity"] = "line_real_power"
 to_approx["quantity_index"] = (18,11,13)
 to_approx_list[1] = to_approx
 
-# to_approx = Dict{String,Any}()
-# to_approx["quantity"] = "bus_voltage_magnitude"
-# to_approx["quantity_index"] = 2
-# to_approx_list[2] = to_approx
+to_approx = Dict{String,Any}()
+to_approx["quantity"] = "bus_voltage_magnitude"
+to_approx["quantity_index"] = 2
+to_approx_list[2] = to_approx
 
-# to_approx = Dict{String,Any}()
-# to_approx["quantity"] = "line_reactive_power"
-# to_approx["quantity_index"] = (18,11,13)
-# to_approx_list[3] = to_approx
+to_approx = Dict{String,Any}()
+to_approx["quantity"] = "line_reactive_power"
+to_approx["quantity_index"] = (18,11,13)
+to_approx_list[3] = to_approx
 
 # to_approx = Dict{String,Any}()
 # to_approx["quantity"] = "line_reactive_power"
