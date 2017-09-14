@@ -113,7 +113,7 @@ linearation_coefficients["l_v"] = linear_approximations[1]["l_v"]
 ########## some post checking ###########
 variables = matread("ptdf_matrices.mat")
 lp_jac = variables["Hac_f"][18,:][1:24]
-lq_jac = ariables["Hac_f"][18,:][25:48]
+lq_jac = variables["Hac_f"][18,:][25:48]
 
 lp = Dict{String,Float64}()
 lq = Dict{String,Float64}()
