@@ -8,6 +8,7 @@ using GLPKMathProgInterface
 include("opf_mod.jl")
 include("support_functions.jl")
 include("find_optimal_linearization.jl")
+include("find_linearization_error.jl")
 
 
 
@@ -41,8 +42,8 @@ network_data = PowerModels.parse_file("case24_ieee_rts.m")
 # line = (11,5,11)
 
 
-# solver_ipopt = IpoptSolver(print_level=0) # , linear_solver="ma97"
-solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
+solver_ipopt = IpoptSolver(print_level=0) # , linear_solver="ma97"
+# solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
 # solver_ipopt = IpoptSolver(linear_solver="ma97")
 
 solver_lp = GLPKSolverLP()
@@ -63,15 +64,15 @@ to_approx["quantity"] = "line_real_power"
 to_approx["quantity_index"] = (18,11,13)
 to_approx_list[1] = to_approx
 
-to_approx = Dict{String,Any}()
-to_approx["quantity"] = "bus_voltage_magnitude"
-to_approx["quantity_index"] = 2
-to_approx_list[2] = to_approx
-
-to_approx = Dict{String,Any}()
-to_approx["quantity"] = "line_reactive_power"
-to_approx["quantity_index"] = (18,11,13)
-to_approx_list[3] = to_approx
+# to_approx = Dict{String,Any}()
+# to_approx["quantity"] = "bus_voltage_magnitude"
+# to_approx["quantity_index"] = 2
+# to_approx_list[2] = to_approx
+#
+# to_approx = Dict{String,Any}()
+# to_approx["quantity"] = "line_reactive_power"
+# to_approx["quantity_index"] = (18,11,13)
+# to_approx_list[3] = to_approx
 
 # to_approx = Dict{String,Any}()
 # to_approx["quantity"] = "line_reactive_power"
@@ -96,3 +97,13 @@ to_approx_list[3] = to_approx
 tic()
 linear_approximations = find_optimal_linearizations(network_data, to_approx_list, inflation_factors, solver_ipopt, solver_lp, cnst_gen_max_iter, tol, obj_tuning)
 time = toc()
+
+
+
+linearation_coefficients = Dict{String,Any}()
+linearation_coefficients["l0"] = linear_approximations[1]["l0"]
+linearation_coefficients["l_pb"] = linear_approximations[1]["l_pb"]
+linearation_coefficients["l_qb"] = linear_approximations[1]["l_qb"]
+linearation_coefficients["l_v"] = linear_approximations[1]["l_v"]
+
+(l,u) = find_linearization_error(network_data, to_approx, solver_ipopt, linearation_coefficients,inflation_factors)

@@ -67,8 +67,39 @@ end     # end of get_current_solution
 
 
 
-# function append_network_data()
-# end
+
+# function to append network_data with useful data structures so that it can be passed and accessed within all functions
+function append_network_data(network_data,inflation_factors)
+    ######### Defining indices and parameters ######################################
+    ind_bus = [parse(Int,key) for (key,b) in network_data["bus"]]
+    ind_branch = [parse(Int,key) for (key,b) in network_data["branch"]]
+    ind_gen = [parse(Int,key) for (key,b) in network_data["gen"]]
+    ################################################################################
+    slack = [bus["index"] for (i,bus) in network_data["bus"] if bus["bus_type"] == 3][1]
+    ############## Mapping generators to buses #####################################
+    gen_buses = [network_data["gen"][i]["gen_bus"] for i in keys(network_data["gen"])]
+    gen_buses = unique(gen_buses)
+    load_buses = [parse(Int64,i) for i in keys(network_data["bus"]) if abs(network_data["bus"][i]["pd"]) + abs(network_data["bus"][i]["qd"]) > 1e-2]
+    active_buses = union(gen_buses,load_buses)
+
+
+
+    gens_at_bus = Dict{String,Array{Int,1}}()
+    for i in gen_buses
+        gens_at_bus[string(i)] = [network_data["gen"][j]["index"] for j in keys(network_data["gen"]) if network_data["gen"][j]["gen_bus"] == i]
+    end
+    ################################################################################
+    network_data["ind_gen"] = ind_gen
+    network_data["ind_bus"] = ind_bus
+    network_data["ind_branch"] = ind_branch
+    network_data["gen_buses"] = gen_buses
+    network_data["load_buses"] = load_buses
+    network_data["active_buses"] = active_buses
+    network_data["gen_inflation"] = inflation_factors["gen_inflation"]
+    network_data["load_inflation"] = inflation_factors["load_inflation"]
+    network_data["gens_at_bus"] = gens_at_bus
+    network_data["slack"] = slack
+end
 
 
 # function to create useful structure in network data
