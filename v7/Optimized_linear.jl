@@ -60,14 +60,14 @@ inflation_factors["gen_inflation"] = gen_inflation
 inflation_factors["load_inflation"] = load_inflation
 # inflation_factors["v_inflation"] = v_inflation
 
-# to_approx_list = Dict{Int64,Any}()
-to_approx_list = Dict{String,Any}()
+to_approx_list = Dict{Int64,Any}()
+# to_approx_list = Dict{String,Any}()
 
 for (i,branch) in network_data_old["branch"]
     to_approx = Dict{String,Any}()
     to_approx["quantity"] = "line_real_power"
     to_approx["quantity_index"] = (parse(Int64,i),branch["f_bus"],branch["t_bus"])
-    to_approx_list[i] = to_approx
+    to_approx_list[parse(Int64,i)] = to_approx
 end
 
 # to_approx = Dict{String,Any}()
