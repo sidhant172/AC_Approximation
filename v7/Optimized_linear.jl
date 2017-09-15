@@ -2,8 +2,8 @@ using PowerModels
 using JuMP
 using Ipopt
 # using Clp
-using GLPKMathProgInterface
-# using Gurobi
+#using GLPKMathProgInterface
+using Gurobi
 using MAT
 
 include("opf_mod.jl")
@@ -47,9 +47,9 @@ solver_ipopt = IpoptSolver(print_level=0) # , linear_solver="ma97"
 # solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
 # solver_ipopt = IpoptSolver(linear_solver="ma97")
 
-solver_lp = GLPKSolverLP()
+# solver_lp = GLPKSolverLP()
 # solver_lp = ClpSolver()
-# solver_lp = GurobiSolver()
+solver_lp = GurobiSolver(TuneOutput=0)
 
 
 
