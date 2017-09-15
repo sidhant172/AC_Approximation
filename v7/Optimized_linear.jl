@@ -21,8 +21,8 @@ cnst_gen_max_iter  = 1000   # max iterations for constraint generation
 # tol = 1e-4   # convergence tolerance
 
 # operational conditions
-gen_inflation = 0.3     # defining range of loading conditions
-load_inflation = 0.3    # defining range of generation conditions
+gen_inflation = 0.4     # defining range of loading conditions
+load_inflation = 0.4    # defining range of generation conditions
 # v_inflation = 0.1
 
 tol = gen_inflation*1e-2
@@ -96,10 +96,11 @@ to_approx_list[1] = to_approx
 # to_approx_list[1] = to_approx
 
 ####### remove this ########
-pm = build_generic_model(network_data, ACPPowerModel, PowerModels.post_opf)
-solution = solve_generic_model(pm, solver_ipopt; solution_builder = PowerModels.get_solution)
-p_var = pm.var[:p][(18,11,13)]
+pm_before = build_generic_model(network_data, ACPPowerModel, PowerModels.post_opf)
+result_before = solve_generic_model(pm_before, solver_ipopt; solution_builder = PowerModels.get_solution)
+p_var = pm_before.var[:p][(18,11,13)]
 p_line_val = getvalue(p_var)
+network_data_old  = deepcopy(network_data)
 ############################
 
 tic()
@@ -134,8 +135,28 @@ end
 @show norm_error_q = sqrt( sum( (lq[string(i)] - linear_approximations[1]["l_qb"][string(i)])^2 for i in network_data["active_buses"]   )  )
 
 
+
+
+pb_before  = Dict{String,Float64}()
+qb_before  = Dict{String,Float64}()
+
+for i in network_data["active_buses"]
+    if i in network_data["gen_buses"]
+        pb_before[string(i)] = sum(result_before["solution"]["gen"][string(j)]["pg"]   for j in network_data["gens_at_bus"][string(i)]) - network_data_old["bus"][string(i)]["pd"]
+        qb_before[string(i)] = sum(result_before["solution"]["gen"][string(j)]["qg"]   for j in network_data["gens_at_bus"][string(i)]) - network_data_old["bus"][string(i)]["qd"]
+    else
+        pb_before[string(i)] = - network_data_old["bus"][string(i)]["pd"]
+        qb_before[string(i)] = - network_data_old["bus"][string(i)]["qd"]
+    end
+end
+
+
+
+const_term = p_line_val - sum(pb_before[string(i)]*lp[string(i)] + qb_before[string(i)]*lq[string(i)] for i in network_data["active_buses"])
+
+
 linearation_coefficients = Dict{String,Any}()
-linearation_coefficients["l0"] = p_line_val
+linearation_coefficients["l0"] = const_term
 linearation_coefficients["l_pb"] = lp
 linearation_coefficients["l_qb"] = lq
 linearation_coefficients["l_v"] = 0
