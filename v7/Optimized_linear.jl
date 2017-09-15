@@ -137,7 +137,7 @@ for (linenum,approximation) in linear_approximations
     approx_error[linenum] = approximation["error"]
 end
 
-matwrite("linear_approximations.mat",mat_dict)
+matwrite("linear_approximations.mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
 
 
 
