@@ -21,8 +21,8 @@ cnst_gen_max_iter  = 1000   # max iterations for constraint generation
 # tol = 1e-4   # convergence tolerance
 
 # operational conditions
-gen_inflation = 0.4     # defining range of loading conditions
-load_inflation = 0.4    # defining range of generation conditions
+gen_inflation = 0.3     # defining range of loading conditions
+load_inflation = 0.3    # defining range of generation conditions
 # v_inflation = 0.1
 
 tol = gen_inflation*1e-2
@@ -139,7 +139,7 @@ for (linenum,approximation) in linear_approximations
 end
 
 # write aproximations for real power
-matwrite("linear_approximations_real.mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
+matwrite("linear_approximations_real"string(gen_inflation)".mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
 
 
 to_approx_list = Dict{Int64,Any}()
@@ -172,7 +172,7 @@ for (linenum,approximation) in linear_approximations
 end
 
 # write aproximations for reactive power
-matwrite("linear_approximations_reactive.mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
+matwrite("linear_approximations_reactive"string(gen_inflation)".mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
 
 # linearation_coefficients = Dict{String,Any}()
 # linearation_coefficients["l0"] = linear_approximations[1]["l0"]
