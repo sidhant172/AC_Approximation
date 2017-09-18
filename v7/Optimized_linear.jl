@@ -70,6 +70,7 @@ for (i,branch) in network_data_old["branch"]
     to_approx_list[parse(Int64,i)] = to_approx
 end
 
+
 # to_approx = Dict{String,Any}()
 # to_approx["quantity"] = "line_real_power"
 # to_approx["quantity_index"] = (18,11,13)
@@ -137,10 +138,41 @@ for (linenum,approximation) in linear_approximations
     approx_error[linenum] = approximation["error"]
 end
 
-matwrite("linear_approximations.mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
+# write aproximations for real power
+matwrite("linear_approximations_real.mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
 
 
+to_approx_list = Dict{Int64,Any}()
 
+
+for (i,branch) in network_data_old["branch"]
+    to_approx = Dict{String,Any}()
+    to_approx["quantity"] = "line_reactive_power"
+    to_approx["quantity_index"] = (parse(Int64,i),branch["f_bus"],branch["t_bus"])
+    to_approx_list[parse(Int64,i)] = to_approx
+end
+
+tic()
+linear_approximations = find_optimal_linearizations(network_data, to_approx_list, inflation_factors, solver_ipopt, solver_lp, cnst_gen_max_iter, tol, obj_tuning)
+time = toc()
+
+coeff_const = zeros(num_branch)
+coeff_p = zeros(num_branch,num_bus)
+coeff_q = zeros(num_branch,num_bus)
+approx_error = zeros(num_branch)
+for (linenum,approximation) in linear_approximations
+    for (i,coeff) in approximation["l_pb"]
+        coeff_p[linenum,parse(Int64,i)] = coeff
+    end
+    for (i,coeff) in approximation["l_qb"]
+        coeff_q[linenum,parse(Int64,i)] = coeff
+    end
+    coeff_const[linenum] = approximation["l0"]
+    approx_error[linenum] = approximation["error"]
+end
+
+# write aproximations for reactive power
+matwrite("linear_approximations_reactive.mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
 
 # linearation_coefficients = Dict{String,Any}()
 # linearation_coefficients["l0"] = linear_approximations[1]["l0"]
