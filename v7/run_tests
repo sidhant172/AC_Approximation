@@ -1,0 +1,2 @@
+#!/bin/bash
+srun julia random_tests.jl

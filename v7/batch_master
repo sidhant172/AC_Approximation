@@ -1,0 +1,2 @@
+#!/bin/bash
+sbatch --partition=general --output=small_tests.out ./run_tests
