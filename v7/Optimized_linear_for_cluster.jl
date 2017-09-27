@@ -121,7 +121,7 @@ branch = network_data_old["branch"][linenum]
 to_approx = Dict{String,Any}()
 to_approx["quantity"] = quantity_to_approx
 to_approx["quantity_index"] = (parse(Int64,i),branch["f_bus"],branch["t_bus"])
-to_approx_list[branch] = to_approx
+to_approx_list[linenum] = to_approx
 
 
 
