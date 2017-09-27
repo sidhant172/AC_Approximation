@@ -6,7 +6,7 @@ filename = ARGS[2]
 
 network_data = PowerModels.parse_file(filename)
 
-num_bus = length(network_data_old["bus"])
+num_bus = length(network_data["bus"])
 num_branch = length(network_data["branch"])
 
 # ind_bus = [parse(Int,key) for (key,b) in network_data["bus"]]
