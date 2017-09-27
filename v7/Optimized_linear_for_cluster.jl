@@ -83,68 +83,9 @@ linear_approximations = find_optimal_linearizations(network_data, to_approx_list
 time = toc()
 
 
-# modifying linear_approximations to make it possible to write to a mat find_optimal_linearizations
+
 num_bus = length(network_data_old["bus"])
 num_branch = length(network_data["branch"])
-
-coeff_const = 0
-coeff_p = zeros(num_bus)
-coeff_q = zeros(num_bus)
-approx_error = 0
-# for (linenum,approximation) in linear_approximations
-    approximation = linear_approximations[linenum]
-    for (i,coeff) in approximation["l_pb"]
-        coeff_p[parse(Int64,i)] = coeff
-    end
-    for (i,coeff) in approximation["l_qb"]
-        coeff_q[parse(Int64,i)] = coeff
-    end
-    coeff_const = approximation["l0"]
-    approx_error = approximation["error"]
-# end
-
-# write aproximations for real power
-matwrite("linear_approximations_real"string(gen_inflation)".mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
-
-
-to_approx_list = Dict{Int64,Any}()
-
-
-# for (i,branch) in network_data_old["branch"]
-#     to_approx = Dict{String,Any}()
-#     to_approx["quantity"] = quantity_to_approx
-#     to_approx["quantity_index"] = (parse(Int64,i),branch["f_bus"],branch["t_bus"])
-#     to_approx_list[parse(Int64,i)] = to_approx
-# end
-
-# code to take command line arguments and run the corresponding optimal linearization problem
-branch = network_data_old["branch"][string(linenum)]
-to_approx = Dict{String,Any}()
-to_approx["quantity"] = quantity_to_approx
-to_approx["quantity_index"] = (parse(Int64,i),branch["f_bus"],branch["t_bus"])
-to_approx_list[linenum] = to_approx
-
-
-
-
-tic()
-linear_approximations = find_optimal_linearizations(network_data, to_approx_list, inflation_factors, solver_ipopt, solver_lp, cnst_gen_max_iter, tol, obj_tuning)
-time = toc()
-
-# coeff_const = zeros(num_branch)
-# coeff_p = zeros(num_branch,num_bus)
-# coeff_q = zeros(num_branch,num_bus)
-# approx_error = zeros(num_branch)
-# for (linenum,approximation) in linear_approximations
-#     for (i,coeff) in approximation["l_pb"]
-#         coeff_p[linenum,parse(Int64,i)] = coeff
-#     end
-#     for (i,coeff) in approximation["l_qb"]
-#         coeff_q[linenum,parse(Int64,i)] = coeff
-#     end
-#     coeff_const[linenum] = approximation["l0"]
-#     approx_error[linenum] = approximation["error"]
-# end
 
 coeff_const = 0
 coeff_p = zeros(num_bus)
@@ -163,7 +104,6 @@ approx_error = approximation["error"]
 
 
 # write aproximations for reactive power
-# matwrite("results_57bus/linear_approximations_real"string(gen_inflation)".mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
 if quantity_to_approx == "line_real_power"
     matwrite("results_57bus/linear_approximations_real"string(gen_inflation)"_line_"string(linenum)".mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
 else if quantity_to_approx == "line_reactive_power"
