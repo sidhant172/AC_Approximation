@@ -39,6 +39,6 @@ for i in keys(data["branch"])
 end
 
 # write aproximations for real power
-matwrite(string(dirname)"linear_approximations_real"string(inflation)".mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
+matwrite(string(dirname)"/matrix_forms/linear_approximations_real"string(inflation)".mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
 
 end
