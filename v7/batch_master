@@ -2,12 +2,13 @@
 #sbatch --job-name=case57 --partition=scaling --output=case57.out ./run_tests line_real_power 18.0 0.2
 
 scalings='0.4 0.3 0.2 0.1 0.05'
-c=14
+c=30
 #filename=nesta_case57_ieee.m
 #filename=case24_ieee_rts.m
-filename=nesta_case14_ieee.m
+#filename=nesta_case14_ieee.m
+filename=nesta_case30_as.m
 dirname=results$c
-lines=20
+lines=41
 
 mkdir $dirname
 
