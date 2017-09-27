@@ -87,20 +87,21 @@ time = toc()
 num_bus = length(network_data_old["bus"])
 num_branch = length(network_data["branch"])
 
-coeff_const = zeros(num_branch)
-coeff_p = zeros(num_branch,num_bus)
-coeff_q = zeros(num_branch,num_bus)
-approx_error = zeros(num_branch)
-for (linenum,approximation) in linear_approximations
+coeff_const = 0
+coeff_p = zeros(num_bus)
+coeff_q = zeros(num_bus)
+approx_error = 0
+# for (linenum,approximation) in linear_approximations
+    approximation = linear_approximations[linenum]
     for (i,coeff) in approximation["l_pb"]
-        coeff_p[linenum,parse(Int64,i)] = coeff
+        coeff_p[parse(Int64,i)] = coeff
     end
     for (i,coeff) in approximation["l_qb"]
-        coeff_q[linenum,parse(Int64,i)] = coeff
+        coeff_q[parse(Int64,i)] = coeff
     end
-    coeff_const[linenum] = approximation["l0"]
-    approx_error[linenum] = approximation["error"]
-end
+    coeff_const = approximation["l0"]
+    approx_error = approximation["error"]
+# end
 
 # write aproximations for real power
 matwrite("linear_approximations_real"string(gen_inflation)".mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
