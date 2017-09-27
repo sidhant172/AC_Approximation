@@ -42,9 +42,9 @@ obj_tuning = 1e2
 # quantity_to_approx = "line_reactive_power"
 # quantity_to_approx = "bus_voltage_magnitude"
 
-# network_data = PowerModels.parse_file("case24_ieee_rts.m")
+network_data = PowerModels.parse_file("case24_ieee_rts.m")
 # network_data = PowerModels.parse_file("case118.m")
-network_data = PowerModels.parse_file("nesta_case57_ieee.m")
+# network_data = PowerModels.parse_file("nesta_case57_ieee.m")
 # network_data = PowerModels.parse_file("nesta_case300_ieee.m")
 
 network_data_old = deepcopy(network_data)
@@ -117,7 +117,7 @@ to_approx_list = Dict{Int64,Any}()
 # end
 
 # code to take command line arguments and run the corresponding optimal linearization problem
-branch = network_data_old["branch"][linenum]
+branch = network_data_old["branch"][string(linenum)]
 to_approx = Dict{String,Any}()
 to_approx["quantity"] = quantity_to_approx
 to_approx["quantity_index"] = (parse(Int64,i),branch["f_bus"],branch["t_bus"])
