@@ -8,7 +8,7 @@ using MAT
 
 
 @show quantity_to_approx = ARGS[1]
-@show linenum = parse(Int64,ARGS[2])
+@show linenum = convert(Int64,parse(Float64,ARGS[2]))
 @show inflation_const = parse(Float64,ARGS[3])
 
 
