@@ -29,7 +29,7 @@ coeff_const = zeros(num_branch)
 coeff_p = zeros(num_branch,num_bus)
 coeff_q = zeros(num_branch,num_bus)
 approx_error = zeros(num_branch)
-for i in keys(data["branch"])
+for i in keys(network_data["branch"])
     linenum = parse(Int64,i)
     vars = matread("linear_approximations_real"string(inflation)"_line_"string(linenum)".mat")
     coeff_const[i] = vars["coeff_const"]
