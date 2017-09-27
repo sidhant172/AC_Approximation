@@ -106,7 +106,7 @@ approx_error = approximation["error"]
 # write aproximations for reactive power
 if quantity_to_approx == "line_real_power"
     matwrite("results_57bus/linear_approximations_real"string(gen_inflation)"_line_"string(linenum)".mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
-else if quantity_to_approx == "line_reactive_power"
+elseif quantity_to_approx == "line_reactive_power"
     matwrite("results_57bus/linear_approximations_reactive"string(gen_inflation)"_line_"string(linenum)".mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
 elseif println("quantity not supported")
 end
