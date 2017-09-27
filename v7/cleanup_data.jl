@@ -42,4 +42,17 @@ end
 # write aproximations for real power
 matwrite(string(dirname)"/matrix_forms/linear_approximations_real"string(inflation)".mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
 
+
+for i in keys(network_data["branch"])
+    linenum = parse(Int64,i)
+    vars = matread(string(dirname)"/linear_approximations_reactive"string(inflation)"_line_"string(linenum)".mat")
+    coeff_const[linenum] = vars["coeff_const"]
+    coeff_p[linenum,:] = vars["coeff_p"]
+    coeff_q[linenum,:] = vars["coeff_q"]
+    approx_error[linenum] = vars["approx_error"]
+end
+
+# write aproximations for real power
+matwrite(string(dirname)"/matrix_forms/linear_approximations_reactive"string(inflation)".mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
+
 end
