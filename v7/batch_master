@@ -1,2 +1,21 @@
 #!/bin/bash
-sbatch --partition=general --output=small_tests.out ./run_tests
+#sbatch --job-name=case57 --partition=scaling --output=case57.out ./run_tests line_real_power 18.0 0.2
+
+for i in '0.4 0.3 0.2 0.1 0.05'
+do
+   for k in {1..80}
+   do
+      sbatch --jobname=case57_line_$k --partition=scaling --output=case57_real_$k.out ./run_tests line_real_power $k $i
+   done
+done
+
+
+#for i in '0.1 0.2'
+#do
+#   for k in {1..5}
+#   do
+#      echo $i
+#      echo $k
+#   done
+#done
+

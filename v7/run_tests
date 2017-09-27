@@ -1,2 +1,3 @@
 #!/bin/bash
-srun julia random_tests.jl
+/home/sidhant/license_servers
+srun julia Optimized_linear_for_cluster.jl $1 $2 $3
