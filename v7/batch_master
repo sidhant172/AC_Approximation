@@ -5,12 +5,20 @@ for i in '0.4 0.3 0.2 0.1 0.05'
 do
    for k in {1..80}
    do
-      sbatch --jobname=case57_line_$k --partition=scaling --output=case57_real_$k.out ./run_tests line_real_power $k $i
+      sbatch --job-name=case57_line_$k --partition=scaling --output=case57_real_$k.out ./run_tests nesta_case57_ieee.m line_real_power $k $i
+   done
+done
+
+for i in '0.4 0.3 0.2 0.1 0.05'
+do
+   for k in {1..80}
+   do
+      sbatch --job-name=case57_line_$k --partition=scaling --output=case57_reactive_$k.out ./run_tests nesta_case57_ieee.m line_reactive_power $k $i
    done
 done
 
 
-#for i in '0.1 0.2'
+#for i in '0.1 0.2 0.3'
 #do
 #   for k in {1..5}
 #   do
