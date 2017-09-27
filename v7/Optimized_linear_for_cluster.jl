@@ -6,10 +6,12 @@ using Ipopt
 using Gurobi
 using MAT
 
+
 @show filename = ARGS[1]
-@show quantity_to_approx = ARGS[2]
-@show linenum = convert(Int64,parse(Float64,ARGS[3]))
-@show inflation_const = parse(Float64,ARGS[4])
+@show dirname = ARGS[2]
+@show quantity_to_approx = ARGS[3]
+@show linenum = convert(Int64,parse(Float64,ARGS[4]))
+@show inflation_const = parse(Float64,ARGS[5])
 
 
 
@@ -106,8 +108,8 @@ approx_error = approximation["error"]
 
 # write aproximations for reactive power
 if quantity_to_approx == "line_real_power"
-    matwrite("results_57bus/linear_approximations_real"string(gen_inflation)"_line_"string(linenum)".mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
+   matwrite(string(dirname)"/linear_approximations_real"string(gen_inflation)"_line_"string(linenum)".mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
 elseif quantity_to_approx == "line_reactive_power"
-    matwrite("results_57bus/linear_approximations_reactive"string(gen_inflation)"_line_"string(linenum)".mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
+   matwrite(string(dirname)"/linear_approximations_reactive"string(gen_inflation)"_line_"string(linenum)".mat",Dict("coeff_const"=>coeff_const,"coeff_p"=>coeff_p,"coeff_q"=>coeff_q,"approx_error"=>approx_error))
 elseif println("quantity not supported")
 end
