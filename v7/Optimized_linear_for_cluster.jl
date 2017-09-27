@@ -6,10 +6,10 @@ using Ipopt
 using Gurobi
 using MAT
 
-
-@show quantity_to_approx = ARGS[1]
-@show linenum = convert(Int64,parse(Float64,ARGS[2]))
-@show inflation_const = parse(Float64,ARGS[3])
+@show filename = ARGS[1]
+@show quantity_to_approx = ARGS[2]
+@show linenum = convert(Int64,parse(Float64,ARGS[3]))
+@show inflation_const = parse(Float64,ARGS[4])
 
 
 
@@ -44,7 +44,8 @@ obj_tuning = 1e2
 
 # network_data = PowerModels.parse_file("case24_ieee_rts.m")
 # network_data = PowerModels.parse_file("case118.m")
-network_data = PowerModels.parse_file("nesta_case57_ieee.m")
+# network_data = PowerModels.parse_file("nesta_case57_ieee.m")
+network_data = PowerModels.parse_file(filename)
 # network_data = PowerModels.parse_file("nesta_case300_ieee.m")
 
 network_data_old = deepcopy(network_data)
