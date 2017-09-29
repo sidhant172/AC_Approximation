@@ -38,11 +38,11 @@ function find_linearization_error(network_data, to_approx, solver, linearation_c
 
     network_data["direction"] = 0
     (result, pm) = run_ac_opf_mod(network_data,solver)
-    negative_error = result["objective"]
+    negative_error = result["objective"]/network_data["obj_tuning"]
 
     network_data["direction"] = 1
     (result, pm) = run_ac_opf_mod(network_data,solver)
-    positive_error = result["objective"]
+    positive_error = result["objective"]/network_data["obj_tuning"]
 
     return negative_error, positive_error
 end
