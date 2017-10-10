@@ -43,6 +43,12 @@ end
 p_error = zeros(num_branch,length(inflation_factors))
 q_error = zeros(num_branch,length(inflation_factors))
 
+pps = Dict{String,Any}()
+pqs = Dict{String,Any}()
+qps = Dict{String,Any}()
+qqs = Dict{String,Any}()
+
+
 ctr = 0
 for inflation in inflation_factors
     ctr = ctr+1
@@ -56,8 +62,16 @@ for inflation in inflation_factors
     qq = vars["coeff_q"]
     q_err = vars["approx_error"]
     q_error[:,ctr] = q_err
+
+    # saving everyting
+    pps[string(convert(Int64,100*inflation))] = pp
+    pqs[string(convert(Int64,100*inflation))] = pq
+    qps[string(convert(Int64,100*inflation))] = qp
+    qqs[string(convert(Int64,100*inflation))] = qq
 end
 ################################################################################
+
+
 
 # for i = 1:num_branch
 #     perr_plot = plot(inflation_factors,p_error_jac[i,:],linewidth = 2, xlabel="Radius",ylabel="Maximum approximation error (pu)",lab = "Taylor")
@@ -71,11 +85,11 @@ end
 #     # savefig(plot(inflation_factors,q_error_jac[i,:],xlabel="Radius",ylabel="Maximum approximation error",leg=false),"plotsJacobian/approximation_error_comparison/approx_error_reactive_line_"string(i)".pdf")
 # end
 
-combined_plot = plot(size = (1400,900), layout=4, right_margin=20px, left_margin=20px, top_margin= 20px, bottom_margin=10px, [inflation_factors, inflation_factors, inflation_factors, inflation_factors],
-    [p_error_jac[1,:], q_error_jac[1,:], p_error_jac[18,:], q_error_jac[18,:]], linewidth=2, xlabel = "Radius", ylabel = "Maximum approximation error (pu)", lab="Taylor"
-    , annotations=[(0.1,0.03,text("Line #1 active",:left)) (0.1,0.24,text("Line #1 reactive",:left)) (0.1,0.19,text("Line #18 active",:left)) (0.1,0.15,text("Line #18 reactive",:left))] )
-
-    plot!(size = (1400,900), layout=4, right_margin=20px, left_margin=20px, top_margin= 20px,  bottom_margin=10px, [inflation_factors, inflation_factors, inflation_factors, inflation_factors],
-        [p_error[1,:], q_error[1,:], p_error[18,:], q_error[18,:]], linewidth=2, xlabel = "Radius", ylabel = "Maximum approximation error (pu)", lab="Optimal")
-
-    savefig(combined_plot, "plotsJacobian/approximation_error_comparison/combinedfigure.pdf")
+# combined_plot = plot(size = (1400,900), layout=4, right_margin=20px, left_margin=20px, top_margin= 20px, bottom_margin=10px, [inflation_factors, inflation_factors, inflation_factors, inflation_factors],
+#     [p_error_jac[1,:], q_error_jac[1,:], p_error_jac[18,:], q_error_jac[18,:]], linewidth=2, xlabel = "Radius", ylabel = "Maximum approximation error (pu)", lab="Taylor"
+#     , annotations=[(0.1,0.03,text("Line #1 active",:left)) (0.1,0.24,text("Line #1 reactive",:left)) (0.1,0.19,text("Line #18 active",:left)) (0.1,0.15,text("Line #18 reactive",:left))] )
+#
+#     plot!(size = (1400,900), layout=4, right_margin=20px, left_margin=20px, top_margin= 20px,  bottom_margin=10px, [inflation_factors, inflation_factors, inflation_factors, inflation_factors],
+#         [p_error[1,:], q_error[1,:], p_error[18,:], q_error[18,:]], linewidth=2, xlabel = "Radius", ylabel = "Maximum approximation error (pu)", lab="Optimal")
+#
+#     savefig(combined_plot, "plotsJacobian/approximation_error_comparison/combinedfigure.pdf")

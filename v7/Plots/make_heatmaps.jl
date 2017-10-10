@@ -86,16 +86,27 @@ for inflation in inflation_factors
     # savefig(heatmap(1:38,1:num_active,abs(pq[:,active_buses]-pq_jac[:,active_buses])',aspect_ratio=1, yaxis=(0:2:20)),"plots"string(num_bus)"/heatmaps/heatmap_pq_"string(convert(Int64,inflation*100))".pdf")
     # savefig(heatmap(1:38,1:num_active,abs(qp[:,active_buses]-qp_jac[:,active_buses])',aspect_ratio=1, yaxis=(0:2:20)),"plots"string(num_bus)"/heatmaps/heatmap_qp_"string(convert(Int64,inflation*100))".pdf")
     # savefig(heatmap(1:38,1:num_active,abs(qq[:,active_buses]-qq_jac[:,active_buses])',aspect_ratio=1, yaxis=(0:2:20)),"plots"string(num_bus)"/heatmaps/heatmap_qq_"string(convert(Int64,inflation*100))".pdf")
+
+    ###### making rms maps instead
+
+
+
 end
 
+combined_rms_plot = plot(size = (1400,800), layout=4, right_margin=10px, left_margin=10px, top_margin= 0px, bottom_margin=0px,
+    inflation_factors, (1/sqrt(38*length(active_buses)))*[norm(pp_dict[string(convert(Int64,100*inflation))][:,active_buses]-pp_jac[:,active_buses]) for inflation in inflation_factors]  )
+plot!(inflation_factors, (1/sqrt(38*length(active_buses)))*[norm(pq_dict[string(convert(Int64,100*inflation))][:,active_buses]-pq_jac[:,active_buses]) for inflation in inflation_factors], subplot = 2 )
+plot!(inflation_factors, (1/sqrt(38*length(active_buses)))*[norm(qp_dict[string(convert(Int64,100*inflation))][:,active_buses]-qp_jac[:,active_buses]) for inflation in inflation_factors], subplot = 3 )
+plot!(inflation_factors, (1/sqrt(38*length(active_buses)))*[norm(qq_dict[string(convert(Int64,100*inflation))][:,active_buses]-qq_jac[:,active_buses]) for inflation in inflation_factors], subplot = 4  )
+savefig(combined_rms_plot,"combined_rms_plot.pdf")
 
 
 combined_heatmap = heatmap(size = (1400,800), layout=4, right_margin=10px, left_margin=10px, top_margin= 0px, bottom_margin=0px,
     1:38,1:num_active, abs(pp_dict["5"][:,active_buses]-pp_jac[:,active_buses])'
     ,aspect_ratio=1, yaxis=(0:2:20))
-heatmap!(1:38,1:num_active, abs(pq_dict["5"][:,active_buses]-pp_jac[:,active_buses])', aspect_ratio=1, yaxis=(0:2:20), subplot=2)
+heatmap!(1:38,1:num_active, abs(pq_dict["5"][:,active_buses]-pq_jac[:,active_buses])', aspect_ratio=1, yaxis=(0:2:20), subplot=2)
 heatmap!(1:38,1:num_active, abs(pp_dict["40"][:,active_buses]-pp_jac[:,active_buses])', aspect_ratio=1, yaxis=(0:2:20), subplot=3)
-heatmap!(1:38,1:num_active, abs(pq_dict["40"][:,active_buses]-pp_jac[:,active_buses])', aspect_ratio=1, yaxis=(0:2:20), subplot=4)
+heatmap!(1:38,1:num_active, abs(pq_dict["40"][:,active_buses]-pq_jac[:,active_buses])', aspect_ratio=1, yaxis=(0:2:20), subplot=4)
 
 annotate!(2,18,text("Lp R=0.05",:white,:left), subplot=1)
 annotate!(2,18,text("Lq R=0.05",:white,:left), subplot=2)
@@ -103,6 +114,11 @@ annotate!(2,18,text("Lp R=0.4",:white,:left), subplot=3)
 annotate!(2,18,text("Lq R=0.4",:white,:left), subplot=4)
 
 savefig(combined_heatmap,"combined_heatmap.pdf")
+
+
+
+
+
 
 # combined_heatmap = heatmap(size = (1400,900), layout=4, right_margin=20px, left_margin=20px, top_margin= 20px, bottom_margin=10px,
 # 1:num_active,1:38,abs(pp_dict["5"][:,active_buses]-pp_jac[:,active_buses]),aspect_ratio=1, "combined_heatmap.pdf" )
