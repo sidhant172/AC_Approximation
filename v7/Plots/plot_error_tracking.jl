@@ -2,14 +2,21 @@ using MAT
 using Plots
 gr()
 
-vars = matread("../results24/error_tracking_real_line1.mat")
+
+dirname = "../results14"
+plot_dirname = "plots14"
+
+
+vars = matread(string(dirname)"/error_tracking_real_line1.mat")
+# vars = matread("../results14/error_tracking_real_line1.mat")
+# vars = matread("../results24/error_tracking_real_line1.mat")
 # vars = matread("../results57/error_tracking_real_line1.mat")
 nlp_err = max(vars["nlp_err_pos"],vars["nlp_err_neg"])
 lp_err = vars["lp_err"]
 
 
 
-err_plot = plot(size = (1400,800), layout=4, right_margin=40px, left_margin=20px, top_margin= 30px, bottom_margin=10px, 
+err_plot = plot(size = (1400,800), layout=4, right_margin=40px, left_margin=20px, top_margin= 30px, bottom_margin=10px,
     nlp_err[2:end], xlabel = "Iteration number", ylabel="Maximum approximation error", leg=false,  xtickfont = font(10, "Courier"), linewidth=2)
 
 plot!(lp_err, xlabel = "Iteration number", ylabel="Objective of LP relaxation", color=:red, xtickfont = font(10, "Courier"),
@@ -18,8 +25,9 @@ plot!(lp_err, xlabel = "Iteration number", ylabel="Objective of LP relaxation", 
 
 lp_deltas_real = vars["lp_deltas"]
 
-
-vars = matread("../results24/error_tracking_reactive_line1.mat")
+vars = matread(string(dirname)"/error_tracking_reactive_line1.mat")
+# vars = matread("../results14/error_tracking_reactive_line1.mat")
+# vars = matread("../results24/error_tracking_reactive_line1.mat")
 # vars = matread("../results57/error_tracking_reactive_line1.mat")
 
 nlp_err = max(vars["nlp_err_pos"],vars["nlp_err_neg"])
@@ -30,10 +38,10 @@ plot!(lp_err, xlabel = "Iteration number", ylabel="Objective of LP relaxation", 
 
 lp_deltas_reactive = vars["lp_deltas"]
 
-annotate!(65,1,text("Line #1 Active power", font(9), :left), subplot=1)
-annotate!(95,0.8,text("Line #1 Reactive power", font(9), :left), subplot=2)
-annotate!(65,0.0004,text("Line #1 Active power", font(9), :left), subplot=3)
-annotate!(95,0.0016,text("Line #1 Reactive power", font(9), :left), subplot=4)
+# annotate!(65,1,text("Line #1 Active power", font(9), :left), subplot=1)
+# annotate!(95,0.8,text("Line #1 Reactive power", font(9), :left), subplot=2)
+# annotate!(65,0.0004,text("Line #1 Active power", font(9), :left), subplot=3)
+# annotate!(95,0.0016,text("Line #1 Reactive power", font(9), :left), subplot=4)
 
 # savefig(plot(vars["lp_deltas"]), "plots24/lp_deltas_reactive.pdf")
 
@@ -43,8 +51,9 @@ annotate!(95,0.0016,text("Line #1 Reactive power", font(9), :left), subplot=4)
 # plot!(lp_deltas_reactive, xlabel = "Iteration number", ylabel="Change in lq", xtickfont = font(10, "Courier"),color=:green, linewidth=2, leg=false, subplot=4, right_margin=40px, left_margin=20px, top_margin= 30px, bottom_margin=10px)
 
 
-
-savefig(err_plot,"plots24/error_tracking.pdf")
+savefig(err_plot, string(plot_dirname)"error_tracking.pdf")
+# savefig(err_plot,"plots14/error_tracking.pdf")
+# savefig(err_plot,"plots24/error_tracking.pdf")
 # savefig(err_plot,"plots57/error_tracking.pdf")
 
 
