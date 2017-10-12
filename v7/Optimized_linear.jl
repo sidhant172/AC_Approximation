@@ -2,8 +2,8 @@ using PowerModels
 using JuMP
 using Ipopt
 # using Clp
-using GLPKMathProgInterface
-# using Gurobi
+# using GLPKMathProgInterface
+using Gurobi
 using MAT
 
 include("opf_mod.jl")
