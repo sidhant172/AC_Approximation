@@ -67,7 +67,8 @@ end
 # get Jacobian information
 
 # read jacobian data from file
-vars = matread("ptdf_matrices.mat")
+# vars = matread("ptdf_matrices.mat")
+vars = matread("case"string(num_bus)"_ptdf.mat")
 pp_jac = vars["Hac_f"][1:num_branch,1:num_bus]
 pq_jac = vars["Hac_f"][1:num_branch,num_bus+1:end]
 qp_jac = vars["Hac_f"][num_branch+1:end,1:num_bus]
@@ -174,7 +175,10 @@ for inflation_const in inflation_factors
 
     end
 
-    matwrite("resultsJacobian/jacobian_error_real_"string(inflation_const)".mat",Dict("err" => err_jac_real[:,ctr]))
-    matwrite("resultsJacobian/jacobian_error_reactive_"string(inflation_const)".mat",Dict("err" => err_jac_reactive[:,ctr]))
+    # matwrite("resultsJacobian/jacobian_error_real_"string(inflation_const)".mat",Dict("err" => err_jac_real[:,ctr]))
+    # matwrite("resultsJacobian/jacobian_error_reactive_"string(inflation_const)".mat",Dict("err" => err_jac_reactive[:,ctr]))
+
+    matwrite("resultsJacobian/case"string(num_bus)"/jacobian_error_real_"string(inflation_const)".mat",Dict("err" => err_jac_real[:,ctr]))
+    matwrite("resultsJacobian/case"string(num_bus)"/jacobian_error_reactive_"string(inflation_const)".mat",Dict("err" => err_jac_reactive[:,ctr]))
 
 end
