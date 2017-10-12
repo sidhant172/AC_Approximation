@@ -17,7 +17,7 @@ network_data = PowerModels.parse_file("../"string(filename))
 num_branch = length(network_data["branch"])
 num_bus = length(network_data["bus"])
 
-inflation_factors = [0.05, 0.1, 0.2, 0.3, 0.4]
+inflation_factors = [0.02, 0.05, 0.1, 0.2, 0.3, 0.4]
 
 
 vars = matread("../results"string(num_bus)"/matrix_forms/linear_approximations_real0.05.mat")
