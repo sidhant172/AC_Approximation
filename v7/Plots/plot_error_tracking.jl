@@ -9,9 +9,9 @@ lp_err = vars["lp_err"]
 
 
 
-err_plot = plot(size = (1400,800), layout=4, right_margin=40px, left_margin=20px, top_margin= 30px, bottom_margin=10px, layout=4,
+err_plot = plot(size = (1400,800), layout=4, right_margin=40px, left_margin=20px, top_margin= 30px, bottom_margin=10px, 
     nlp_err[2:end], xlabel = "Iteration number", ylabel="Maximum approximation error", leg=false,  xtickfont = font(10, "Courier"), linewidth=2)
-    
+
 plot!(lp_err, xlabel = "Iteration number", ylabel="Objective of LP relaxation", color=:red, xtickfont = font(10, "Courier"),
      linewidth=2, leg=false, subplot=3, right_margin=40px, left_margin=20px, top_margin= 30px, bottom_margin=10px,)
 # savefig(err_real,"plots24/error_tracking_real.pdf")
