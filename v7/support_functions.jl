@@ -127,6 +127,61 @@ end
 
 
 
+############## degrees_of_freedom computation #########
+function find_degrees_of_freedom(network_data, solver)
+    gen_buses = unique(find_gen_buses(network_data))
+    load_buses = unique(find_load_buses(network_data))
+    active_buses = find_active_buses(network_data)
+
+    gen_only = setdiff(gen_buses,load_buses)
+    load_only = setdiff(load_buses,gen_buses)
+
+    result = PowerModels.run_ac_opf(network_data,solver)
+
+    gens_at_bus = Dict{String,Array{Int,1}}()
+    for i in gen_buses
+        gens_at_bus[string(i)] = [network_data["gen"][j]["index"] for j in keys(network_data["gen"]) if network_data["gen"][j]["gen_bus"] == i]
+    end
+
+    degrees_of_freedom = 0
+
+    for i in gen_buses
+        to_add_real = 0
+        if abs(network_data["bus"][string(i)]["pd"]) > 0
+            to_add_real = 1
+        end
+        for j in gens_at_bus[string(i)]
+            if abs(result["solution"]["gen"][string(j)]["pg"]) > 0
+                to_add_real = 1
+            end
+        end
+        degrees_of_freedom = degrees_of_freedom + to_add_real
+
+        to_add_reactive = 0
+        if abs(network_data["bus"][string(i)]["qd"]) > 0
+            to_add_reactive = 1
+        end
+        for j in gens_at_bus[string(i)]
+            if abs(result["solution"]["gen"][string(j)]["qg"]) > 0
+                to_add_reactive = 1
+            end
+        end
+        degrees_of_freedom = degrees_of_freedom + to_add_reactive
+    end
+
+    for i in load_only
+        if abs(network_data["bus"][string(i)]["pd"]) > 0
+            degrees_of_freedom = degrees_of_freedom  + 1
+        end
+        if abs(network_data["bus"][string(i)]["qd"]) > 0
+            degrees_of_freedom = degrees_of_freedom  + 1
+        end
+    end
+
+    return degrees_of_freedom - 1
+end
+
+
 
 
 ################################################################################
