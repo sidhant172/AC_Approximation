@@ -3,8 +3,8 @@ using Plots
 gr()
 
 
-dirname = "../results14"
-plot_dirname = "plots14"
+dirname = "../results57"
+plot_dirname = "plots57"
 
 
 vars = matread(string(dirname)"/error_tracking_real_line1.mat")
@@ -51,7 +51,7 @@ lp_deltas_reactive = vars["lp_deltas"]
 # plot!(lp_deltas_reactive, xlabel = "Iteration number", ylabel="Change in lq", xtickfont = font(10, "Courier"),color=:green, linewidth=2, leg=false, subplot=4, right_margin=40px, left_margin=20px, top_margin= 30px, bottom_margin=10px)
 
 
-savefig(err_plot, string(plot_dirname)"error_tracking.pdf")
+savefig(err_plot, string(plot_dirname)"/error_tracking.pdf")
 # savefig(err_plot,"plots14/error_tracking.pdf")
 # savefig(err_plot,"plots24/error_tracking.pdf")
 # savefig(err_plot,"plots57/error_tracking.pdf")
