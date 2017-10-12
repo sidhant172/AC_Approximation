@@ -7,8 +7,9 @@ using PowerModels
 
 # filename = "nesta_case57_ieee.m"
 # filename = "nesta_case30_as.m"
-filename = "nesta_case14_ieee.m"
 # filename = "case24_ieee_rts.m"
+filename = "nesta_case14_ieee.m"
+
 
 network_data = PowerModels.parse_file("../"string(filename))
 num_branch = length(network_data["branch"])
