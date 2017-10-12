@@ -36,7 +36,8 @@ gen_inflation = inflation_const    # defining range of loading conditions
 load_inflation = inflation_const    # defining range of generation conditions
 # v_inflation = 0.1
 
-tol = gen_inflation*1e-2
+#tol = gen_inflation*1e-2
+tol = gen_inflation*1e-3
 
 obj_tuning = 1e1
 
