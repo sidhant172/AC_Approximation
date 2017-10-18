@@ -48,9 +48,9 @@ network_data_old = deepcopy(network_data)
 # line = (11,5,11)
 
 
-solver_ipopt = IpoptSolver(print_level=0) # , linear_solver="ma97"
+# solver_ipopt = IpoptSolver(print_level=0) # , linear_solver="ma97"
 # solver_ipopt = IpoptSolver()
-# solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
+solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
 # solver_ipopt = IpoptSolver(linear_solver="ma97")
 
 # solver_lp = GLPKSolverLP()
