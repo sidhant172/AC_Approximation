@@ -2,8 +2,8 @@ using PowerModels
 using JuMP
 using Ipopt
 # using Clp
-using GLPKMathProgInterface
-# using Gurobi
+# using GLPKMathProgInterface
+using Gurobi
 using MAT
 
 include("opf_mod.jl")
@@ -48,14 +48,14 @@ network_data_old = deepcopy(network_data)
 # line = (11,5,11)
 
 
-# solver_ipopt = IpoptSolver(print_level=0) # , linear_solver="ma97"
-solver_ipopt = IpoptSolver()
+solver_ipopt = IpoptSolver(print_level=0) # , linear_solver="ma97"
+# solver_ipopt = IpoptSolver()
 # solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
 # solver_ipopt = IpoptSolver(linear_solver="ma97")
 
-solver_lp = GLPKSolverLP()
+# solver_lp = GLPKSolverLP()
 # solver_lp = ClpSolver()
-# solver_lp = GurobiSolver(TuneOutput=0)
+solver_lp = GurobiSolver(TuneOutput=0)
 
 
 
@@ -119,12 +119,12 @@ tic()
 linear_approximations = find_optimal_linearizations_error_tracking(network_data, to_approx_list, inflation_factors, solver_ipopt, solver_lp, cnst_gen_max_iter, tol, obj_tuning)
 time = toc()
 
-num_bus = length(network_data_old["bus"])
-num_branch = length(network_data_old["branch"])
-
-approximation = linear_approximations[1]
-matwrite("results"string(num_bus)"/error_tracking_real_line1.mat",Dict("lp_err" => approximation["lp_err"], "nlp_err_pos" => approximation["nlp_err_pos"],
-    "nlp_err_neg" => approximation["nlp_err_neg"], "lp_deltas" => approximation["lp_deltas"]))
-approximation = linear_approximations[2]
-matwrite("results"string(num_bus)"/error_tracking_reactive_line1.mat",Dict("lp_err" => approximation["lp_err"], "nlp_err_pos" => approximation["nlp_err_pos"],
-    "nlp_err_neg" => approximation["nlp_err_neg"], "lp_deltas" => approximation["lp_deltas"]))
+# num_bus = length(network_data_old["bus"])
+# num_branch = length(network_data_old["branch"])
+#
+# approximation = linear_approximations[1]
+# matwrite("results"string(num_bus)"/error_tracking_real_line1.mat",Dict("lp_err" => approximation["lp_err"], "nlp_err_pos" => approximation["nlp_err_pos"],
+#     "nlp_err_neg" => approximation["nlp_err_neg"], "lp_deltas" => approximation["lp_deltas"]))
+# approximation = linear_approximations[2]
+# matwrite("results"string(num_bus)"/error_tracking_reactive_line1.mat",Dict("lp_err" => approximation["lp_err"], "nlp_err_pos" => approximation["nlp_err_pos"],
+#     "nlp_err_neg" => approximation["nlp_err_neg"], "lp_deltas" => approximation["lp_deltas"]))
