@@ -34,12 +34,12 @@ obj_tuning = 1e1
 # quantity_to_approx = "line_reactive_power"
 # quantity_to_approx = "bus_voltage_magnitude"
 
-# network_data = PowerModels.parse_file("case24_ieee_rts.m")
+network_data = PowerModels.parse_file("case24_ieee_rts.m")
 # network_data = PowerModels.parse_file("nesta_case14_ieee.m")
 # network_data = PowerModels.parse_file("nesta_case30_as.m")
 # network_data = PowerModels.parse_file("case118.m")
 # network_data = PowerModels.parse_file("nesta_case57_ieee.m")
-network_data = PowerModels.parse_file("nesta_case300_ieee.m")
+# network_data = PowerModels.parse_file("nesta_case300_ieee.m")
 
 network_data_old = deepcopy(network_data)
 
@@ -74,10 +74,10 @@ to_approx["quantity"] = "line_real_power"
 to_approx["quantity_index"] = (line_num,network_data["branch"][string(line_num)]["f_bus"],network_data["branch"][string(line_num)]["t_bus"])
 to_approx_list[1] = to_approx
 
-to_approx = Dict{String,Any}()
-to_approx["quantity"] = "line_reactive_power"
-to_approx["quantity_index"] = (line_num,network_data["branch"][string(line_num)]["f_bus"],network_data["branch"][string(line_num)]["t_bus"])
-to_approx_list[2] = to_approx
+# to_approx = Dict{String,Any}()
+# to_approx["quantity"] = "line_reactive_power"
+# to_approx["quantity_index"] = (line_num,network_data["branch"][string(line_num)]["f_bus"],network_data["branch"][string(line_num)]["t_bus"])
+# to_approx_list[2] = to_approx
 
 # to_approx = Dict{String,Any}()
 # to_approx["quantity"] = "bus_voltage_magnitude"
