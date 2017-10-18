@@ -67,14 +67,16 @@ inflation_factors["load_inflation"] = load_inflation
 to_approx_list = Dict{Int64,Any}()
 
 
+line_num = 18
+
 to_approx = Dict{String,Any}()
 to_approx["quantity"] = "line_real_power"
-to_approx["quantity_index"] = (1,network_data["branch"]["1"]["f_bus"],network_data["branch"]["1"]["t_bus"])
+to_approx["quantity_index"] = (1,network_data["branch"][string(line_num)]["f_bus"],network_data["branch"]["1"]["t_bus"])
 to_approx_list[1] = to_approx
 
 to_approx = Dict{String,Any}()
 to_approx["quantity"] = "line_reactive_power"
-to_approx["quantity_index"] = (1,network_data["branch"]["1"]["f_bus"],network_data["branch"]["1"]["t_bus"])
+to_approx["quantity_index"] = (1,network_data["branch"][string(line_num)]["f_bus"],network_data["branch"]["1"]["t_bus"])
 to_approx_list[2] = to_approx
 
 # to_approx = Dict{String,Any}()
