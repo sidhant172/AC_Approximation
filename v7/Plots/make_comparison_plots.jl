@@ -86,11 +86,11 @@ end
 #     # savefig(plot(inflation_factors,q_error_jac[i,:],xlabel="Radius",ylabel="Maximum approximation error",leg=false),"plotsJacobian/approximation_error_comparison/approx_error_reactive_line_"string(i)".pdf")
 # end
 
-combined_plot = plot(size = (1400,900), layout=4, right_margin=20px, left_margin=20px, top_margin= 20px, bottom_margin=10px, [inflation_factors, inflation_factors, inflation_factors, inflation_factors],
-    [p_error_jac[1,:], q_error_jac[1,:], p_error_jac[18,:], q_error_jac[18,:]], linewidth=2, linestyle=:dash, xtickfont = font(7, "Courier"), xlabel = "Radius", ylabel = "Maximum approximation error (pu)", lab="Taylor"
-    , annotations=[(0.07,0.03,text("Line #1 active",:left)) (0.07,0.24,text("Line #1 reactive",:left)) (0.07,0.19,text("Line #18 active",:left)) (0.07,0.15,text("Line #18 reactive",:left))] )
+combined_plot = plot(size = (1400,750), layout=4, right_margin=20px, left_margin=30px, top_margin= 10px, bottom_margin=10px, [convert(Array{Int64,1},100*inflation_factors), convert(Array{Int64,1},100*inflation_factors), convert(Array{Int64,1},100*inflation_factors), convert(Array{Int64,1},100*inflation_factors)],
+    [p_error_jac[1,:], q_error_jac[1,:], p_error_jac[18,:], q_error_jac[18,:]], linewidth=2, linestyle=:dash, xtickfont = font(7, "Courier"), xlabel = "Radius (percentage)", ylabel = "Maximum approximation \n error (pu)", lab="Taylor"
+    , annotations=[(7,0.03,text("Line #1 real",:left)) (7,0.24,text("Line #1 reactive",:left)) (7,0.19,text("Line #18 real",:left)) (7,0.15,text("Line #18 reactive",:left))] )
 
-    plot!(size = (1400,900), layout=4, right_margin=20px, left_margin=20px, top_margin= 20px,  bottom_margin=10px, [inflation_factors, inflation_factors, inflation_factors, inflation_factors],
-        [p_error[1,:], q_error[1,:], p_error[18,:], q_error[18,:]], linewidth=2, xtickfont = font(7, "Courier"), xlabel = "Radius", ylabel = "Maximum approximation error (pu)", lab="Optimal")
+    plot!(size = (1400,750), layout=4, right_margin=20px, left_margin=30px, top_margin= 20px,  bottom_margin=10px, [convert(Array{Int64,1},100*inflation_factors), convert(Array{Int64,1},100*inflation_factors),convert(Array{Int64,1},100*inflation_factors),convert(Array{Int64,1},100*inflation_factors)],
+        [p_error[1,:], q_error[1,:], p_error[18,:], q_error[18,:]], linewidth=2, xtickfont = font(7, "Courier"), xlabel = "Radius (percentage)", ylabel = "Maximum approximation \n error (pu)", lab="Optimal")
 
     savefig(combined_plot, "plotsJacobian/case"string(num_bus)"/approximation_error_comparison/combinedfigure.pdf")

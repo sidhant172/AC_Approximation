@@ -101,6 +101,7 @@ function find_optimal_linearization_error_tracking(network_data, to_approx, solv
     lp_deltas = Float64[];
     nlp_deltas_pos = Float64[];
     nlp_deltas_neg = Float64[]
+    num_constraint_added = Int64[];
 
 
     status = solve(m)
@@ -150,6 +151,7 @@ function find_optimal_linearization_error_tracking(network_data, to_approx, solv
 
         converged_flag = 1
 
+        num_const = 0
     ################################################################################
         network_data["direction"] = 0   # direction of maximization
         (result, pm) = run_ac_opf_mod(network_data,solver)
@@ -160,6 +162,8 @@ function find_optimal_linearization_error_tracking(network_data, to_approx, solv
 
         if (z_val - result["objective"]/obj_tuning) < -tol
             converged_flag = 0
+
+            num_const = num_const + 1
 
             current_sol = get_current_solution(result["solution"], pm, to_approx, ind_gen, ind_bus, ind_branch)
             @show current_sol["val"]
@@ -184,6 +188,8 @@ function find_optimal_linearization_error_tracking(network_data, to_approx, solv
         if (z_val - result["objective"]/obj_tuning) < -tol
             converged_flag = 0
 
+            num_const = num_const + 1
+
             current_sol = get_current_solution(result["solution"], pm, to_approx, ind_gen, ind_bus, ind_branch)
             @show current_sol["val"]
 
@@ -195,6 +201,8 @@ function find_optimal_linearization_error_tracking(network_data, to_approx, solv
             <= z)
         end
     ################################################################################
+
+    push!(num_constraint_added,num_const)
 
     @show iter
     @show z_val
@@ -215,6 +223,7 @@ function find_optimal_linearization_error_tracking(network_data, to_approx, solv
     approximation["nlp_err_pos"] = nlp_err_pos
     approximation["nlp_err_neg"] = nlp_err_neg
     approximation["lp_deltas"] = lp_deltas
+    approximation["num_constraint_added"] = num_constraint_added
 
     return approximation
 end     # end of find optimal linearizaion

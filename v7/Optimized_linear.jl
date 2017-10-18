@@ -2,8 +2,8 @@ using PowerModels
 using JuMP
 using Ipopt
 # using Clp
-# using GLPKMathProgInterface
-using Gurobi
+using GLPKMathProgInterface
+# using Gurobi
 using MAT
 
 include("opf_mod.jl")
@@ -34,11 +34,11 @@ obj_tuning = 1e1
 # quantity_to_approx = "line_reactive_power"
 # quantity_to_approx = "bus_voltage_magnitude"
 
-# network_data = PowerModels.parse_file("case24_ieee_rts.m")
+network_data = PowerModels.parse_file("case24_ieee_rts.m")
 # network_data = PowerModels.parse_file("nesta_case14_ieee.m")
 # network_data = PowerModels.parse_file("nesta_case30_as.m")
 # network_data = PowerModels.parse_file("case118.m")
-network_data = PowerModels.parse_file("nesta_case57_ieee.m")
+# network_data = PowerModels.parse_file("nesta_case57_ieee.m")
 # network_data = PowerModels.parse_file("nesta_case300_ieee.m")
 
 network_data_old = deepcopy(network_data)
@@ -53,9 +53,9 @@ solver_ipopt = IpoptSolver()
 # solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
 # solver_ipopt = IpoptSolver(linear_solver="ma97")
 
-# solver_lp = GLPKSolverLP()
+solver_lp = GLPKSolverLP()
 # solver_lp = ClpSolver()
-solver_lp = GurobiSolver(TuneOutput=0)
+# solver_lp = GurobiSolver(TuneOutput=0)
 
 
 

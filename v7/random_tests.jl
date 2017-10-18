@@ -1,3 +1,31 @@
+using GLPKMathProgInterface
+using PowerModels
+using Distributions
+
+
+max_iter = 100
+
+solver = GLPKSolverLP()
+
+network_data = PowerModels.parse_file("../pglib_opf_case240_pserc.m")
+
+num_bus = length(network_data["bus"])
+# result = run_dc_opf(network_data, solver)
+
+result_dict = Dict{String,Any}()
+
+
+dist = Normal(0,0.03)
+
+perturbations = rand(dist,num_bus)
+
+for iter=1:max_iter
+    network = deepcopy(network_data)
+    for (i,bus) in network["bus"]
+        bus["pd"] = bus["pd"]*(1+rand(dist))
+    end
+    result_dict[string(iter)] = run_dc_opf(network,solver)
+end
 
 
 # # m = Model(solver=IpoptSolver(mu_init=1e-9))
@@ -14,12 +42,7 @@
 # status = solve(m)
 
 # m = Model(solver=IpoptSolver(linear_solver="ma97"))
-println(ARGS[1])
-println(ARGS[2])
-@show ARGS[1]
 
-
-@show parse(Int64,ARGS[1]) + parse(Int64,ARGS[2])
 
 
 
