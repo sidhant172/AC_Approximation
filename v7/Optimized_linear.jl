@@ -8,9 +8,9 @@ using MAT
 
 include("opf_mod.jl")
 include("support_functions.jl")
-# include("find_optimal_linearization.jl")
+include("find_optimal_linearization.jl")
 include("find_linearization_error.jl")
-include("find_optimal_linearizations_with_err.jl")
+# include("find_optimal_linearizations_with_err.jl")
 
 
 
