@@ -118,8 +118,12 @@ to_approx_list[2] = to_approx
 ############################
 
 tic()
-linear_approximations = find_optimal_linearizations_error_tracking(network_data, to_approx_list, inflation_factors, solver_ipopt, solver_lp, cnst_gen_max_iter, tol, obj_tuning)
+linear_approximations = find_optimal_linearizations(network_data, to_approx_list, inflation_factors, solver_ipopt, solver_lp, cnst_gen_max_iter, tol, obj_tuning)
 time = toc()
+
+# tic()
+# linear_approximations = find_optimal_linearizations_error_tracking(network_data, to_approx_list, inflation_factors, solver_ipopt, solver_lp, cnst_gen_max_iter, tol, obj_tuning)
+# time = toc()
 
 # num_bus = length(network_data_old["bus"])
 # num_branch = length(network_data_old["branch"])
