@@ -149,6 +149,7 @@ solver_warm = IpoptSolver(print_level=0,mu_init = 1e-5)
 step_factor = 1
 
 warm = true
+backtrack = true
 
 for iter = 1:cnst_gen_max_iter
 
@@ -215,17 +216,19 @@ for iter = 1:cnst_gen_max_iter
     end
 
 
-    if @show 0.5*(val0 + val1) > err + tol
+    if @show 0.5*(val0 + val1) > err + tol  &&  backtrack == true
         step_factor = step_factor*2
         for i in active_buses
             l_pb_val[string(i)] = l_pb_val_old[string(i)]
             l_qb_val[string(i)] = l_qb_val_old[string(i)]
         end
         warm = false
+        backtrack =  false
         # break
         continue # skip doing gradient descent step
     end
 
+    backtrack = true
     warm = true
 
     @show err = 0.5*(val0 + val1)
