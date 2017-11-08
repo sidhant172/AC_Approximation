@@ -74,8 +74,8 @@ function find_optimal_linearization(network_data, to_approx, solver, solver_lp, 
 
 # make this an input to the function
 # vars = matread("ptdf_matrices.mat")
-vars = matread("case57_ptdf.mat")
-# vars = matread("case118_ptdf.mat")
+# vars = matread("case57_ptdf.mat")
+vars = matread("case118_ptdf.mat")
 
 pp_jac = Dict{Int,Float64}()
 pq_jac = Dict{Int,Float64}()
