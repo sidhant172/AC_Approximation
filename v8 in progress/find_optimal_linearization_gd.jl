@@ -201,6 +201,11 @@ for iter = 1:cnst_gen_max_iter
     end
 
 
+    if @show 0.5*(val0 + val1) > err + tol
+        step_factor = step_factor*5
+        continue # skip doing gradient descent step
+    end
+
     # Perform gradient descent step
     for i in active_buses
         l_pb_val[string(i)] = l_pb_val[string(i)] - step_pb[i]
@@ -211,9 +216,7 @@ for iter = 1:cnst_gen_max_iter
 
 
 
-    if @show 0.5*(val0 + val1) > err + tol
-        step_factor = step_factor*5
-    end
+
 
     @show err = 0.5*(val0 + val1)
 
