@@ -135,7 +135,17 @@ current_sol = get_current_solution(result["solution"], pm_1_old, to_approx, ind_
 ################################################################################
 
 
+solver_warm = IpoptSolver(print_level=0,mu_init = 1e-3)
+
+
 for iter = 1:cnst_gen_max_iter
+
+    if mod(iter,10) == 0
+        solver_spec = solver
+    else
+        solver_spec = solver_warm
+    end
+
 
     step_size = step_size_const/iter
 
@@ -157,7 +167,7 @@ for iter = 1:cnst_gen_max_iter
     # (result, pm) = run_ac_opf_mod(network_data,solver)
     pm_0 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
     set_warm_start(pm_0,pm_0_old)
-    result = solve_generic_model(pm_0, IpoptSolver(print_level=0,mu_init=1e-4); solution_builder = PowerModels.get_solution)
+    result = solve_generic_model(pm_0, solver_spec; solution_builder = PowerModels.get_solution)
     current_sol = get_current_solution(result["solution"], pm_0, to_approx, ind_gen, ind_bus, ind_branch)
     val0 = result["objective"]/obj_tuning
 
@@ -173,7 +183,7 @@ for iter = 1:cnst_gen_max_iter
     network_data["direction"] = 1
     pm_1 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
     set_warm_start(pm_1,pm_1_old)
-    result = solve_generic_model(pm_1, IpoptSolver(print_level=0,mu_init=1e-4); solution_builder = PowerModels.get_solution)
+    result = solve_generic_model(pm_1, solver_spec; solution_builder = PowerModels.get_solution)
     current_sol = get_current_solution(result["solution"], pm_1, to_approx, ind_gen, ind_bus, ind_branch)
     val1 = result["objective"]/obj_tuning
 
