@@ -73,8 +73,8 @@ function find_optimal_linearization(network_data, to_approx, solver, solver_lp, 
 # Gradient descent solver
 
 # make this an input to the function
-# vars = matread("ptdf_matrices.mat")
-vars = matread("case57_ptdf.mat")
+vars = matread("ptdf_matrices.mat")
+# vars = matread("case57_ptdf.mat")
 # vars = matread("case118_ptdf.mat")
 
 pp_jac = Dict{Int,Float64}()
@@ -239,7 +239,7 @@ for iter = 1:cnst_gen_max_iter
         warm = false
         backtrack =  false
 
-        if ctr == 5
+        if ctr == 4
             break
         end
         continue # skip doing gradient descent step
