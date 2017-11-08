@@ -111,7 +111,7 @@ for i in active_buses
 end
 
 
-step_size_const = 1e-2
+step_size_const = 1e-3
 val0 = 0
 val1 = 0
 
