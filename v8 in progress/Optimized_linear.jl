@@ -43,7 +43,7 @@ load_inflation = 0.25    # defining range of generation conditions
 
 tol = gen_inflation*1e-2
 
-obj_tuning = 1e2
+obj_tuning = 1e1
 
 # quantity = "line_real_power"
 # quantity_to_approx = "line_reactive_power"
@@ -63,10 +63,9 @@ network_data_old = deepcopy(network_data)
 # line = (11,5,11)
 
 
-solver_ipopt = IpoptSolver(print_level=0)#
-solver_warm = IpoptSolver(print_level=0,mu_init=1e-5)
+# solver_ipopt = IpoptSolver(print_level=0)#
 # solver_ipopt = IpoptSolver()
-# solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
+solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
 # solver_ipopt = IpoptSolver(linear_solver="ma97")
 
 solver_lp = GLPKSolverLP()
