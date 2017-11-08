@@ -110,6 +110,8 @@ end
 
 
 step_size_const = 1e-3
+val0 = 0
+val1 = 0
 
 for iter = 1:cnst_gen_max_iter
 
@@ -174,7 +176,7 @@ end
     approximation["l_v"] = l_v_val
     approximation["l_pb"] = l_pb_val
     approximation["l_qb"] = l_qb_val
-    approximation["error"] = getvalue(z)
+    approximation["error"] = 0.5*(val0+val1)
 
     return approximation
 
