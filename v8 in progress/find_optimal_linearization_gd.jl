@@ -195,7 +195,7 @@ for iter = 1:cnst_gen_max_iter
     l_pb_val[string(slack)] = 0
 
 
-    @show val0 + val1
+    @show 0.5*(val0 + val1)
 
 
     pm_0_old = pm_0
