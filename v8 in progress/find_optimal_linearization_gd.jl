@@ -169,12 +169,12 @@ for iter = 1:cnst_gen_max_iter
 
     step_size = step_size_const/step_factor
 
-    solver_spec = solver_warm
-    if warm == false
-        solver_spec = solver
-    else
-        solver_spec = solver_warm
-    end
+    solver_spec = solver
+    # if warm == false
+    #     solver_spec = solver
+    # else
+    #     solver_spec = solver_warm
+    # end
 
 
     @show iter
