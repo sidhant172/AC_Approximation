@@ -111,7 +111,7 @@ for i in active_buses
 end
 
 
-step_size_const = 1e-3
+step_size_const = 1e-2
 val0 = 0
 val1 = 0
 
@@ -137,7 +137,7 @@ current_sol = get_current_solution(result["solution"], pm_1_old, to_approx, ind_
 
 for iter = 1:cnst_gen_max_iter
 
-    step_size = step_size_const/sqrt(iter)
+    step_size = step_size_const/iter
 
     @show iter
 
