@@ -40,11 +40,11 @@ function get_current_solution(solution::Dict{String,Any}, pm::GenericPowerModel,
     val = 0
     if quantity == "line_real_power"
         # val_JuMP_var = getindex(model, :p)
-        val_JuMP_var = pm.var[:p]
+        val_JuMP_var = pm.var[:nw][0][:p]
         val = getvalue(val_JuMP_var[index])
     elseif quantity == "line_reactive_power"
         # val_JuMP_var = getindex(model, :q)
-        val_JuMP_var = pm.var[:q]
+        val_JuMP_var = pm.var[:nw][0][:q]
         val = getvalue(val_JuMP_var[index])
     elseif quantity == "bus_voltage_magnitude"
         val = vm_curr[index]
