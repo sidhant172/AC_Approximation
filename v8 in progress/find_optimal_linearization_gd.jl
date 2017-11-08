@@ -225,7 +225,10 @@ for iter = 1:cnst_gen_max_iter
         end
         warm = false
         backtrack =  false
-        # break
+
+        if step_factor > 2^10
+            break
+        end
         continue # skip doing gradient descent step
     end
 
