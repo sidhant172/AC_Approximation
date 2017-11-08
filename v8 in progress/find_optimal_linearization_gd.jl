@@ -214,6 +214,11 @@ for iter = 1:cnst_gen_max_iter
         continue # skip doing gradient descent step
     end
 
+    for i in active_buses
+        l_pb_val_old[string(i)] = l_pb_val[string(i)]
+        l_qb_val_old[string(i)] = l_qb_val[string(i)]
+    end
+
     # Perform gradient descent step
     for i in active_buses
         l_pb_val[string(i)] = l_pb_val[string(i)] - step_pb[i]
@@ -224,10 +229,6 @@ for iter = 1:cnst_gen_max_iter
 
 
 
-    for i in active_buses
-        l_pb_val_old[string(i)] = l_pb_val[string(i)]
-        l_qb_val_old[string(i)] = l_qb_val[string(i)]
-    end
 
     @show err = 0.5*(val0 + val1)
 
