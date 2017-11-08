@@ -137,7 +137,7 @@ current_sol = get_current_solution(result["solution"], pm_1_old, to_approx, ind_
 
 for iter = 1:cnst_gen_max_iter
 
-    step_size = step_size_const
+    step_size = step_size_const/iter
 
     @show iter
 
