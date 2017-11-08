@@ -19,7 +19,7 @@ include("find_linearization_error.jl")
 # OPTIONS
 
 # algorithm parameters
-cnst_gen_max_iter  = 40   # max iterations for constraint generation
+cnst_gen_max_iter  = 200   # max iterations for constraint generation
 # tol = 1e-4   # convergence tolerance
 
 # operational conditions
