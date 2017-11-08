@@ -73,7 +73,8 @@ function find_optimal_linearization(network_data, to_approx, solver, solver_lp, 
 # Gradient descent solver
 
 # make this an input to the function
-vars = matread("ptdf_matrices.mat")
+# vars = matread("ptdf_matrices.mat")
+vars = matread("case57_ptdf.mat")
 
 pp_jac = Dict{Int,Float64}()
 pq_jac = Dict{Int,Float64}()
@@ -113,6 +114,26 @@ step_size_const = 1e-3
 val0 = 0
 val1 = 0
 
+
+
+######## solve once at the beginning to get warm start point
+network_data["l0"] = l0_val
+network_data["l_v"] = l_v_val
+network_data["l_pb"] = l_pb_val
+network_data["l_qb"] = l_qb_val
+
+
+network_data["direction"] = 0   # direction of maximization
+(result, pm_0_old) = run_ac_opf_mod(network_data,solver)
+current_sol = get_current_solution(result["solution"], pm_0_old, to_approx, ind_gen, ind_bus, ind_branch)
+
+network_data["direction"] = 1
+(result, pm_1_old) = run_ac_opf_mod(network_data,solver)
+current_sol = get_current_solution(result["solution"], pm_1_old, to_approx, ind_gen, ind_bus, ind_branch)
+
+################################################################################
+
+
 for iter = 1:cnst_gen_max_iter
 
     step_size = step_size_const/iter
@@ -132,8 +153,11 @@ for iter = 1:cnst_gen_max_iter
     end
 
     network_data["direction"] = 0   # direction of maximization
-    (result, pm) = run_ac_opf_mod(network_data,solver)
-    current_sol = get_current_solution(result["solution"], pm, to_approx, ind_gen, ind_bus, ind_branch)
+    # (result, pm) = run_ac_opf_mod(network_data,solver)
+    pm_0 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
+    set_warm_start(pm_0,pm_0_old)
+    result = solve_generic_model(pm_0, IpoptSolver(print_level=0,mu_init=1e-5); solution_builder = PowerModels.get_solution)
+    current_sol = get_current_solution(result["solution"], pm_0, to_approx, ind_gen, ind_bus, ind_branch)
     val0 = result["objective"]/obj_tuning
 
     for i in gen_buses
@@ -146,8 +170,10 @@ for iter = 1:cnst_gen_max_iter
     end
 
     network_data["direction"] = 1
-    (result, pm) = run_ac_opf_mod(network_data,solver)
-    current_sol = get_current_solution(result["solution"], pm, to_approx, ind_gen, ind_bus, ind_branch)
+    pm_1 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
+    set_warm_start(pm_1,pm_1_old)
+    result = solve_generic_model(pm_1, IpoptSolver(print_level=0,mu_init=1e-6); solution_builder = PowerModels.get_solution)
+    current_sol = get_current_solution(result["solution"], pm_1, to_approx, ind_gen, ind_bus, ind_branch)
     val1 = result["objective"]/obj_tuning
 
     for i in gen_buses
@@ -170,6 +196,10 @@ for iter = 1:cnst_gen_max_iter
 
 
     @show val0 + val1
+
+
+    pm_0_old = pm_0
+    pm_1_old = pm_1
 end
 
     approximation["l0"] = l0_val

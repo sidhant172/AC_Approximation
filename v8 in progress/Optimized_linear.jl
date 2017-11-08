@@ -7,7 +7,7 @@ using GLPKMathProgInterface
 using MAT
 
 
-algo = 1
+algo = 0
 
 include("opf_mod.jl")
 include("support_functions.jl")
@@ -49,11 +49,11 @@ obj_tuning = 1
 # quantity_to_approx = "line_reactive_power"
 # quantity_to_approx = "bus_voltage_magnitude"
 
-network_data = PowerModels.parse_file("case24_ieee_rts.m")
+# network_data = PowerModels.parse_file("case24_ieee_rts.m")
 # network_data = PowerModels.parse_file("nesta_case14_ieee.m")
 # network_data = PowerModels.parse_file("nesta_case30_as.m")
 # network_data = PowerModels.parse_file("case118.m")
-# network_data = PowerModels.parse_file("nesta_case57_ieee.m")
+network_data = PowerModels.parse_file("nesta_case57_ieee.m")
 # network_data = PowerModels.parse_file("nesta_case300_ieee.m")
 
 network_data_old = deepcopy(network_data)
@@ -64,6 +64,7 @@ network_data_old = deepcopy(network_data)
 
 
 solver_ipopt = IpoptSolver(print_level=0,tol=1e-12) #
+solver_warm = IpoptSolver(print_level=0,mu_init=1e-5)
 # solver_ipopt = IpoptSolver()
 # solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
 # solver_ipopt = IpoptSolver(linear_solver="ma97")

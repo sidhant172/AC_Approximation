@@ -182,6 +182,61 @@ function find_degrees_of_freedom(network_data, solver)
 end
 
 
+function set_warm_start(pm::GenericPowerModel ,pm_old::GenericPowerModel)
+    for i in ids(pm_old,:bus)
+        # voltage variables starting point
+        vm = pm.var[:nw][0][:vm][i]
+        va = pm.var[:nw][0][:va][i]
+        vm_old = pm_old.var[:nw][0][:vm][i]
+        va_old = pm_old.var[:nw][0][:va][i]
+
+        # @show getvalue(vm_old)
+        # @show getvalue(va_old)
+
+        JuMP.setvalue(vm,getvalue(vm_old))
+        JuMP.setvalue(va,getvalue(va_old))
+
+        # load variables starting point
+        pd = getindex(pm.model,:pd)[i]
+        qd = getindex(pm.model,:qd)[i]
+
+        pd_old = getindex(pm_old.model,:pd)[i]
+        qd_old = getindex(pm_old.model,:qd)[i]
+
+        JuMP.setvalue(pd,getvalue(pd_old))
+        JuMP.setvalue(qd,getvalue(qd_old))
+
+        # @show getvalue(pd_old)
+        # @show getvalue(qd_old)
+    end
+
+
+    for i in ids(pm_old,:gen)
+        pg = pm.var[:nw][0][:pg][i]
+        qg = pm.var[:nw][0][:qg][i]
+        pg_old = pm_old.var[:nw][0][:pg][i]
+        qg_old = pm_old.var[:nw][0][:qg][i]
+
+        JuMP.setvalue(pg,getvalue(pg_old))
+        JuMP.setvalue(qg,getvalue(qg_old))
+    end
+
+
+    for i in ids(pm_old,:branch)
+        p = pm.var[:nw][0][:p][(i,pm.data["branch"][string(i)]["f_bus"],pm.data["branch"][string(i)]["t_bus"])]
+        p_old = pm_old.var[:nw][0][:p][(i,pm.data["branch"][string(i)]["f_bus"],pm.data["branch"][string(i)]["t_bus"])]
+        # @show getvalue(p_old)
+
+        q = pm.var[:nw][0][:q][(i,pm.data["branch"][string(i)]["f_bus"],pm.data["branch"][string(i)]["t_bus"])]
+        q_old = pm_old.var[:nw][0][:q][(i,pm.data["branch"][string(i)]["f_bus"],pm.data["branch"][string(i)]["t_bus"])]
+        # @show getvalue(q_old)
+
+        JuMP.setvalue(p,getvalue(p_old))
+        JuMP.setvalue(q,getvalue(q_old))
+    end
+end
+
+
 
 
 ################################################################################
