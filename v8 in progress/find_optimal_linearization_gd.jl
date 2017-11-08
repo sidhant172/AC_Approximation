@@ -109,7 +109,7 @@ for i in active_buses
 end
 
 
-step_size = 1e-4
+step_size = 1e-6
 
 for iter = 1:cnst_gen_max_iter
 
