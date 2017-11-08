@@ -216,6 +216,7 @@ for iter = 1:cnst_gen_max_iter
     end
 
     @show err = 0.5*(val0 + val1)
+    @show step_factor
 
     for i in active_buses
         l_pb_val_old[string(i)] = l_pb_val[string(i)]
