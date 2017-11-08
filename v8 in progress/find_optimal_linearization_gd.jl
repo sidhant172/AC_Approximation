@@ -210,13 +210,13 @@ for iter = 1:cnst_gen_max_iter
 
 
     if @show 0.5*(val0 + val1) > err + tol
-        # step_factor = step_factor*2
-        # for i in active_buses
-        #     l_pb_val[string(i)] = l_pb_val_old[string(i)]
-        #     l_qb_val[string(i)] = l_qb_val_old[string(i)]
-        # end
+        step_factor = step_factor*2
+        for i in active_buses
+            l_pb_val[string(i)] = l_pb_val_old[string(i)]
+            l_qb_val[string(i)] = l_qb_val_old[string(i)]
+        end
         # break
-        # continue # skip doing gradient descent step
+        continue # skip doing gradient descent step
     end
 
     @show err = 0.5*(val0 + val1)
