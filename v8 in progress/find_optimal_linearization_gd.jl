@@ -149,7 +149,7 @@ solver_warm = IpoptSolver(print_level=0)
 
 step_factor = 1
 
-warm = true
+warm = false
 backtrack = true
 
 for iter = 1:cnst_gen_max_iter
@@ -230,7 +230,7 @@ for iter = 1:cnst_gen_max_iter
     end
 
     backtrack = true
-    warm = true
+    warm = false
 
     @show err = 0.5*(val0 + val1)
     @show step_factor
