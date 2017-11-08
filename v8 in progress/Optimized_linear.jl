@@ -49,10 +49,10 @@ obj_tuning = 1
 # quantity_to_approx = "line_reactive_power"
 # quantity_to_approx = "bus_voltage_magnitude"
 
-# network_data = PowerModels.parse_file("case24_ieee_rts.m")
+network_data = PowerModels.parse_file("case24_ieee_rts.m")
 # network_data = PowerModels.parse_file("nesta_case14_ieee.m")
 # network_data = PowerModels.parse_file("nesta_case30_as.m")
-network_data = PowerModels.parse_file("case118.m")
+# network_data = PowerModels.parse_file("case118.m")
 # network_data = PowerModels.parse_file("nesta_case57_ieee.m")
 # network_data = PowerModels.parse_file("nesta_case300_ieee.m")
 
@@ -84,7 +84,7 @@ to_approx_list = Dict{Int64,Any}()
 
 
 # line_num = 18
-line_num = 10
+line_num = 18
 
 to_approx = Dict{String,Any}()
 to_approx["quantity"] = "line_real_power"
