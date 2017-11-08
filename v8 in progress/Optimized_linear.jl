@@ -37,8 +37,8 @@ end
 # tol = 1e-4   # convergence tolerance
 
 # operational conditions
-gen_inflation = 0.2   # defining range of loading conditions
-load_inflation = 0.2    # defining range of generation conditions
+gen_inflation = 0.4   # defining range of loading conditions
+load_inflation = 0.4    # defining range of generation conditions
 # v_inflation = 0.1
 
 tol = gen_inflation*1e-2
@@ -52,8 +52,8 @@ obj_tuning = 1e2
 # network_data = PowerModels.parse_file("case24_ieee_rts.m")
 # network_data = PowerModels.parse_file("nesta_case14_ieee.m")
 # network_data = PowerModels.parse_file("nesta_case30_as.m")
-network_data = PowerModels.parse_file("case118.m")
-# network_data = PowerModels.parse_file("nesta_case57_ieee.m")
+# network_data = PowerModels.parse_file("case118.m")
+network_data = PowerModels.parse_file("nesta_case57_ieee.m")
 # network_data = PowerModels.parse_file("nesta_case300_ieee.m")
 
 network_data_old = deepcopy(network_data)
