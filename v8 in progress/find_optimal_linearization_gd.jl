@@ -203,7 +203,7 @@ for iter = 1:cnst_gen_max_iter
 
     if @show 0.5*(val0 + val1) > err + tol
         step_factor = step_factor*5
-        continue # skip doing gradient descent step
+        # continue # skip doing gradient descent step
     end
 
     # Perform gradient descent step
