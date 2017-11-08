@@ -84,17 +84,17 @@ to_approx_list = Dict{Int64,Any}()
 
 
 # line_num = 18
-line_num = 1
+line_num = 18
 
 to_approx = Dict{String,Any}()
 to_approx["quantity"] = "line_real_power"
 to_approx["quantity_index"] = (line_num,network_data["branch"][string(line_num)]["f_bus"],network_data["branch"][string(line_num)]["t_bus"])
 to_approx_list[1] = to_approx
 
-# to_approx = Dict{String,Any}()
-# to_approx["quantity"] = "line_reactive_power"
-# to_approx["quantity_index"] = (line_num,network_data["branch"][string(line_num)]["f_bus"],network_data["branch"][string(line_num)]["t_bus"])
-# to_approx_list[2] = to_approx
+to_approx = Dict{String,Any}()
+to_approx["quantity"] = "line_reactive_power"
+to_approx["quantity_index"] = (line_num,network_data["branch"][string(line_num)]["f_bus"],network_data["branch"][string(line_num)]["t_bus"])
+to_approx_list[2] = to_approx
 
 # to_approx = Dict{String,Any}()
 # to_approx["quantity"] = "bus_voltage_magnitude"

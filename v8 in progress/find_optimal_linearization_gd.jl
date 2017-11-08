@@ -139,7 +139,7 @@ current_sol = get_current_solution(result["solution"], pm_1_old, to_approx, ind_
 val1 = result["objective"]/obj_tuning
 ################################################################################
 
-err = 0.5*(val0+val1)
+@show err = 0.5*(val0+val1)
 
 # solver_warm = IpoptSolver(linear_solver="ma97",print_level=0,mu_init = 1e-8)
 # solver_warm = IpoptSolver(print_level=0,mu_init = 1e-3)
