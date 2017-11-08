@@ -8,8 +8,8 @@ using MAT
 
 include("opf_mod.jl")
 include("support_functions.jl")
-# include("find_optimal_linearization.jl")
-include("find_optimal_linearization_gd.jl")
+include("find_optimal_linearization.jl")
+# include("find_optimal_linearization_gd.jl")
 include("find_linearization_error.jl")
 # include("find_optimal_linearizations_with_err.jl")
 
@@ -19,12 +19,12 @@ include("find_linearization_error.jl")
 # OPTIONS
 
 # algorithm parameters
-cnst_gen_max_iter  = 30   # max iterations for constraint generation
+cnst_gen_max_iter  = 40   # max iterations for constraint generation
 # tol = 1e-4   # convergence tolerance
 
 # operational conditions
-gen_inflation = 0.1     # defining range of loading conditions
-load_inflation = 0.1    # defining range of generation conditions
+gen_inflation = 0.2     # defining range of loading conditions
+load_inflation = 0.2    # defining range of generation conditions
 # v_inflation = 0.1
 
 tol = gen_inflation*1e-2
