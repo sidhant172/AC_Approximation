@@ -148,13 +148,15 @@ solver_warm = IpoptSolver(print_level=0,mu_init = 1e-5)
 
 step_factor = 1
 
+warm = true
+
 for iter = 1:cnst_gen_max_iter
 
 
     step_size = step_size_const/step_factor
 
     solver_spec = solver_warm
-    if mod(iter,10) == 0
+    if warm == false
         solver_spec = solver
     else
         solver_spec = solver_warm
@@ -215,9 +217,12 @@ for iter = 1:cnst_gen_max_iter
             l_pb_val[string(i)] = l_pb_val_old[string(i)]
             l_qb_val[string(i)] = l_qb_val_old[string(i)]
         end
+        warm = false
         # break
         continue # skip doing gradient descent step
     end
+
+    warm = true
 
     @show err = 0.5*(val0 + val1)
     @show step_factor
