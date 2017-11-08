@@ -2,7 +2,7 @@
 #sbatch --job-name=case57 --partition=scaling --output=case57.out ./run_tests line_real_power 18.0 0.2
 
 #scalings='0.4 0.3 0.2 0.1 0.05'
-scalings='0.01'
+scalings='0.1'
 c=24
 #c=118
 #filename=nesta_case57_ieee.m
