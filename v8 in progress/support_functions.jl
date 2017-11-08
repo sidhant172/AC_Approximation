@@ -223,16 +223,30 @@ function set_warm_start(pm::GenericPowerModel ,pm_old::GenericPowerModel)
 
 
     for i in ids(pm_old,:branch)
-        p = pm.var[:nw][0][:p][(i,pm.data["branch"][string(i)]["f_bus"],pm.data["branch"][string(i)]["t_bus"])]
-        p_old = pm_old.var[:nw][0][:p][(i,pm.data["branch"][string(i)]["f_bus"],pm.data["branch"][string(i)]["t_bus"])]
+        pf = pm.var[:nw][0][:p][(i,pm.data["branch"][string(i)]["f_bus"],pm.data["branch"][string(i)]["t_bus"])]
+        pf_old = pm_old.var[:nw][0][:p][(i,pm.data["branch"][string(i)]["f_bus"],pm.data["branch"][string(i)]["t_bus"])]
         # @show getvalue(p_old)
 
-        q = pm.var[:nw][0][:q][(i,pm.data["branch"][string(i)]["f_bus"],pm.data["branch"][string(i)]["t_bus"])]
-        q_old = pm_old.var[:nw][0][:q][(i,pm.data["branch"][string(i)]["f_bus"],pm.data["branch"][string(i)]["t_bus"])]
+        qf = pm.var[:nw][0][:q][(i,pm.data["branch"][string(i)]["f_bus"],pm.data["branch"][string(i)]["t_bus"])]
+        qf_old = pm_old.var[:nw][0][:q][(i,pm.data["branch"][string(i)]["f_bus"],pm.data["branch"][string(i)]["t_bus"])]
         # @show getvalue(q_old)
 
-        JuMP.setvalue(p,getvalue(p_old))
-        JuMP.setvalue(q,getvalue(q_old))
+        JuMP.setvalue(pf,getvalue(pf_old))
+        JuMP.setvalue(qf,getvalue(qf_old))
+
+
+
+
+        pt = pm.var[:nw][0][:p][(i,pm.data["branch"][string(i)]["t_bus"],pm.data["branch"][string(i)]["f_bus"])]
+        pt_old = pm_old.var[:nw][0][:p][(i,pm.data["branch"][string(i)]["t_bus"],pm.data["branch"][string(i)]["f_bus"])]
+        # @show getvalue(p_old)
+
+        qt = pm.var[:nw][0][:q][(i,pm.data["branch"][string(i)]["t_bus"],pm.data["branch"][string(i)]["f_bus"])]
+        qt_old = pm_old.var[:nw][0][:q][(i,pm.data["branch"][string(i)]["t_bus"],pm.data["branch"][string(i)]["f_bus"])]
+        # @show getvalue(q_old)
+
+        JuMP.setvalue(pt,getvalue(pt_old))
+        JuMP.setvalue(qt,getvalue(qt_old))
     end
 end
 
