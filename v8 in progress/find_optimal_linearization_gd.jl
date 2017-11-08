@@ -127,18 +127,24 @@ network_data["l_qb"] = l_qb_val
 network_data["direction"] = 0   # direction of maximization
 (result, pm_0_old) = run_ac_opf_mod(network_data,solver)
 current_sol = get_current_solution(result["solution"], pm_0_old, to_approx, ind_gen, ind_bus, ind_branch)
+val0 = result["objective"]/obj_tuning
 
 network_data["direction"] = 1
 (result, pm_1_old) = run_ac_opf_mod(network_data,solver)
 current_sol = get_current_solution(result["solution"], pm_1_old, to_approx, ind_gen, ind_bus, ind_branch)
-
+val1 = result["objective"]/obj_tuning
 ################################################################################
 
+err = 0.5*(val0+val1)
 
 solver_warm = IpoptSolver(print_level=0,mu_init = 1e-3)
 
+step_factor = 1
 
 for iter = 1:cnst_gen_max_iter
+
+
+    step_size = step_size_const/step_factor
 
     if mod(iter,10) == 0
         solver_spec = solver
@@ -146,8 +152,6 @@ for iter = 1:cnst_gen_max_iter
         solver_spec = solver_warm
     end
 
-
-    step_size = step_size_const/iter
 
     @show iter
 
@@ -206,7 +210,12 @@ for iter = 1:cnst_gen_max_iter
     l_pb_val[string(slack)] = 0
 
 
-    @show 0.5*(val0 + val1)
+
+    if @show 0.5*(val0 + val1) > err + tol
+        step_factor = step_factor/5
+    end
+
+    @show err = 0.5*(val0 + val1)
 
 
     pm_0_old = pm_0
