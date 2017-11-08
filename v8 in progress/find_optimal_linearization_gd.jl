@@ -228,7 +228,7 @@ for iter = 1:cnst_gen_max_iter
     end
 
 
-    if @show 0.5*(val0 + val1) > err + 3*tol  &&  backtrack == true
+    if @show 0.5*(val0 + val1) > err + 0*tol  &&  backtrack == true
         step_factor = step_factor*2
         for i in active_buses
             l_pb_val[string(i)] = l_pb_val_old[string(i)]
