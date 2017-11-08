@@ -6,20 +6,34 @@ using GLPKMathProgInterface
 # using Gurobi
 using MAT
 
+
+algo = parse(Int64,ARGS[1])
+
 include("opf_mod.jl")
 include("support_functions.jl")
-include("find_optimal_linearization.jl")
-# include("find_optimal_linearization_gd.jl")
+
+if algo == 0
+    include("find_optimal_linearization.jl")
+elseif algo == 1
+    include("find_optimal_linearization_gd.jl")
+end
+
 include("find_linearization_error.jl")
 # include("find_optimal_linearizations_with_err.jl")
-
 
 
 ################################################################################
 # OPTIONS
 
+
+if algo == 0
+    cnst_gen_max_iter = 1000
+elseif algo == 1
+    cnst_gen_max_iter = 40
+end
+
 # algorithm parameters
-cnst_gen_max_iter  = 40   # max iterations for constraint generation
+# cnst_gen_max_iter  = 40   # max iterations for constraint generation
 # tol = 1e-4   # convergence tolerance
 
 # operational conditions
@@ -29,7 +43,7 @@ load_inflation = 0.2    # defining range of generation conditions
 
 tol = gen_inflation*1e-2
 
-obj_tuning = 1e1
+obj_tuning = 1
 
 # quantity = "line_real_power"
 # quantity_to_approx = "line_reactive_power"
