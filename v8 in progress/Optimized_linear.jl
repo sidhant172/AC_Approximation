@@ -43,7 +43,7 @@ load_inflation = 0.1    # defining range of generation conditions
 
 tol = gen_inflation*1e-2
 
-obj_tuning = 1
+obj_tuning = 1e2
 
 # quantity = "line_real_power"
 # quantity_to_approx = "line_reactive_power"
