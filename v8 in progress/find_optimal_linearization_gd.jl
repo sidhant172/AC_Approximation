@@ -109,9 +109,11 @@ for i in active_buses
 end
 
 
-step_size = 1e-3
+step_size_const = 1e-3
 
 for iter = 1:cnst_gen_max_iter
+
+    step_size = step_size_const/iter
 
     @show iter
 
