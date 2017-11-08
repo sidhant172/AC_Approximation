@@ -90,7 +90,8 @@ if to_approx["quantity"] == "line_real_power"
         pq_jac[i] = vars["Hac_f"][to_approx["quantity_index"][1],length(ind_bus)+i]
     end
 elseif to_approx["quantity"] == "line_reactive_power"
-    println("not yet supported")
+    qp_jac[i] = vars["Hac_f"][length(ind_branch)+to_approx["quantity_index"][1],i]
+    qq_jac[i] = vars["Hac_f"][length(ind_branch)+to_approx["quantity_index"][1],length(ind_bus)+i]
 else println("not supported")
 end
 
@@ -108,10 +109,18 @@ l_pb_val_old = Dict{String,Float64}()
 l_qb_val_old = Dict{String,Float64}()
 for i in active_buses
     # initialize with jacobian values for warm start
-    l_pb_val[string(i)] = pp_jac[i]
-    l_qb_val[string(i)] = pq_jac[i]
-    l_pb_val_old[string(i)] = pp_jac[i]
-    l_qb_val_old[string(i)] = pq_jac[i]
+    if to_approx["quantity"] == "line_real_power"
+        l_pb_val[string(i)] = pp_jac[i]
+        l_qb_val[string(i)] = pq_jac[i]
+        l_pb_val_old[string(i)] = pp_jac[i]
+        l_qb_val_old[string(i)] = pq_jac[i]
+    elseif to_approx["quantity"] == "line_reactive_power"
+        l_pb_val[string(i)] = qp_jac[i]
+        l_qb_val[string(i)] = qq_jac[i]
+        l_pb_val_old[string(i)] = qp_jac[i]
+        l_qb_val_old[string(i)] = qq_jac[i]
+    end
+
 end
 
 
