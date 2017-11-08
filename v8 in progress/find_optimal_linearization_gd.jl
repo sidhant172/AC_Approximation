@@ -150,11 +150,11 @@ for iter = 1:cnst_gen_max_iter
 
     step_size = step_size_const/step_factor
 
-    if mod(iter,10) == 0
-        solver_spec = solver
-    else
-        solver_spec = solver_warm
-    end
+    # if mod(iter,10) == 0
+    #     solver_spec = solver
+    # else
+    #     solver_spec = solver_warm
+    # end
 
 
     @show iter
