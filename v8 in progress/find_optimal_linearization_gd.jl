@@ -239,7 +239,7 @@ for iter = 1:cnst_gen_max_iter
         warm = false
         backtrack =  false
 
-        if ctr == 10
+        if ctr == 6
             break
         end
         continue # skip doing gradient descent step
