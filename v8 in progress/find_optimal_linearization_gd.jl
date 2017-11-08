@@ -141,7 +141,9 @@ val1 = result["objective"]/obj_tuning
 
 err = 0.5*(val0+val1)
 
-solver_warm = IpoptSolver(print_level=0,mu_init = 1e-7)
+# solver_warm = IpoptSolver(print_level=0,mu_init = 1e-7)
+
+solver_warm = IpoptSolver(linear_solver="ma97",mu_init = 1e-7)
 
 step_factor = 1
 
