@@ -153,14 +153,14 @@ val1 = result["objective"]/obj_tuning
 @show err = 0.5*(val0+val1)
 
 # solver_warm = IpoptSolver(linear_solver="ma97",print_level=0,mu_init = 1e-8)
-# solver_warm = IpoptSolver(print_level=0,mu_init = 1e-3)
-solver_warm = IpoptSolver(print_level=0)
+solver_warm = IpoptSolver(print_level=0,mu_init = 1e-5)
+# solver_warm = IpoptSolver(print_level=0)
 
 # solver_warm = IpoptSolver(linear_solver="ma97",mu_init = 1e-7)
 
 step_factor = 1
 
-warm = false
+warm = true
 backtrack = true
 
 for iter = 1:cnst_gen_max_iter
@@ -244,7 +244,7 @@ for iter = 1:cnst_gen_max_iter
     end
 
     backtrack = true
-    warm = false
+    warm = true
 
     @show err = 0.5*(val0 + val1)
     @show step_factor
