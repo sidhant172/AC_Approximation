@@ -8,8 +8,8 @@ using MAT
 
 include("opf_mod.jl")
 include("support_functions.jl")
-# include("find_optimal_linearization.jl")
-include("find_optimal_linearization_gd.jl")
+include("find_optimal_linearization.jl")
+# include("find_optimal_linearization_gd.jl")
 include("find_linearization_error.jl")
 # include("find_optimal_linearizations_with_err.jl")
 
@@ -68,7 +68,8 @@ inflation_factors["load_inflation"] = load_inflation
 to_approx_list = Dict{Int64,Any}()
 
 
-line_num = 18
+# line_num = 18
+line_num = 10
 
 to_approx = Dict{String,Any}()
 to_approx["quantity"] = "line_real_power"
