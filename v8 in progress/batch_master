@@ -1,0 +1,43 @@
+#!/bin/bash
+#sbatch --job-name=case57 --partition=scaling --output=case57.out ./run_tests line_real_power 18.0 0.2
+
+#scalings='0.4 0.3 0.2 0.1 0.05'
+scalings='0.01'
+c=24
+#c=118
+#filename=nesta_case57_ieee.m
+filename=case24_ieee_rts.m
+#filename=nesta_case14_ieee.m
+#filename=nesta_case30_as.m
+#filename=case118.m
+dirname=results$c
+lines=38
+
+mkdir $dirname
+
+for i in $scalings
+do
+   for k in `seq 1 $lines`
+   do
+      sbatch --job-name=case$c_line_$k --partition=scaling --output=output_files/real_$k.out ./run_tests $filename $dirname line_real_power $k $i 
+   done
+done
+
+for i in $scalings
+do
+   for k in `seq 1 $lines`
+   do
+      sbatch --job-name=case$c_line_$k --partition=scaling --output=output_files/reactive_$k.out ./run_tests $filename $dirname line_reactive_power $k $i
+   done
+done
+
+
+#for i in '0.1 0.2 0.3'
+#do
+#   for k in {1..5}
+#   do
+#      echo $i
+#      echo $k
+#   done
+#done
+
