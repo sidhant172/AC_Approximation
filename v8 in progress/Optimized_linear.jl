@@ -7,7 +7,7 @@ using GLPKMathProgInterface
 using MAT
 
 
-algo = parse(Int64,ARGS[1])
+algo = 0
 
 include("opf_mod.jl")
 include("support_functions.jl")
