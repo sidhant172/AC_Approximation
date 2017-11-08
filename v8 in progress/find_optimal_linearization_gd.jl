@@ -104,10 +104,14 @@ l0_val = 0
 l_v_val = 0
 l_pb_val = Dict{String,Float64}()
 l_qb_val = Dict{String,Float64}()
+l_pb_val_old = Dict{String,Float64}()
+l_qb_val_old = Dict{String,Float64}()
 for i in active_buses
     # initialize with jacobian values for warm start
     l_pb_val[string(i)] = pp_jac[i]
     l_qb_val[string(i)] = pq_jac[i]
+    l_pb_val_old[string(i)] = pp_jac[i]
+    l_qb_val_old[string(i)] = pq_jac[i]
 end
 
 
@@ -203,7 +207,11 @@ for iter = 1:cnst_gen_max_iter
 
     if @show 0.5*(val0 + val1) > err + tol
         step_factor = step_factor*5
-        # continue # skip doing gradient descent step
+        for i in active_buses
+            l_pb_val[i] = l_pb_val_old[i]
+            l_qb_val[i] = l_qb_val_old[i]
+        end
+        continue # skip doing gradient descent step
     end
 
     # Perform gradient descent step
@@ -216,7 +224,10 @@ for iter = 1:cnst_gen_max_iter
 
 
 
-
+    for i in active_buses
+        l_pb_val_old[i] = l_pb_val[i]
+        l_qb_val_old[i] = l_qb_val[i]
+    end
 
     @show err = 0.5*(val0 + val1)
 
