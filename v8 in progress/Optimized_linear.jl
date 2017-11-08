@@ -23,8 +23,8 @@ cnst_gen_max_iter  = 40   # max iterations for constraint generation
 # tol = 1e-4   # convergence tolerance
 
 # operational conditions
-gen_inflation = 0.3     # defining range of loading conditions
-load_inflation = 0.3    # defining range of generation conditions
+gen_inflation = 0.1     # defining range of loading conditions
+load_inflation = 0.1    # defining range of generation conditions
 # v_inflation = 0.1
 
 tol = gen_inflation*1e-2
