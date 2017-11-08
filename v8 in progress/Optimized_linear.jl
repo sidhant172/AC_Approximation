@@ -29,7 +29,7 @@ include("find_linearization_error.jl")
 if algo == 0
     cnst_gen_max_iter = 1000
 elseif algo == 1
-    cnst_gen_max_iter = 40
+    cnst_gen_max_iter = 80
 end
 
 # algorithm parameters
