@@ -1,0 +1,227 @@
+successfully obtained license
+failed to connect to server
+filename = ARGS[1] = "case24_ieee_rts.m"
+dirname = ARGS[2] = "results24"
+quantity_to_approx = ARGS[3] = "line_real_power"
+linenum = convert(Int64, parse(Float64, ARGS[4])) = 8
+inflation_const = parse(Float64, ARGS[5]) = 0.1
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 24 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 24 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 4 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 4 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 1 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 1 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 12 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 12 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 29 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 29 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 20 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 20 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 32 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 32 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 2 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 2 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 6 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 6 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 25 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 25 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 23 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 23 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 22 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 22 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 11 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 11 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 35 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 35 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 13 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 13 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 5 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 5 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 15 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 15 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 27 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 27 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 31 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 31 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 33 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 33 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 28 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 28 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 16 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 16 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 14 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 14 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 21 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 21 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 38 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 38 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 7 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 7 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 34 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 34 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 8 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 8 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 36 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 36 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 26 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 26 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 17 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 17 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 10 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 10 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 19 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 19 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 37 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 37 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 9 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 9 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 18 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 18 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 30 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 30 from 360.0 to 60.0001403060998 deg.
+WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 3 from -360.0 to -60.0001403060998 deg.
+WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 3 from 360.0 to 60.0001403060998 deg.
+WARNING: the voltage setpoint on generator 24 does not match the value at bus 21
+WARNING: the voltage setpoint on generator 4 does not match the value at bus 1
+WARNING: the voltage setpoint on generator 1 does not match the value at bus 1
+WARNING: the voltage setpoint on generator 12 does not match the value at bus 13
+WARNING: the voltage setpoint on generator 29 does not match the value at bus 22
+WARNING: the voltage setpoint on generator 20 does not match the value at bus 15
+WARNING: the voltage setpoint on generator 32 does not match the value at bus 23
+WARNING: the voltage setpoint on generator 2 does not match the value at bus 1
+WARNING: the voltage setpoint on generator 6 does not match the value at bus 2
+WARNING: the voltage setpoint on generator 25 does not match the value at bus 22
+WARNING: the voltage setpoint on generator 23 does not match the value at bus 18
+WARNING: the voltage setpoint on generator 22 does not match the value at bus 16
+WARNING: the voltage setpoint on generator 11 does not match the value at bus 7
+WARNING: the voltage setpoint on generator 13 does not match the value at bus 13
+WARNING: the voltage setpoint on generator 5 does not match the value at bus 2
+WARNING: the voltage setpoint on generator 15 does not match the value at bus 14
+WARNING: the voltage setpoint on generator 27 does not match the value at bus 22
+WARNING: the voltage setpoint on generator 31 does not match the value at bus 23
+WARNING: the voltage setpoint on generator 33 does not match the value at bus 23
+WARNING: the voltage setpoint on generator 28 does not match the value at bus 22
+WARNING: the voltage setpoint on generator 16 does not match the value at bus 15
+WARNING: the voltage setpoint on generator 14 does not match the value at bus 13
+WARNING: the voltage setpoint on generator 21 does not match the value at bus 15
+WARNING: the voltage setpoint on generator 7 does not match the value at bus 2
+WARNING: the voltage setpoint on generator 8 does not match the value at bus 2
+WARNING: the voltage setpoint on generator 26 does not match the value at bus 22
+WARNING: the voltage setpoint on generator 17 does not match the value at bus 15
+WARNING: the voltage setpoint on generator 10 does not match the value at bus 7
+WARNING: the voltage setpoint on generator 19 does not match the value at bus 15
+WARNING: the voltage setpoint on generator 9 does not match the value at bus 7
+WARNING: the voltage setpoint on generator 18 does not match the value at bus 15
+WARNING: the voltage setpoint on generator 30 does not match the value at bus 22
+WARNING: the voltage setpoint on generator 3 does not match the value at bus 1
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+length(ind_bus) = 24
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+err = 0.5 * (val0 + val1) = 0.0023649853803839023
+iter = 1
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.0023649853803839023
+step_factor = 1
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.0022510651125195943
+iter = 2
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = true
+iter = 3
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.0023649853803839023
+step_factor = 2
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.0011255325562597972
+iter = 4
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = true
+iter = 5
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.0023649853803839023
+step_factor = 4
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.0005627662781298986
+iter = 6
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.002348736227085759
+step_factor = 4
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.0006068445507187274
+iter = 7
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = true
+iter = 8
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.002348736227085759
+step_factor = 8
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.0003034222753593637
+iter = 9
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.0020558136162513556
+step_factor = 8
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.0002555907635615101
+iter = 10
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.002028606051891545
+step_factor = 8
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.00025968870636172963
+iter = 11
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = true
+iter = 12
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.002028606051891545
+step_factor = 16
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.00012984435318086482
+iter = 13
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = true
+iter = 14
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.002028606051891545
+step_factor = 32
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 6.492217659043241e-5
+iter = 15
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = true
+iter = 16
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.002028606051891545
+step_factor = 64
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 3.2461088295216204e-5
+iter = 17
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = true
+elapsed time: 21.038570793 seconds
