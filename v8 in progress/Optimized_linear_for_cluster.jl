@@ -55,7 +55,7 @@ network_data = PowerModels.parse_file(filename)
 network_data_old = deepcopy(network_data)
 
 
-solver_ipopt = IpoptSolver(print_level=0) # , linear_solver="ma97"
+solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma57") # , linear_solver="ma97"
 # solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
 # solver_ipopt = IpoptSolver(linear_solver="ma97")
 
