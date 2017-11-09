@@ -12,21 +12,23 @@ end
 
 
 
-# m = Model(solver=IpoptSolver(hessian_approximation="limited-memory"))
-#
-# JuMP.register(m,:f,2,f,fprime)
-#
-# @variable(m,x[1:2])
-#
-# @NLobjective(m, Min, f(x[1],x[2]) )
-#
-# status = solve(m)
+m = Model(solver=IpoptSolver(hessian_approximation="limited-memory"))
+
+JuMP.register(m,:f,2,f,fprime)
+
+@variable(m,x[1:2])
+
+args = (x[1],x[2])
+
+@NLobjective(m, Min, f(x[1],x[2]) )
+
+status = solve(m)
 
 
-x = [1,2]
-
-
-@show f(x...)
+# x = [3,2]
+#
+#
+# @show f(x...)
 
 # function f(x...)
 #     return sum(x[i] for i in 1:length(x))
