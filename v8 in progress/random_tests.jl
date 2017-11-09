@@ -1,54 +1,45 @@
-using GLPKMathProgInterface
-using PowerModels
-using Distributions
+using JuMP
+using Ipopt
 
+function f(x...)
+    return (x[1]-1)^2 +x[2]^2
+end
 
-max_iter = 100
-
-solver = GLPKSolverLP()
-
-network_data = PowerModels.parse_file("../pglib_opf_case240_pserc.m")
-
-num_bus = length(network_data["bus"])
-# result = run_dc_opf(network_data, solver)
-
-result_dict = Dict{String,Any}()
-
-
-dist = Normal(0,0.03)
-
-perturbations = rand(dist,num_bus)
-
-for iter=1:max_iter
-    network = deepcopy(network_data)
-    for (i,bus) in network["bus"]
-        bus["pd"] = bus["pd"]*(1+rand(dist))
-    end
-    result_dict[string(iter)] = run_dc_opf(network,solver)
+function fprime(g,x...)
+    g[1]=2*(x[1]-1)
+    g[2]=2*x[2]
 end
 
 
-# # m = Model(solver=IpoptSolver(mu_init=1e-9))
-# m = Model(solver=IpoptSolver())
-# #
-# @variable(m,x,start=sqrt(1/3))
-# # @variable(m,x,start=0.9944097250233357)
-# @variable(m,y,start=sqrt(2/3))
-# # @variable(m,y,start=0.10559026622375049)
-# @constraint(m,x^2+y^2<=1)
-# @constraint(m,x+y>=1.1)
-# @objective(m,Min,y+0.2*x)
-# #
+
+# m = Model(solver=IpoptSolver(hessian_approximation="limited-memory"))
+#
+# JuMP.register(m,:f,2,f,fprime)
+#
+# @variable(m,x[1:2])
+#
+# @NLobjective(m, Min, f(x[1],x[2]) )
+#
 # status = solve(m)
 
-# m = Model(solver=IpoptSolver(linear_solver="ma97"))
+
+x = [1,2]
 
 
+@show f(x...)
 
-
-# network_data = PowerModels.parse_file("nesta_case300_ieee.m")
+# function f(x...)
+#     return sum(x[i] for i in 1:length(x))
+# end
 #
-# # solver = IpoptSolver()
-# solver = IpoptSolver(linear_solver="ma97")
+# x = [1,2,3,4]
+# arg = (x[1],x[2],x[3])
+# # @show f(x[1],x[2],x[3])
+# @show f(x...)
+# function f(x; kwargs...)
+#     @show c = kwargs[1][2]
+#     return x + c
+# end
 #
-# run_ac_opf(network_data,solver)
+#
+# @show f(4; :c=>2)
