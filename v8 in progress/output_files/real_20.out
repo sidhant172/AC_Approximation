@@ -4,7 +4,7 @@ filename = ARGS[1] = "case24_ieee_rts.m"
 dirname = ARGS[2] = "results24"
 quantity_to_approx = ARGS[3] = "line_real_power"
 linenum = convert(Int64, parse(Float64, ARGS[4])) = 20
-inflation_const = parse(Float64, ARGS[5]) = 0.1
+inflation_const = parse(Float64, ARGS[5]) = 0.05
 WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 24 from -360.0 to -60.0001403060998 deg.
 WARNING: this code only supports angmax values in -90 deg. to 90 deg., tightening the value on branch 24 from 360.0 to 60.0001403060998 deg.
 WARNING: this code only supports angmin values in -90 deg. to 90 deg., tightening the value on branch 4 from -360.0 to -60.0001403060998 deg.
@@ -125,103 +125,138 @@ WARNING: there was an issue with getsolvetime() on the solver, falling back on @
 length(ind_bus) = 24
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
-err = 0.5 * (val0 + val1) = 0.005450292911254109
+err = 0.5 * (val0 + val1) = 0.0012447334054222561
 iter = 1
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 0.5 * (val0 + val1) > err + 1.0e-5 = false
-err = 0.5 * (val0 + val1) = 0.005450292911254109
+err = 0.5 * (val0 + val1) = 0.0012447334054222561
 step_factor = 1
-sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.0016188337120834014
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.0009779461853904373
 iter = 2
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
-0.5 * (val0 + val1) > err + 1.0e-5 = false
-err = 0.5 * (val0 + val1) = 0.0046090682293580395
-step_factor = 1
-sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.001320258251158367
+0.5 * (val0 + val1) > err + 1.0e-5 = true
 iter = 3
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 0.5 * (val0 + val1) > err + 1.0e-5 = false
-err = 0.5 * (val0 + val1) = 0.004072373684875567
-step_factor = 1
-sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.0012865320507349878
+err = 0.5 * (val0 + val1) = 0.0012447334054222561
+step_factor = 2
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.0004889730926952187
 iter = 4
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
-0.5 * (val0 + val1) > err + 1.0e-5 = true
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.0012442372537699842
+step_factor = 2
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.0006020600841325238
 iter = 5
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
-0.5 * (val0 + val1) > err + 1.0e-5 = false
-err = 0.5 * (val0 + val1) = 0.004072373684875567
-step_factor = 2
-sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.0006432660253674939
+0.5 * (val0 + val1) > err + 1.0e-5 = true
 iter = 6
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
-0.5 * (val0 + val1) > err + 1.0e-5 = true
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.0012442372537699842
+step_factor = 4
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.0003010300420662619
 iter = 7
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 0.5 * (val0 + val1) > err + 1.0e-5 = false
-err = 0.5 * (val0 + val1) = 0.004072373684875567
+err = 0.5 * (val0 + val1) = 0.0012473295516066568
 step_factor = 4
-sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.00032163301268374694
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.0002787316296139565
 iter = 8
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 0.5 * (val0 + val1) > err + 1.0e-5 = false
-err = 0.5 * (val0 + val1) = 0.0039057345827950988
+err = 0.5 * (val0 + val1) = 0.001177791088373823
 step_factor = 4
-sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.00025037031554180224
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.00022171706057697686
 iter = 9
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
-0.5 * (val0 + val1) > err + 1.0e-5 = true
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.0011599897528740417
+step_factor = 4
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.000233742738176556
 iter = 10
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 0.5 * (val0 + val1) > err + 1.0e-5 = false
-err = 0.5 * (val0 + val1) = 0.0039057345827950988
-step_factor = 8
-sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.00012518515777090112
+err = 0.5 * (val0 + val1) = 0.0011374109869683791
+step_factor = 4
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.00024381179668337755
 iter = 11
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
-0.5 * (val0 + val1) > err + 1.0e-5 = true
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.0010729218000817544
+step_factor = 4
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.0002455627013603035
 iter = 12
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
-0.5 * (val0 + val1) > err + 1.0e-5 = false
-err = 0.5 * (val0 + val1) = 0.0039057345827950988
-step_factor = 16
-sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 6.259257888545056e-5
+0.5 * (val0 + val1) > err + 1.0e-5 = true
 iter = 13
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
-0.5 * (val0 + val1) > err + 1.0e-5 = true
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.0010729218000817544
+step_factor = 8
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 0.00012278135068015175
 iter = 14
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
-0.5 * (val0 + val1) > err + 1.0e-5 = false
-err = 0.5 * (val0 + val1) = 0.0039057345827950988
-step_factor = 32
-sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 3.129628944272528e-5
+0.5 * (val0 + val1) > err + 1.0e-5 = true
 iter = 15
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
-0.5 * (val0 + val1) > err + 1.0e-5 = true
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.0010729218000817544
+step_factor = 16
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 6.139067534007587e-5
 iter = 16
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
-0.5 * (val0 + val1) > err + 1.0e-5 = false
-err = 0.5 * (val0 + val1) = 0.0039057345827950988
-step_factor = 64
-sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 1.564814472136264e-5
+0.5 * (val0 + val1) > err + 1.0e-5 = true
 iter = 17
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.0010729218000817544
+step_factor = 32
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 3.069533767003794e-5
+iter = 18
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.0010612173911395358
+step_factor = 32
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 2.9455979131308115e-5
+iter = 19
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
 0.5 * (val0 + val1) > err + 1.0e-5 = true
-elapsed time: 21.621651724 seconds
+iter = 20
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.0010612173911395358
+step_factor = 64
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 1.4727989565654057e-5
+iter = 21
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = false
+err = 0.5 * (val0 + val1) = 0.0010564210372770652
+step_factor = 64
+sqrt(sum((step_pb[i] ^ 2 + step_qb[i] ^ 2 for i = active_buses))) = 1.4746556633902668e-5
+iter = 22
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+WARNING: there was an issue with getsolvetime() on the solver, falling back on @timed.  This is not a rigorous timing value.
+0.5 * (val0 + val1) > err + 1.0e-5 = true
+elapsed time: 22.003909734 seconds
