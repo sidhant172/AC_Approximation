@@ -16,9 +16,9 @@ network_data = PowerModels.parse_file("../"string(filename))
 num_branch = length(network_data["branch"])
 num_bus = length(network_data["bus"])
 
-# inflation_factors = [0.05, 0.1, 0.2, 0.3, 0.4]
+inflation_factors = [0.1, 0.2, 0.3, 0.4]
 
-inflation_factors = [0.1]
+# inflation_factors = [0.1]
 
 vars = matread("../results"string(num_bus)"/matrix_forms/linear_approximations_real0.05.mat")
 # vars_jac = matread("../ptdf_matrices.mat")
@@ -63,7 +63,38 @@ for inflation in inflation_factors
     # savefig(heatmap(active_buses,1:38,abs(qq[:,active_buses]-qq_jac[:,active_buses]),aspect_ratio=1),"heatmap_qq_"string(inflation)".pdf")
 end
 
+
+p_error_old = zeros(num_branch,length(inflation_factors))
+q_error_old = zeros(num_branch,length(inflation_factors))
+ctr = 0
+olddirname = "/Users/SidhantMisra/Dropbox/Work/GitHub/AC_Approximation/v7"
+for inflation in inflation_factors
+    ctr = ctr+1
+    vars = matread(string(olddirname)"/results"string(num_bus)"/matrix_forms/linear_approximations_real"string(inflation)".mat")
+    pp = vars["coeff_p"]
+    pq = vars["coeff_q"]
+    p_err_old = vars["approx_error"]
+    p_error_old[:,ctr] = p_err_old
+    vars = matread(string(olddirname)"/results"string(num_bus)"/matrix_forms/linear_approximations_reactive"string(inflation)".mat")
+    qp = vars["coeff_p"]
+    qq = vars["coeff_q"]
+    q_err_old = vars["approx_error"]
+    q_error_old[:,ctr] = q_err_old
+end
+
+
+
+
+
 for i = 1:num_branch
-    savefig(plot(inflation_factors,p_error[i,:],xlabel="Radius",ylabel="Maximum approximation error",leg=false),"plots"string(num_bus)"/approximation_error/approx_error_real_line_"string(i)".pdf")
-    savefig(plot(inflation_factors,q_error[i,:],xlabel="Radius",ylabel="Maximum approximation error",leg=false),"plots"string(num_bus)"/approximation_error/approx_error_reactive_line_"string(i)".pdf")
+    realfig = plot(inflation_factors,p_error[i,:],xlabel="Radius",ylabel="Maximum approximation error",leg=false)
+    plot!(inflation_factors,p_error_old[i,:],color=:red)
+    savefig(realfig,"plots"string(num_bus)"/approximation_error/approx_error_real_line_"string(i)".pdf")
+
+    reactivefig = plot(inflation_factors,q_error[i,:],xlabel="Radius",ylabel="Maximum approximation error",leg=false)
+    plot!(inflation_factors,q_error_old[i,:],color=:red)
+    savefig(realfig,"plots"string(num_bus)"/approximation_error/approx_error_reactive_line_"string(i)".pdf")
+
+    # savefig(plot(inflation_factors,p_error[i,:],xlabel="Radius",ylabel="Maximum approximation error",leg=false),"plots"string(num_bus)"/approximation_error/approx_error_real_line_"string(i)".pdf")
+    # savefig(plot(inflation_factors,q_error[i,:],xlabel="Radius",ylabel="Maximum approximation error",leg=false),"plots"string(num_bus)"/approximation_error/approx_error_reactive_line_"string(i)".pdf")
 end
