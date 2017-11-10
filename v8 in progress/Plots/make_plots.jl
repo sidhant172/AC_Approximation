@@ -87,12 +87,12 @@ end
 
 
 for i = 1:num_branch
-    realfig = plot(inflation_factors,p_error[i,:],xlabel="Radius",ylabel="Maximum approximation error",leg=false)
-    plot!(inflation_factors,p_error_old[i,:],color=:red)
+    realfig = plot(inflation_factors,p_error[i,:],xlabel="Radius",ylabel="Maximum approximation error",label="cg")
+    plot!(inflation_factors,p_error_old[i,:],color=:red,label="gd")
     savefig(realfig,"plots"string(num_bus)"/approximation_error/approx_error_real_line_"string(i)".pdf")
 
-    reactivefig = plot(inflation_factors,q_error[i,:],xlabel="Radius",ylabel="Maximum approximation error",leg=false)
-    plot!(inflation_factors,q_error_old[i,:],color=:red)
+    reactivefig = plot(inflation_factors,q_error[i,:],xlabel="Radius",ylabel="Maximum approximation error",label="cg")
+    plot!(inflation_factors,q_error_old[i,:],color=:red,label="gd")
     savefig(realfig,"plots"string(num_bus)"/approximation_error/approx_error_reactive_line_"string(i)".pdf")
 
     # savefig(plot(inflation_factors,p_error[i,:],xlabel="Radius",ylabel="Maximum approximation error",leg=false),"plots"string(num_bus)"/approximation_error/approx_error_real_line_"string(i)".pdf")
