@@ -152,6 +152,7 @@ current_sol = get_current_solution(result["solution"], pm_1_old, to_approx, ind_
 val1 = result["objective"]/obj_tuning
 ################################################################################
 
+println("printing error of jacobian with symmetrization")
 @show err = 0.5*(val0+val1)
 
 # solver_warm = IpoptSolver(linear_solver="ma97",print_level=0,mu_init = 1e-8)
@@ -231,8 +232,12 @@ for iter = 1:cnst_gen_max_iter
     end
 
 
+    if @show sqrt(sum(step_pb[i]^2 + step_qb[i]^2 for i in active_buses)) < 1e-6
+        break
+    end
+
     # if @show 0.5*(val0 + val1) > err   &&  backtrack == true
-    if @show 0.5*(val0 + val1) > err + 1e-5
+    if @show 0.5*(val0 + val1) > err + 1e-3
         step_factor = step_factor*2
         ctr = ctr + 1
         for i in active_buses
@@ -242,9 +247,13 @@ for iter = 1:cnst_gen_max_iter
         warm = false
         backtrack =  false
 
-        if ctr == 7
+
+        if @show sqrt(sum(step_pb[i]^2 + step_qb[i]^2 for i in active_buses)) < 1e-6
             break
         end
+        # if ctr == 7
+        #     break
+        # end
         continue # skip doing gradient descent step
     end
 
