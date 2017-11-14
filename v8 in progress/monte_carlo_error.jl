@@ -116,7 +116,7 @@ function find_monte_carlo_error(network_data, to_approx_list, linearation_coeffi
         for (i,to_approx) in to_approx_list
             if to_approx["quantity"] == "line_real_power"
                 p = pm.var[:nw][0][:p][to_approx["quantity_index"]]
-                pval = getvalue(p)
+                @show pval = getvalue(p)
 
                 linearation_coefficients = linearation_coefficients_list[i]
 
@@ -133,7 +133,7 @@ function find_monte_carlo_error(network_data, to_approx_list, linearation_coeffi
 
             elseif to_approx["quantity"] == "line_reactive_power"
                 q = pm.var[:nw][0][:q][to_approx["quantity_index"]]
-                qval = getvalue(q)
+                @show qval = getvalue(q)
 
                 linearation_coefficients = linearation_coefficients_list[i]
 
