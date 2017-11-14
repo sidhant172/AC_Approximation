@@ -282,7 +282,7 @@ for iter = 1:cnst_gen_max_iter
     pm_1_old = pm_1
 end
 
-    approximation["l0"] = -0.5*(val0-val1)
+    approximation["l0"] = 0.5*(val0-val1)
     approximation["l_v"] = l_v_val
     approximation["l_pb"] = l_pb_val
     approximation["l_qb"] = l_qb_val
