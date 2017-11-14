@@ -242,8 +242,8 @@ for iter = 1:cnst_gen_max_iter
         step_factor = step_factor*2
         ctr = ctr + 1
         for i in active_buses
-            l_pb_val[string(i)] = l_pb_val_old[string(i)]
-            l_qb_val[string(i)] = l_qb_val_old[string(i)]
+            l_pb_val[string(i)] = l_pb_val_old[string(i)] + 1e-4*rand(1)
+            l_qb_val[string(i)] = l_qb_val_old[string(i)] + 1e-4*rand(1)
         end
         warm = false
         backtrack =  false
