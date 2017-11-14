@@ -8,11 +8,12 @@ using MAT
 
 
 algo = 1
-num_samples = 10
+num_samples = 100
 
 include("opf_mod.jl")
 include("support_functions.jl")
 include("monte_carlo_error.jl")
+include("find_linearization_error.jl")
 
 if algo == 0
     include("find_optimal_linearization.jl")
@@ -44,7 +45,7 @@ gen_inflation = 0.4  # defining range of loading conditions
 load_inflation = 0.4    # defining range of generation conditions
 # v_inflation = 0.1
 
-tol = gen_inflation*1e-2
+tol = gen_inflation*1e-3
 
 obj_tuning = 1e1
 
@@ -150,15 +151,20 @@ for i in keys(linear_approximations)
     linearization_coefficients["l0"] = linear_approximations[i]["l0"]
     linearization_coefficients["l_pb"] = linear_approximations[i]["l_pb"]
     linearization_coefficients["l_qb"] = linear_approximations[i]["l_qb"]
-    linearization_coefficients_list[i] = linearization_coefficients 
+    linearization_coefficients["l_v"] = 0
+    linearization_coefficients_list[i] = linearization_coefficients
 end
 
 
 
 network_data = deepcopy(network_data_old)
 
-find_monte_carlo_error(network_data, to_approx_list, linearization_coefficients_list, inflation_factors, solver_ipopt, num_samples)
+@show find_monte_carlo_error(network_data, to_approx_list, linearization_coefficients_list, inflation_factors, solver_ipopt, num_samples)
 
+
+for (i,linearation_coefficients) in linearization_coefficients_list
+    @show find_linearization_error(network_data, to_approx, solver_ipopt, linearation_coefficients,inflation_factors,obj_tuning)
+end
 
 
 # tic()
