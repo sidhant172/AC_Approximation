@@ -18,7 +18,7 @@ function find_monte_carlo_error(network_data, to_approx_list, linearation_coeffi
     slack = network_data["slack"]
 
     ################ find region to sample #####################################
-    output = run_ac_opf(network_data, solver_ipopt)
+    output = PowerModels.run_ac_opf(network_data, solver_ipopt)
 
     gen_inflation = inflation_factors["gen_inflation"]
     load_inflation = inflation_factors["load_inflation"]
@@ -81,6 +81,9 @@ function find_monte_carlo_error(network_data, to_approx_list, linearation_coeffi
         end
     end
     #####################################################
+
+
+
 
     for samples = 1:num_samples
         pg_samples = Dict{Int,Float64}()
