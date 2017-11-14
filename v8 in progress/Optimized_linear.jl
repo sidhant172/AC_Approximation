@@ -7,7 +7,7 @@ using GLPKMathProgInterface
 using MAT
 
 
-algo = 1
+algo = 0
 num_samples = 100
 
 include("opf_mod.jl")
@@ -88,7 +88,7 @@ to_approx_list = Dict{Int64,Any}()
 
 
 # line_num = 18
-line_num = 37
+line_num = 18
 
 to_approx = Dict{String,Any}()
 to_approx["quantity"] = "line_real_power"
