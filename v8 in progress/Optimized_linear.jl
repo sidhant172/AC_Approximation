@@ -143,29 +143,29 @@ linear_approximations = find_optimal_linearizations(network_data, to_approx_list
 time = toc()
 
 
-linearization_coefficients_list = Dict{Int,Any}()
-
-
-for i in keys(linear_approximations)
-    linearization_coefficients = Dict{String,Any}()
-    linearization_coefficients["l0"] = linear_approximations[i]["l0"]
-    linearization_coefficients["l_pb"] = linear_approximations[i]["l_pb"]
-    linearization_coefficients["l_qb"] = linear_approximations[i]["l_qb"]
-    linearization_coefficients["l_v"] = 0
-    linearization_coefficients_list[i] = linearization_coefficients
-end
+# linearization_coefficients_list = Dict{Int,Any}()
+#
+#
+# for i in keys(linear_approximations)
+#     linearization_coefficients = Dict{String,Any}()
+#     linearization_coefficients["l0"] = linear_approximations[i]["l0"]
+#     linearization_coefficients["l_pb"] = linear_approximations[i]["l_pb"]
+#     linearization_coefficients["l_qb"] = linear_approximations[i]["l_qb"]
+#     linearization_coefficients["l_v"] = 0
+#     linearization_coefficients_list[i] = linearization_coefficients
+# end
 
 
 
 network_data = deepcopy(network_data_old)
 
-@show find_monte_carlo_error(network_data, to_approx_list, linearization_coefficients_list, inflation_factors, solver_ipopt, num_samples)
+@show find_monte_carlo_error(network_data, to_approx_list, linear_approximations, inflation_factors, solver_ipopt, num_samples)
 
 
 network_data = deepcopy(network_data_old)
 
 for (i,linearation_coefficients) in linearization_coefficients_list
-    @show find_linearization_error(network_data, to_approx, solver_ipopt, linearation_coefficients,inflation_factors,obj_tuning)
+    @show find_linearization_error(network_data, to_approx, solver_ipopt, linear_approximations,inflation_factors,obj_tuning)
 end
 
 
