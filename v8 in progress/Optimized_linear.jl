@@ -7,7 +7,7 @@ using GLPKMathProgInterface
 using MAT
 
 
-algo = 1
+algo = 0
 num_samples = 100
 
 include("opf_mod.jl")
