@@ -89,18 +89,16 @@ function find_monte_carlo_error(network_data, to_approx_list, linearation_coeffi
         qd_samples = Dict{Int,Float64}()
 
         for i in network_data["ind_gen"]
-            pg_samples[i] = rand(Uniform(pg_min[i],pg_max[i]))
-            qg_samples[i] = rand(Uniform(qg_min[i],qg_max[i]))
-            # pg_samples[i] = pg_min[i] + (pg_max[i]-pg_min[i])*rand()
-            # qg_samples[i] = qg_min[i] + (qg_max[i]-qg_min[i])*rand()
+            pg_samples[i] = pg_min[i] + (pg_max[i]-pg_min[i])*rand()
+            qg_samples[i] = qg_min[i] + (qg_max[i]-qg_min[i])*rand()
+
             network_data["gen"][string(i)]["pg"] = pg_samples[i]
             network_data["gen"][string(i)]["qg"] = qg_samples[i]
         end
         for i in network_data["ind_bus"]
-            pd_samples[i] = rand(Uniform(pd_min[i],pd_max[i]))
-            qd_samples[i] = rand(Uniform(qd_min[i],qd_max[i]))
-            # pd_samples[i] = pd_min[i] + (pd_max[i]-pd_min[i])*rand()
-            # qd_samples[i] = qd_min[i] + (qd_max[i]-qd_min[i])*rand()
+            pd_samples[i] = pd_min[i] + (pd_max[i]-pd_min[i])*rand()
+            qd_samples[i] = qd_min[i] + (qd_max[i]-qd_min[i])*rand()
+
             network_data["bus"][string(i)]["pd"] = pd_samples[i]
             network_data["bus"][string(i)]["qd"] = qd_samples[i]
         end
