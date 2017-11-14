@@ -8,9 +8,11 @@ using MAT
 
 
 algo = 1
+num_samples = 10
 
 include("opf_mod.jl")
 include("support_functions.jl")
+include("monte_carlo_error.jl")
 
 if algo == 0
     include("find_optimal_linearization.jl")
@@ -138,6 +140,26 @@ to_approx_list[2] = to_approx
 tic()
 linear_approximations = find_optimal_linearizations(network_data, to_approx_list, inflation_factors, solver_ipopt, solver_lp, cnst_gen_max_iter, tol, obj_tuning)
 time = toc()
+
+
+linearization_coefficients_list = Dict{Int,Any}()
+
+
+for i in keys(linear_approximations)
+    linearization_coefficients = Dict{String,Any}()
+    linearization_coefficients["l0"] = linear_approximations[i]["l0"]
+    linearization_coefficients["l_pb"] = linear_approximations[i]["l_pb"]
+    linearization_coefficients["l_qb"] = linear_approximations[i]["l_qb"]
+    linearization_coefficients_list[i] = linearization_coefficients 
+end
+
+
+
+network_data = deepcopy(network_data_old)
+
+find_monte_carlo_error(network_data, to_approx_list, linearization_coefficients_list, inflation_factors, solver_ipopt, num_samples)
+
+
 
 # tic()
 # linear_approximations = find_optimal_linearizations_error_tracking(network_data, to_approx_list, inflation_factors, solver_ipopt, solver_lp, cnst_gen_max_iter, tol, obj_tuning)

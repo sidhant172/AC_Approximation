@@ -115,18 +115,6 @@ function add_objective(pm::PM.GenericPowerModel)
 
     sign = (-1)^direction
 
-    # @show pm.model
-
-    # access JuMP variables
-    # v = getindex(pm.model, :v)  # voltage magnitude variable
-    # t = getindex(pm.model, :t)  # voltage angle variable
-    # p = getindex(pm.model, :p)  # line active flow variables
-    # q = getindex(pm.model, :q)  # line reactive flow variables
-    # pg = getindex(pm.model, :pg)   # active generation variables
-    # qg = getindex(pm.model, :qg)   # reactive generation variables
-    # pd = getindex(pm.model, :pd)
-    # qd = getindex(pm.model, :qd)
-
 
     v = pm.var[:nw][0][:vm]
     t = pm.var[:nw][0][:va]
