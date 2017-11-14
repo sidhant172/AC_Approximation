@@ -233,7 +233,7 @@ for iter = 1:cnst_gen_max_iter
     end
 
 
-    if @show sqrt(sum(step_pb[i]^2 + step_qb[i]^2 for i in active_buses)) < 1e-6
+    if @show sqrt(sum(step_pb[i]^2 + step_qb[i]^2 for i in active_buses)) < 1e-7
         break
     end
 
@@ -249,9 +249,9 @@ for iter = 1:cnst_gen_max_iter
         backtrack =  false
 
 
-        if @show sqrt(sum(step_pb[i]^2 + step_qb[i]^2 for i in active_buses)) < 1e-6
-            break
-        end
+        # if @show sqrt(sum(step_pb[i]^2 + step_qb[i]^2 for i in active_buses)) < 1e-6
+        #     break
+        # end
         # if ctr == 7
         #     break
         # end
@@ -283,18 +283,13 @@ for iter = 1:cnst_gen_max_iter
     pm_0_old = pm_0
     pm_1_old = pm_1
 
-
-    @show val0
-    @show val1
 end
 
-    @show val0
-    @show val1
     approximation["l0"] = l0_by_mean
     approximation["l_v"] = l_v_val
     approximation["l_pb"] = l_pb_val
     approximation["l_qb"] = l_qb_val
-    approximation["error"] = 0.5*(val0+val1)
+    approximation["error"] = err
 
     return approximation
 
