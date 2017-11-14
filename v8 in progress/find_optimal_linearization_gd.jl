@@ -166,6 +166,7 @@ step_factor = 1
 warm = true
 backtrack = true
 ctr = 0
+l0_by_mean = 0
 
 for iter = 1:cnst_gen_max_iter
 
@@ -261,6 +262,7 @@ for iter = 1:cnst_gen_max_iter
     warm = true
 
     @show err = 0.5*(val0 + val1)
+    @show l0_by_mean = 0.5*(val0-val1)
     @show step_factor
 
     for i in active_buses
@@ -288,7 +290,7 @@ end
 
     @show val0
     @show val1
-    approximation["l0"] = 0.5*(val0-val1)
+    approximation["l0"] = l0_by_mean
     approximation["l_v"] = l_v_val
     approximation["l_pb"] = l_pb_val
     approximation["l_qb"] = l_qb_val
