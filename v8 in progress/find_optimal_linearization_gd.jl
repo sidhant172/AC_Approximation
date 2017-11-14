@@ -72,9 +72,10 @@ function find_optimal_linearization(network_data, to_approx, solver, solver_lp, 
 ################################################################################
 # Gradient descent solver
 
+vars = matread("case"String(length(ind_bus))"_ptdf.mat")
 # make this an input to the function
 # vars = matread("ptdf_matrices.mat")
-vars = matread("case14_ptdf.mat")
+# vars = matread("case14_ptdf.mat")
 # vars = matread("case57_ptdf.mat")
 # vars = matread("case118_ptdf.mat")
 
