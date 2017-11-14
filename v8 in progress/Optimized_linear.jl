@@ -164,8 +164,8 @@ network_data = deepcopy(network_data_old)
 
 network_data = deepcopy(network_data_old)
 
-for (i,linearation_coefficients) in linearization_coefficients_list
-    @show find_linearization_error(network_data, to_approx, solver_ipopt, linear_approximations,inflation_factors,obj_tuning)
+for (i,linear_approximations) in linearization_coefficients_list
+    @show find_linearization_error(network_data, to_approx, solver_ipopt, linear_approximations[i],inflation_factors,obj_tuning)
 end
 
 
