@@ -8,7 +8,7 @@ using MAT
 
 
 algo = 1
-num_samples = 100
+num_samples = 1000
 
 include("opf_mod.jl")
 include("support_functions.jl")
@@ -161,6 +161,8 @@ network_data = deepcopy(network_data_old)
 
 @show find_monte_carlo_error(network_data, to_approx_list, linearization_coefficients_list, inflation_factors, solver_ipopt, num_samples)
 
+
+network_data = deepcopy(network_data_old)
 
 for (i,linearation_coefficients) in linearization_coefficients_list
     @show find_linearization_error(network_data, to_approx, solver_ipopt, linearation_coefficients,inflation_factors,obj_tuning)
