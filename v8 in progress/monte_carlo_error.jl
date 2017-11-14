@@ -5,6 +5,8 @@ include("support_functions.jl")
 
 function find_monte_carlo_error(network_data, to_approx_list, linearation_coefficients_list, inflation_factors, solver, num_samples)
 
+    output = PowerModels.run_ac_opf(network_data, solver)
+
     append_network_data(network_data,inflation_factors)   # append network_data with useful data structures
 
     # unpack useful data
@@ -18,7 +20,6 @@ function find_monte_carlo_error(network_data, to_approx_list, linearation_coeffi
     slack = network_data["slack"]
 
     ################ find region to sample #####################################
-    output = PowerModels.run_ac_opf(network_data, solver_ipopt)
 
     gen_inflation = inflation_factors["gen_inflation"]
     load_inflation = inflation_factors["load_inflation"]
@@ -92,18 +93,18 @@ function find_monte_carlo_error(network_data, to_approx_list, linearation_coeffi
         qd_samples = Dict{Int,Float64}()
 
         for i in network_data["ind_gen"]
-            pg_samples[i] = pg_min[i] + (pg_max[i]-pg_min[i])*rand()
-            qg_samples[i] = qg_min[i] + (qg_max[i]-qg_min[i])*rand()
+            # pg_samples[i] = pg_min[i] + (pg_max[i]-pg_min[i])*rand()
+            # qg_samples[i] = qg_min[i] + (qg_max[i]-qg_min[i])*rand()
 
-            network_data["gen"][string(i)]["pg"] = pg_samples[i]
-            network_data["gen"][string(i)]["qg"] = qg_samples[i]
+            network_data["gen"][string(i)]["pg"] = pg_min[i] + (pg_max[i]-pg_min[i])*rand()
+            network_data["gen"][string(i)]["qg"] = qg_min[i] + (qg_max[i]-qg_min[i])*rand()
         end
         for i in network_data["ind_bus"]
-            pd_samples[i] = pd_min[i] + (pd_max[i]-pd_min[i])*rand()
-            qd_samples[i] = qd_min[i] + (qd_max[i]-qd_min[i])*rand()
+            # pd_samples[i] = pd_min[i] + (pd_max[i]-pd_min[i])*rand()
+            # qd_samples[i] = qd_min[i] + (qd_max[i]-qd_min[i])*rand()
 
-            network_data["bus"][string(i)]["pd"] = pd_samples[i]
-            network_data["bus"][string(i)]["qd"] = qd_samples[i]
+            network_data["bus"][string(i)]["pd"] = pd_min[i] + (pd_max[i]-pd_min[i])*rand()
+            network_data["bus"][string(i)]["qd"] = qd_min[i] + (qd_max[i]-qd_min[i])*rand()
         end
 
         pm = build_generic_model(network_data, ACPPowerModel, PowerModels.post_pf)
