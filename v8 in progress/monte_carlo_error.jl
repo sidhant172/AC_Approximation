@@ -119,12 +119,12 @@ function find_monte_carlo_error(network_data, to_approx_list, linearation_coeffi
         gen_buses = network_data["gen_buses"]
         load_buses = network_data["load_buses"]
 
-        for (i,to_approx) in to_approx_list
+        for (ind,to_approx) in to_approx_list
             if to_approx["quantity"] == "line_real_power"
                 p = pm.var[:nw][0][:p][to_approx["quantity_index"]]
                 @show pval = getvalue(p)
 
-                linearation_coefficients = linearation_coefficients_list[i]
+                linearation_coefficients = linearation_coefficients_list[ind]
 
                 l0_val = linearation_coefficients["l0"]
                 l_pb_val = linearation_coefficients["l_pb"]
@@ -141,7 +141,7 @@ function find_monte_carlo_error(network_data, to_approx_list, linearation_coeffi
                 q = pm.var[:nw][0][:q][to_approx["quantity_index"]]
                 @show qval = getvalue(q)
 
-                linearation_coefficients = linearation_coefficients_list[i]
+                linearation_coefficients = linearation_coefficients_list[ind]
 
                 l0_val = linearation_coefficients["l0"]
                 l_pb_val = linearation_coefficients["l_pb"]
@@ -162,19 +162,19 @@ function find_monte_carlo_error(network_data, to_approx_list, linearation_coeffi
 
     approximation_errors = Dict{Int,Any}()
 
-    for (i,to_approx) in to_approx_list
+    for (ind,to_approx) in to_approx_list
         if to_approx["quantity"] == "line_real_power"
             errors = Dict{String,Float64}()
             errors["positive_error"] = perr_pos_mc[to_approx["quantity_index"]]
             errors["negative_error"] = perr_neg_mc[to_approx["quantity_index"]]
             errors["maximum_error"] = max(perr_pos_mc[to_approx["quantity_index"]],perr_neg_mc[to_approx["quantity_index"]])
-            approximation_errors[i] = errors
+            approximation_errors[ind] = errors
         elseif to_approx["quantity"] == "line_reactive_power"
             errors = Dict{String,Float64}()
             errors["positive_error"] = qerr_pos_mc[to_approx["quantity_index"]]
             errors["negative_error"] = qerr_neg_mc[to_approx["quantity_index"]]
             errors["maximum_error"] = max(qerr_pos_mc[to_approx["quantity_index"]],qerr_neg_mc[to_approx["quantity_index"]])
-            approximation_errors[i] = errors
+            approximation_errors[ind] = errors
         else println("Quantity not supported")
         end
     end
