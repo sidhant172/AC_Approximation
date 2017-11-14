@@ -235,7 +235,7 @@ for iter = 1:cnst_gen_max_iter
     end
 
 
-    if @show sqrt(sum(step_pb[i]^2 + step_qb[i]^2 for i in active_buses)) < 1e-6
+    if @show sqrt(sum(step_pb[i]^2 + step_qb[i]^2 for i in active_buses)) < 1e-7
         break
     end
 
@@ -247,7 +247,7 @@ for iter = 1:cnst_gen_max_iter
             # l_pb_val[string(i)] = l_pb_val_old[string(i)] + 1e-3*(2*rand()-1)
             # l_qb_val[string(i)] = l_qb_val_old[string(i)] + 1e-3*(2*rand()-1)
             l_pb_val[string(i)] = l_pb_val_old[string(i)]
-            l_qb_val[string(i)] = l_qb_val_old[string(i)] 
+            l_qb_val[string(i)] = l_qb_val_old[string(i)]
         end
         warm = false
         backtrack =  false
