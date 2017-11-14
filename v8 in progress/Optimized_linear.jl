@@ -8,7 +8,7 @@ using MAT
 
 
 algo = 1
-num_samples = 1000
+num_samples = 100
 
 include("opf_mod.jl")
 include("support_functions.jl")
