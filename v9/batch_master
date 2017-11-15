@@ -2,7 +2,7 @@
 #sbatch --job-name=case57 --partition=scaling --output=case57.out ./run_tests line_real_power 18.0 0.2
 
 scalings='0.4 0.3 0.2 0.1 0.05'
-algo=1
+algo=2
 # scalings='0.1'
 c=24
 #c=118
