@@ -202,8 +202,9 @@ for iter = 1:cnst_gen_max_iter
     network_data["direction"] = 0   # direction of maximization
     pm_0 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
     result = solve_generic_model(pm_0,solver_spec; solution_builder = PowerModels.get_solution)
+    current_sol = get_current_solution(result["solution"], pm_0, to_approx, ind_gen, ind_bus, ind_branch)
     val0 = result["objective"]/obj_tuning
-    for trial_num = 1:0
+    for trial_num = 1:5
         for i in network_data["ind_bus"]
             vm_var = pm_0.var[:nw][0][:vm][i]
             setvalue(vm_var,1 + 0.01*(2*rand()-1))
@@ -230,8 +231,9 @@ for iter = 1:cnst_gen_max_iter
     network_data["direction"] = 1
     pm_1 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
     result = solve_generic_model(pm_0,solver_spec; solution_builder = PowerModels.get_solution)
+    current_sol = get_current_solution(result["solution"], pm_0, to_approx, ind_gen, ind_bus, ind_branch)
     val1 = result["objective"]/obj_tuning
-    for trial_num = 1:0
+    for trial_num = 1:5
         for i in network_data["ind_bus"]
             vm_var = pm_1.var[:nw][0][:vm][i]
             setvalue(vm_var,1 + 0.01*(2*rand()-1))
