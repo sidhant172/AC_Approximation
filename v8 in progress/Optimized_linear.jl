@@ -7,7 +7,7 @@ using GLPKMathProgInterface
 using MAT
 
 
-algo = 2
+# algo = 1
 num_samples = 100
 
 include("opf_mod.jl")
@@ -35,9 +35,9 @@ include("find_linearization_error.jl")
 if algo == 0
     cnst_gen_max_iter = 1000
 elseif algo == 1
-    cnst_gen_max_iter = 20
+    cnst_gen_max_iter = 30
 elseif algo == 2
-    cnst_gen_max_iter = 6
+    cnst_gen_max_iter = 10
 end
 
 # algorithm parameters
