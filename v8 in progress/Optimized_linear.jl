@@ -7,7 +7,7 @@ using GLPKMathProgInterface
 using MAT
 
 
-algo = 2
+algo = 1
 num_samples = 100
 
 include("opf_mod.jl")
@@ -45,8 +45,8 @@ end
 # tol = 1e-4   # convergence tolerance
 
 # operational conditions
-gen_inflation = 0.2 # defining range of loading conditions
-load_inflation = 0.2    # defining range of generation conditions
+gen_inflation = 0.4 # defining range of loading conditions
+load_inflation = 0.4    # defining range of generation conditions
 # v_inflation = 0.1
 
 tol = gen_inflation*1e-3
