@@ -203,7 +203,7 @@ for iter = 1:cnst_gen_max_iter
     pm_0 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
     result = solve_generic_model(pm_0,solver_spec; solution_builder = PowerModels.get_solution)
     val0 = result["objective"]/obj_tuning
-    for trial_num = 1:5
+    for trial_num = 1:0
         for i in network_data["ind_bus"]
             vm_var = pm_0.var[:nw][0][:vm][i]
             setvalue(vm_var,1 + 0.01*(2*rand()-1))
@@ -231,14 +231,14 @@ for iter = 1:cnst_gen_max_iter
     pm_1 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
     result = solve_generic_model(pm_0,solver_spec; solution_builder = PowerModels.get_solution)
     val1 = result["objective"]/obj_tuning
-    for trial_num = 1:5
+    for trial_num = 1:0
         for i in network_data["ind_bus"]
             vm_var = pm_1.var[:nw][0][:vm][i]
             setvalue(vm_var,1 + 0.01*(2*rand()-1))
         end
         result = solve_generic_model(pm_1, solver_spec; solution_builder = PowerModels.get_solution)
         current_sol_temp = get_current_solution(result["solution"], pm_1, to_approx, ind_gen, ind_bus, ind_branch)
-        
+
         if result["objective"]/obj_tuning > val1
             val1 = result["objective"]/obj_tuning
             current_sol = deepcopy(current_sol_temp)
