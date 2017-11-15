@@ -37,7 +37,7 @@ if algo == 0
 elseif algo == 1
     cnst_gen_max_iter = 30
 elseif algo == 2
-    cnst_gen_max_iter = 10
+    cnst_gen_max_iter = 5
 end
 
 # algorithm parameters
