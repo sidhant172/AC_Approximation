@@ -1,0 +1,17 @@
+#!/bin/bash
+for i in $(seq 1 100)
+do
+   /home/sidhant/license_servers
+   if [ $? -eq 0 ]
+   then
+      echo "successfully obtained license"
+      break
+   else
+      echo "retry $i"
+   fi
+   sleep 3
+done
+echo "failed to connect to server"
+
+
+srun julia Optimized_linear_for_cluster.jl $1 $2 $3 $4 $5 $6
