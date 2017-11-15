@@ -23,7 +23,7 @@ num_branch = length(network_data["branch"])
 
 # inflation_consts = [0.01]
 inflation_consts = [0.05,0.1,0.2,0.3,0.4]
-algorithms = [0,1,2]
+algorithms = [1,2]
 
 for inflation in inflation_consts, algo in algorithms
 
