@@ -53,7 +53,7 @@ load_inflation = inflation    # d
 
 tol = gen_inflation*1e-3
 
-obj_tuning = 1e1
+obj_tuning = 1
 
 # quantity = "line_real_power"
 # quantity_to_approx = "line_reactive_power"
