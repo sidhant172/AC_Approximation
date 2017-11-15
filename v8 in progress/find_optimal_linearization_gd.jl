@@ -147,11 +147,36 @@ network_data["direction"] = 0   # direction of maximization
 (result, pm_0_old) = run_ac_opf_mod(network_data,solver)
 current_sol = get_current_solution(result["solution"], pm_0_old, to_approx, ind_gen, ind_bus, ind_branch)
 val0 = result["objective"]/obj_tuning
+for trial = 1:5
+    for i in ind_bus
+        vm_var = pm_0_old.var[:nw][0][:vm][i]
+        setvalue(vm_var, 1 + 0.02*(2*rand()-1))
+    end
+    result = solve_generic_model(pm_0_old,solver)
+    current_sol_temp = get_current_solution(result["solution"], pm_0_old, to_approx, ind_gen, ind_bus, ind_branch)
+    if val0 < result["objective"]/obj_tuning
+        val0 = result["objective"]/obj_tuning
+        current_sol = deepcopy(current_sol_temp)
+    end
+end
 
 network_data["direction"] = 1
 (result, pm_1_old) = run_ac_opf_mod(network_data,solver)
 current_sol = get_current_solution(result["solution"], pm_1_old, to_approx, ind_gen, ind_bus, ind_branch)
 val1 = result["objective"]/obj_tuning
+for trial = 1:5
+    for i in ind_bus
+        vm_var = pm_1_old.var[:nw][0][:vm][i]
+        setvalue(vm_var, 1 + 0.02*(2*rand()-1))
+    end
+    result = solve_generic_model(pm_1_old,solver)
+    current_sol_temp = get_current_solution(result["solution"], pm_1_old, to_approx, ind_gen, ind_bus, ind_branch)
+    if val1 < result["objective"]/obj_tuning
+        val1 = result["objective"]/obj_tuning
+        current_sol = deepcopy(current_sol_temp)
+    end
+end
+
 ################################################################################
 
 println("printing error of jacobian with symmetrization")
