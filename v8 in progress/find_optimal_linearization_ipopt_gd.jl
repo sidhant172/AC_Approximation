@@ -69,210 +69,160 @@ function find_optimal_linearization(network_data, to_approx, solver, solver_lp, 
     slack = network_data["slack"]
 
 
-################################################################################
-# Gradient descent solver
+    ################################################################################
+    # Gradient descent solver
 
-# make this an input to the function
-vars = matread("ptdf_matrices.mat")
-# vars = matread("case57_ptdf.mat")
-# vars = matread("case118_ptdf.mat")
+    vars = matread("case"string(length(ind_bus))"_ptdf.mat")
 
-pp_jac = Dict{Int,Float64}()
-pq_jac = Dict{Int,Float64}()
-qp_jac = Dict{Int,Float64}()
-qq_jac = Dict{Int,Float64}()
 
-@show length(ind_bus)
+    pp_jac = Dict{Int,Float64}()
+    pq_jac = Dict{Int,Float64}()
+    qp_jac = Dict{Int,Float64}()
+    qq_jac = Dict{Int,Float64}()
 
-if to_approx["quantity"] == "line_real_power"
-    for i in active_buses
-        pp_jac[i] = vars["Hac_f"][to_approx["quantity_index"][1],i]
-        pq_jac[i] = vars["Hac_f"][to_approx["quantity_index"][1],length(ind_bus)+i]
-    end
-elseif to_approx["quantity"] == "line_reactive_power"
-    for i in active_buses
-        qp_jac[i] = vars["Hac_f"][length(ind_branch)+to_approx["quantity_index"][1],i]
-        qq_jac[i] = vars["Hac_f"][length(ind_branch)+to_approx["quantity_index"][1],length(ind_bus)+i]
-    end
-else println("not supported")
-end
+    @show length(ind_bus)
 
-# pp_jac = vars["Hac_f"][1:length(ind_bus),1:length(ind_bus)]
-# pp_jac = vars["Hac_f"][1:length(ind_bus),1:length(ind_bus)]
-# pp_jac = vars["Hac_f"][1:length(ind_bus),1:length(ind_bus)]
-
-################################################################################
-
-l0_val = 0
-l_v_val = 0
-l_pb_val = Dict{String,Float64}()
-l_qb_val = Dict{String,Float64}()
-l_pb_val_old = Dict{String,Float64}()
-l_qb_val_old = Dict{String,Float64}()
-for i in active_buses
-    # initialize with jacobian values for warm start
     if to_approx["quantity"] == "line_real_power"
-        l_pb_val[string(i)] = pp_jac[i]
-        l_qb_val[string(i)] = pq_jac[i]
-        l_pb_val_old[string(i)] = pp_jac[i]
-        l_qb_val_old[string(i)] = pq_jac[i]
+        for i in active_buses
+            pp_jac[i] = vars["Hac_f"][to_approx["quantity_index"][1],i]
+            pq_jac[i] = vars["Hac_f"][to_approx["quantity_index"][1],length(ind_bus)+i]
+        end
     elseif to_approx["quantity"] == "line_reactive_power"
-        l_pb_val[string(i)] = qp_jac[i]
-        l_qb_val[string(i)] = qq_jac[i]
-        l_pb_val_old[string(i)] = qp_jac[i]
-        l_qb_val_old[string(i)] = qq_jac[i]
+        for i in active_buses
+            qp_jac[i] = vars["Hac_f"][length(ind_branch)+to_approx["quantity_index"][1],i]
+            qq_jac[i] = vars["Hac_f"][length(ind_branch)+to_approx["quantity_index"][1],length(ind_bus)+i]
+        end
+    else println("not supported")
     end
 
-end
+    # pp_jac = vars["Hac_f"][1:length(ind_bus),1:length(ind_bus)]
+    # pp_jac = vars["Hac_f"][1:length(ind_bus),1:length(ind_bus)]
+    # pp_jac = vars["Hac_f"][1:length(ind_bus),1:length(ind_bus)]
+
+    ################################################################################
+
+    l0_val = 0
+    l_v_val = 0
+    l_pb_val = Dict{String,Float64}()
+    l_qb_val = Dict{String,Float64}()
+    l_pb_val_old = Dict{String,Float64}()
+    l_qb_val_old = Dict{String,Float64}()
+    for i in active_buses
+        # initialize with jacobian values for warm start
+        if to_approx["quantity"] == "line_real_power"
+            l_pb_val[string(i)] = pp_jac[i]
+            l_qb_val[string(i)] = pq_jac[i]
+            l_pb_val_old[string(i)] = pp_jac[i]
+            l_qb_val_old[string(i)] = pq_jac[i]
+        elseif to_approx["quantity"] == "line_reactive_power"
+            l_pb_val[string(i)] = qp_jac[i]
+            l_qb_val[string(i)] = qq_jac[i]
+            l_pb_val_old[string(i)] = qp_jac[i]
+            l_qb_val_old[string(i)] = qq_jac[i]
+        end
+
+    end
 
 
-step_size_const = 1e-3
-val0 = 0
-val1 = 0
+    step_size_const = 1e-3
+    val0 = 0
+    val1 = 0
 
 
 
 
 
-######## solve once at the beginning to get warm start point
-network_data["l0"] = l0_val
-network_data["l_v"] = l_v_val
-network_data["l_pb"] = l_pb_val
-network_data["l_qb"] = l_qb_val
-
-
-network_data["direction"] = 0   # direction of maximization
-(result, pm_0_old) = run_ac_opf_mod(network_data,solver)
-current_sol = get_current_solution(result["solution"], pm_0_old, to_approx, ind_gen, ind_bus, ind_branch)
-val0 = result["objective"]/obj_tuning
-
-network_data["direction"] = 1
-(result, pm_1_old) = run_ac_opf_mod(network_data,solver)
-current_sol = get_current_solution(result["solution"], pm_1_old, to_approx, ind_gen, ind_bus, ind_branch)
-val1 = result["objective"]/obj_tuning
-################################################################################
-
-@show err = 0.5*(val0+val1)
-
-# solver_warm = IpoptSolver(linear_solver="ma97",print_level=0,mu_init = 1e-8)
-solver_warm = IpoptSolver(print_level=0,mu_init = 1e-5)
-# solver_warm = IpoptSolver(print_level=0)
-
-# solver_warm = IpoptSolver(linear_solver="ma97",mu_init = 1e-7)
-
-step_factor = 1
-
-warm = true
-backtrack = true
-ctr = 0
-
-for iter = 1:cnst_gen_max_iter
-
-
-    step_size = step_size_const/step_factor
-
-    solver_spec = solver
-    # if warm == false
-    #     solver_spec = solver
-    # else
-    #     solver_spec = solver_warm
-    # end
-
-
-    @show iter
-
+    ######## solve once at the beginning to get warm start point
     network_data["l0"] = l0_val
     network_data["l_v"] = l_v_val
     network_data["l_pb"] = l_pb_val
     network_data["l_qb"] = l_qb_val
 
-    step_pb = Dict{Int,Float64}()
-    step_qb = Dict{Int,Float64}()
-    for i in active_buses
-        step_pb[i] = 0.0
-        step_qb[i] = 0.0
-    end
 
     network_data["direction"] = 0   # direction of maximization
-    # (result, pm) = run_ac_opf_mod(network_data,solver)
-    pm_0 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
-    # if warm ==  true
-    #     set_warm_start(pm_0,pm_0_old)
-    # end
-    result = solve_generic_model(pm_0, solver_spec; solution_builder = PowerModels.get_solution)
-    current_sol = get_current_solution(result["solution"], pm_0, to_approx, ind_gen, ind_bus, ind_branch)
+    (result, pm_0_old) = run_ac_opf_mod(network_data,solver)
+    current_sol = get_current_solution(result["solution"], pm_0_old, to_approx, ind_gen, ind_bus, ind_branch)
     val0 = result["objective"]/obj_tuning
 
-    for i in gen_buses
-        step_pb[i] = step_pb[i] - step_size*( sum(current_sol["pg"][j] for j in gens_at_bus[string(i)]) )
-        step_qb[i] = step_qb[i] - step_size*( sum(current_sol["qg"][j] for j in gens_at_bus[string(i)]) )
-    end
-    for i in load_buses
-        step_pb[i] = step_pb[i] + step_size*current_sol["pd"][i]
-        step_qb[i] = step_qb[i] + step_size*current_sol["qd"][i]
-    end
-
     network_data["direction"] = 1
-    pm_1 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
-    # if warm ==  true
-    #     set_warm_start(pm_1,pm_1_old)
-    # end
-    result = solve_generic_model(pm_1, solver_spec; solution_builder = PowerModels.get_solution)
-    current_sol = get_current_solution(result["solution"], pm_1, to_approx, ind_gen, ind_bus, ind_branch)
+    (result, pm_1_old) = run_ac_opf_mod(network_data,solver)
+    current_sol = get_current_solution(result["solution"], pm_1_old, to_approx, ind_gen, ind_bus, ind_branch)
     val1 = result["objective"]/obj_tuning
+    ################################################################################
 
-    for i in gen_buses
-        step_pb[i] = step_pb[i] + step_size*( sum(current_sol["pg"][j] for j in gens_at_bus[string(i)]) )
-        step_qb[i] = step_qb[i] + step_size*( sum(current_sol["qg"][j] for j in gens_at_bus[string(i)]) )
+    @show err = 0.5*(val0+val1)
+
+
+
+    function f(x...)
+        l_pb = Dict{String,Float64}()
+        l_qb = Dict{String,Float64}()
+
+        ctr = 0
+        for i in active_buses
+            ctr = ctr+1
+            l_pb[string(i)] = x[ctr]
+        end
+        for i in active_buses
+            ctr = ctr+1
+            l_qb[string(i)] = x[ctr]
+        end
+
+        return feval(l_pb,l_qb,network_data,solver)
     end
-    for i in load_buses
-        step_pb[i] = step_pb[i] - step_size*current_sol["pd"][i]
-        step_qb[i] = step_qb[i] - step_size*current_sol["qd"][i]
+
+    function gradf(g,x...)
+        l_pb = Dict{String,Float64}()
+        l_qb = Dict{String,Float64}()
+
+        ctr = 0
+        for i in active_buses
+            ctr = ctr+1
+            l_pb[string(i)] = x[ctr]
+        end
+        for i in active_buses
+            ctr = ctr+1
+            l_qb[string(i)] = x[ctr]
+        end
+
+        gradfeval(g,l_pb,l_qb,network_data,solver)
     end
 
 
-    # if @show 0.5*(val0 + val1) > err + 0*tol  &&  backtrack == true
-    #     step_factor = step_factor*2
-    #     ctr = ctr + 1
-    #     for i in active_buses
-    #         l_pb_val[string(i)] = l_pb_val_old[string(i)]
-    #         l_qb_val[string(i)] = l_qb_val_old[string(i)]
-    #     end
-    #     warm = false
-    #     backtrack =  false
-    #
-    #     if ctr == 5
-    #         break
-    #     end
-    #     continue # skip doing gradient descent step
-    # end
 
-    backtrack = true
-    warm = true
+    m = Model(solver=IpoptSolver(linear_solver="ma57",tol=1e-5,hessian_approximation="limited-memory",max_iter=6))
+    # m = Model(solver=IpoptSolver(linear_solver="ma57",tol=1e-5,hessian_approximation="limited-memory",acceptable_obj_change_tol=1e-3,acceptable_iter=3,acceptable_dual_inf_tol=1e3))
 
-    @show err = 0.5*(val0 + val1)
-    @show step_factor
-
+    JuMP.register(m,:f,2*length(active_buses),f,gradf)
+    @variable(m,x[1:2*length(active_buses)])
+    ctr = 0
     for i in active_buses
-        l_pb_val_old[string(i)] = l_pb_val[string(i)]
-        l_qb_val_old[string(i)] = l_qb_val[string(i)]
+        ctr = ctr+1
+        setvalue(x[ctr],l_pb_val[string(i)])
     end
-
-    # Perform gradient descent step
-    @show sqrt(sum(step_pb[i]^2 + step_qb[i]^2 for i in active_buses))
     for i in active_buses
-        l_pb_val[string(i)] = l_pb_val[string(i)] - step_pb[i]
-        l_qb_val[string(i)] = l_qb_val[string(i)] - step_qb[i]
+        ctr = ctr+1
+        setvalue(x[ctr],l_qb_val[string(i)])
     end
 
-    l_pb_val[string(slack)] = 0
+    JuMP.setNLobjective(m, :Min, Expr(:call, :f, x...))
+
+    status = solve(m)
 
 
-    pm_0_old = pm_0
-    pm_1_old = pm_1
-end
+    ctr = 0
+    for i in active_buses
+        ctr = ctr+1
+        l_pb_val[string(i)] = getvalue(x[ctr])
+    end
+    for i in active_buses
+        ctr = ctr+1
+        l_qb_val[string(i)] = getvalue(x[ctr])
+    end
 
-    approximation["l0"] = l0_val
+
+
+    approximation["l0"] = l0_eval(l_pb_val,l_qb_val,network_data,solver)
     approximation["l_v"] = l_v_val
     approximation["l_pb"] = l_pb_val
     approximation["l_qb"] = l_qb_val
@@ -283,10 +233,14 @@ end
 end     # end of find optimal linearizaion
 
 
+function l0_eval(l_pb,l_qb,network_data,solver)
+    gen_buses = network_data["gen_buses"]
+    load_buses = network_data["load_buses"]
+    gens_at_bus = network_data["gens_at_bus"]
+    ind_gen = network_data["ind_gen"]
+    ind_bus = network_data["ind_bus"]
+    ind_branch = network_data["ind_branch"]
 
-
-function feval(l_pb,l_qb; kwargs...)
-    network_data = kwargs[1][2]
     network_data["l0"] = 0
     network_data["l_v"] = 0
     network_data["l_pb"] = l_pb
@@ -294,32 +248,114 @@ function feval(l_pb,l_qb; kwargs...)
 
     network_data["direction"] = 0
     pm_0 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
-    result = solve_generic_model(pm_0, solver_spec; solution_builder = PowerModels.get_solution)
+    result = solve_generic_model(pm_0, solver; solution_builder = PowerModels.get_solution)
     current_sol = get_current_solution(result["solution"], pm_0, to_approx, ind_gen, ind_bus, ind_branch)
     val0 = result["objective"]/obj_tuning
 
     network_data["direction"] = 1
     pm_1 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
-    result = solve_generic_model(pm_1, solver_spec; solution_builder = PowerModels.get_solution)
+    result = solve_generic_model(pm_1, solver; solution_builder = PowerModels.get_solution)
+    current_sol = get_current_solution(result["solution"], pm_1, to_approx, ind_gen, ind_bus, ind_branch)
+    val1 = result["objective"]/obj_tuning
+
+    return 0.5*(val0-val1)
+end
+
+
+function feval(l_pb,l_qb,network_data,solver)
+    gen_buses = network_data["gen_buses"]
+    load_buses = network_data["load_buses"]
+    gens_at_bus = network_data["gens_at_bus"]
+    active_buses = network_data["active_buses"]
+    ind_gen = network_data["ind_gen"]
+    ind_bus = network_data["ind_bus"]
+    ind_branch = network_data["ind_branch"]
+
+    network_data["l0"] = 0
+    network_data["l_v"] = 0
+    network_data["l_pb"] = l_pb
+    network_data["l_qb"] = l_qb
+
+    network_data["direction"] = 0
+    pm_0 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
+    result = solve_generic_model(pm_0, solver; solution_builder = PowerModels.get_solution)
+    current_sol = get_current_solution(result["solution"], pm_0, to_approx, ind_gen, ind_bus, ind_branch)
+    val0 = result["objective"]/obj_tuning
+
+    network_data["direction"] = 1
+    pm_1 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
+    result = solve_generic_model(pm_1, solver; solution_builder = PowerModels.get_solution)
     current_sol = get_current_solution(result["solution"], pm_1, to_approx, ind_gen, ind_bus, ind_branch)
     val1 = result["objective"]/obj_tuning
 
     return 0.5*(val0+val1)
 end
 
-function gradfeval(g,l_pb,l_qb; kwargs...)
-    network_data = kwargs[1][2]
+function gradfeval(g,l_pb,l_qb,network_data,solver)
+
+    gen_buses = network_data["gen_buses"]
+    load_buses = network_data["load_buses"]
+    gens_at_bus = network_data["gens_at_bus"]
+    active_buses = network_data["active_buses"]
+    ind_gen = network_data["ind_gen"]
+    ind_bus = network_data["ind_bus"]
+    ind_branch = network_data["ind_branch"]
+
+    g_pb = Dict{Int,Float64}()
+    g_qb = Dict{Int,Float64}()
+    for i in active_buses
+        g_pb[i] = 0.0
+        g_qb[i] = 0.0
+    end
+
+    network_data["l0"] = 0
+    network_data["l_v"] = 0
+    network_data["l_pb"] = l_pb
+    network_data["l_qb"] = l_qb
+
 
     network_data["direction"] = 0
     pm_0 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
-    result = solve_generic_model(pm_0, solver_spec; solution_builder = PowerModels.get_solution)
+    result = solve_generic_model(pm_0, solver; solution_builder = PowerModels.get_solution)
     current_sol = get_current_solution(result["solution"], pm_0, to_approx, ind_gen, ind_bus, ind_branch)
     val0 = result["objective"]/obj_tuning
 
+    for i in gen_buses
+        g_pb[i] = g_pb[i] - sum(current_sol["pg"][j] for j in gens_at_bus[string(i)])
+        g_qb[i] = g_qb[i] - sum(current_sol["qg"][j] for j in gens_at_bus[string(i)])
+    end
+    for i in load_buses
+        g_pb[i] = g_pb[i] + current_sol["pd"][i]
+        g_qb[i] = g_qb[i] + current_sol["qd"][i]
+    end
+
     network_data["direction"] = 1
     pm_1 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
-    result = solve_generic_model(pm_1, solver_spec; solution_builder = PowerModels.get_solution)
+    result = solve_generic_model(pm_1, solver; solution_builder = PowerModels.get_solution)
     current_sol = get_current_solution(result["solution"], pm_1, to_approx, ind_gen, ind_bus, ind_branch)
     val1 = result["objective"]/obj_tuning
+
+    for i in gen_buses
+        g_pb[i] = g_pb[i] + sum(current_sol["pg"][j] for j in gens_at_bus[string(i)])
+        g_qb[i] = g_qb[i] + sum(current_sol["qg"][j] for j in gens_at_bus[string(i)])
+    end
+    for i in load_buses
+        g_pb[i] = g_pb[i] - current_sol["pd"][i]
+        g_qb[i] = g_qb[i] - current_sol["qd"][i]
+    end
+
+    g_pb[network_data["slack"]] = 0
+
+
+
+    ctr = 0
+    for i in network_data["active_buses"]
+        ctr = ctr+1
+        g[ctr] = g_pb[i]
+    end
+    for i in network_data["active_buses"]
+        ctr = ctr+1
+        g[ctr] = g_qb[i]
+    end
 
 end

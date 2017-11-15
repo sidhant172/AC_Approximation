@@ -156,6 +156,7 @@ val1 = result["objective"]/obj_tuning
 
 println("printing error of jacobian with symmetrization")
 @show err = 0.5*(val0+val1)
+@show l0_by_mean = 0.5*(val0-val1)
 
 # solver_warm = IpoptSolver(linear_solver="ma97",print_level=0,mu_init = 1e-8)
 solver_warm = IpoptSolver(print_level=0,mu_init = 1e-5)
@@ -170,6 +171,7 @@ backtrack = true
 ctr = 0
 l0_by_mean = 0
 
+############# gradient descent iterations #############
 for iter = 1:cnst_gen_max_iter
 
 
@@ -185,7 +187,7 @@ for iter = 1:cnst_gen_max_iter
 
     @show iter
 
-    network_data["l0"] = l0_val
+    network_data["l0"] = 0
     network_data["l_v"] = l_v_val
     network_data["l_pb"] = l_pb_val
     network_data["l_qb"] = l_qb_val
@@ -200,6 +202,10 @@ for iter = 1:cnst_gen_max_iter
     network_data["direction"] = 0   # direction of maximization
     # (result, pm) = run_ac_opf_mod(network_data,solver)
     pm_0 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
+    # for i in network_data["ind_bus"]
+    #     vm_var = pm_0.var[:nw][0][:vm][i]
+    #     setvalue(vm_var,1 + 0.00*(2*rand()-1))
+    # end
     # if warm ==  true
     #     set_warm_start(pm_0,pm_0_old)
     # end
@@ -218,6 +224,10 @@ for iter = 1:cnst_gen_max_iter
 
     network_data["direction"] = 1
     pm_1 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
+    # for i in network_data["ind_bus"]
+    #     vm_var = pm_1.var[:nw][0][:vm][i]
+    #     setvalue(vm_var,1 + 0.00*(2*rand()-1))
+    # end
     # if warm ==  true
     #     set_warm_start(pm_1,pm_1_old)
     # end
@@ -234,15 +244,15 @@ for iter = 1:cnst_gen_max_iter
         step_qb[i] = step_qb[i] - step_size*current_sol["qd"][i]
     end
 
-
-    if @show sqrt(sum(step_pb[i]^2 + step_qb[i]^2 for i in active_buses)) < 1e-7
+    @show step_norm = sqrt(sum(step_pb[i]^2 + step_qb[i]^2 for i in active_buses))
+    if @show step_norm < 1e-6
         break
     end
 
     # if @show 0.5*(val0 + val1) > err   &&  backtrack == true
-    if @show 0.5*(val0 + val1) > err + 1e-3
-        step_factor = step_factor*2
-        ctr = ctr + 1
+    if @show 0.5*(val0 + val1) > err + 1e-4
+        @show step_factor = step_factor*2
+        # ctr = ctr + 1
         for i in active_buses
             # l_pb_val[string(i)] = l_pb_val_old[string(i)] + 1e-4*(2*rand()-1)
             # l_qb_val[string(i)] = l_qb_val_old[string(i)] + 1e-4*(2*rand()-1)
@@ -250,7 +260,7 @@ for iter = 1:cnst_gen_max_iter
             l_qb_val[string(i)] = l_qb_val_old[string(i)]
         end
         warm = false
-        backtrack =  false
+        # backtrack =  false
 
 
         # if @show sqrt(sum(step_pb[i]^2 + step_qb[i]^2 for i in active_buses)) < 1e-6
@@ -275,7 +285,7 @@ for iter = 1:cnst_gen_max_iter
     end
 
     # Perform gradient descent step
-    @show sqrt(sum(step_pb[i]^2 + step_qb[i]^2 for i in active_buses))
+    # @show sqrt(sum(step_pb[i]^2 + step_qb[i]^2 for i in active_buses))
     for i in active_buses
         l_pb_val[string(i)] = l_pb_val[string(i)] - step_pb[i]
         l_qb_val[string(i)] = l_qb_val[string(i)] - step_qb[i]
@@ -289,7 +299,8 @@ for iter = 1:cnst_gen_max_iter
 
 end
 
-    approximation["l0"] = l0_by_mean
+
+@show     approximation["l0"] = l0_by_mean
     approximation["l_v"] = l_v_val
     approximation["l_pb"] = l_pb_val
     approximation["l_qb"] = l_qb_val

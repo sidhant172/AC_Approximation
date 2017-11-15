@@ -36,6 +36,13 @@ function find_linearization_error(network_data, to_approx, solver, linearation_c
     network_data["l_qb"] = linearation_coefficients["l_qb"]
 
 
+
+    gen_buses = network_data["gen_buses"]
+    load_buses = network_data["load_buses"]
+
+    @show val_nominal = network_data["l0"] + sum(network_data["l_pb"][string(i)]*(sum(pg_init[j] for j in network_data["gens_at_bus"][string(i)]))  +  network_data["l_qb"][string(i)]*(sum(qg_init[j] for j in network_data["gens_at_bus"][string(i)]))   for i in gen_buses) - sum(network_data["l_pb"][string(i)]*network_data["bus"][string(i)]["pd"] + network_data["l_qb"][string(i)]*network_data["bus"][string(i)]["qd"]  for i in load_buses)
+
+
     network_data["direction"] = 0
     (result, pm) = run_ac_opf_mod(network_data,solver)
     negative_error = result["objective"]/network_data["obj_tuning"]

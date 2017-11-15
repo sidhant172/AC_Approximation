@@ -1,14 +1,23 @@
 using JuMP
 using Ipopt
+using PowerModels
 
-function f(x...)
-    return sum((x[i]-1)^2 for i in 1:length(x))
+
+
+
+######################### JuMP user defined functions ########################
+function f(c,x...)
+    return sum((x[i]-c)^2 for i in 1:length(x))
 end
 
-function fprime(g,x...)
+function fprime(g,c,x...)
     for i=1:length(x)
-        g[i] = 2*(x[i]-1)
+        g[i] = 2*(x[i]-c)
     end
+end
+
+function obj(x...)
+    
 end
 
 # function fdprime(h,x...)
@@ -25,12 +34,21 @@ JuMP.register(m,:f,2,f,fprime)
 # @variable(m,z)
 
 # args = (x[1],x[2])
-@NLobjective(m, Min, f(x[1],x[2]))
+# @NLobjective(m, Min, f(x[1],x[2]))
+JuMP.setNLobjective(m, :Min, Expr(:call, :f, c,x...))
+
+# JuMP.setNLobjective(m, :Min, Expr(:call, :+,
+#                                         Expr(:call, :obj, [x[i] for i=1:num_spins]...),
+#                                         Expr(:call, :l1norm, [z[i] for i=1:num_spins]...)
+#                                             Expr(:call, :obj, x...),
+#                                             Expr(:call, :l1norm, z...)
+#                                         )
+#                             )
 
 # @NLconstraint(m, f(x...) <= z)
 
 status = solve(m)
-
+########################################################################
 
 # x = [3,2]
 #

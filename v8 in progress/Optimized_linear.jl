@@ -7,7 +7,7 @@ using GLPKMathProgInterface
 using MAT
 
 
-algo = 1
+algo = 2
 num_samples = 100
 
 include("opf_mod.jl")
@@ -20,6 +20,8 @@ if algo == 0
 elseif algo == 1
     # include("find_optimal_linearization_gd_annealing.jl")
     include("find_optimal_linearization_gd.jl")
+elseif algo == 2
+    include("find_optimal_linearization_ipopt_gd.jl")
 end
 
 include("find_linearization_error.jl")
@@ -33,7 +35,9 @@ include("find_linearization_error.jl")
 if algo == 0
     cnst_gen_max_iter = 1000
 elseif algo == 1
-    cnst_gen_max_iter = 1000
+    cnst_gen_max_iter = 15
+elseif algo == 2
+    cnst_gen_max_iter = 15
 end
 
 # algorithm parameters
@@ -41,23 +45,23 @@ end
 # tol = 1e-4   # convergence tolerance
 
 # operational conditions
-gen_inflation = 0.4  # defining range of loading conditions
+gen_inflation = 0.4 # defining range of loading conditions
 load_inflation = 0.4    # defining range of generation conditions
 # v_inflation = 0.1
 
 tol = gen_inflation*1e-3
 
-obj_tuning = 2e1
+obj_tuning = 1
 
 # quantity = "line_real_power"
 # quantity_to_approx = "line_reactive_power"
 # quantity_to_approx = "bus_voltage_magnitude"
 
-network_data = PowerModels.parse_file("case24_ieee_rts.m")
+# network_data = PowerModels.parse_file("case24_ieee_rts.m")
 # network_data = PowerModels.parse_file("nesta_case14_ieee.m")
 # network_data = PowerModels.parse_file("nesta_case30_as.m")
 # network_data = PowerModels.parse_file("case118.m")
-# network_data = PowerModels.parse_file("nesta_case57_ieee.m")
+network_data = PowerModels.parse_file("nesta_case57_ieee.m")
 # network_data = PowerModels.parse_file("nesta_case300_ieee.m")
 
 network_data_old = deepcopy(network_data)
@@ -70,7 +74,7 @@ network_data_old = deepcopy(network_data)
 # solver_ipopt = IpoptSolver(print_level=0)#
 # solver_ipopt = IpoptSolver()
 # solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
-solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
+solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma57")
 # solver_ipopt = IpoptSolver(linear_solver="ma97")
 
 solver_lp = GLPKSolverLP()
@@ -88,7 +92,7 @@ to_approx_list = Dict{Int64,Any}()
 
 
 # line_num = 18
-line_num = 30
+line_num = 18
 
 to_approx = Dict{String,Any}()
 to_approx["quantity"] = "line_real_power"
@@ -157,13 +161,13 @@ time = toc()
 
 
 
+# network_data = deepcopy(network_data_old)
+#
+# @show find_monte_carlo_error(network_data, to_approx_list, linear_approximations, inflation_factors, solver_ipopt, num_samples)
+
+
 network_data = deepcopy(network_data_old)
-
-@show find_monte_carlo_error(network_data, to_approx_list, linear_approximations, inflation_factors, solver_ipopt, num_samples)
-
-
-network_data = deepcopy(network_data_old)
-
+obj_tuning = 1
 for (i,approximation) in linear_approximations
     @show find_linearization_error(network_data, to_approx, solver_ipopt, approximation,inflation_factors,obj_tuning)
 end
