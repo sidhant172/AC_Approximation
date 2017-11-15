@@ -204,20 +204,7 @@ for iter = 1:cnst_gen_max_iter
     result = solve_generic_model(pm_0,solver_spec; solution_builder = PowerModels.get_solution)
     current_sol = get_current_solution(result["solution"], pm_0, to_approx, ind_gen, ind_bus, ind_branch)
     val0 = result["objective"]/obj_tuning
-    for trial_num = 1:5
-        for i in network_data["ind_bus"]
-            vm_var = pm_0.var[:nw][0][:vm][i]
-            setvalue(vm_var,1 + 0.01*(2*rand()-1))
-        end
-
-        result = solve_generic_model(pm_0, solver_spec; solution_builder = PowerModels.get_solution)
-        current_sol_temp = get_current_solution(result["solution"], pm_0, to_approx, ind_gen, ind_bus, ind_branch)
-
-        if result["objective"]/obj_tuning > val0
-            val0 = result["objective"]/obj_tuning
-            current_sol = deepcopy(current_sol_temp)
-        end
-    end
+    
 
     for i in gen_buses
         step_pb[i] = step_pb[i] - step_size*( sum(current_sol["pg"][j] for j in gens_at_bus[string(i)]) )
@@ -233,19 +220,7 @@ for iter = 1:cnst_gen_max_iter
     result = solve_generic_model(pm_0,solver_spec; solution_builder = PowerModels.get_solution)
     current_sol = get_current_solution(result["solution"], pm_0, to_approx, ind_gen, ind_bus, ind_branch)
     val1 = result["objective"]/obj_tuning
-    for trial_num = 1:5
-        for i in network_data["ind_bus"]
-            vm_var = pm_1.var[:nw][0][:vm][i]
-            setvalue(vm_var,1 + 0.01*(2*rand()-1))
-        end
-        result = solve_generic_model(pm_1, solver_spec; solution_builder = PowerModels.get_solution)
-        current_sol_temp = get_current_solution(result["solution"], pm_1, to_approx, ind_gen, ind_bus, ind_branch)
 
-        if result["objective"]/obj_tuning > val1
-            val1 = result["objective"]/obj_tuning
-            current_sol = deepcopy(current_sol_temp)
-        end
-    end
     # result = solve_generic_model(pm_1, solver_spec; solution_builder = PowerModels.get_solution)
     # current_sol = get_current_solution(result["solution"], pm_1, to_approx, ind_gen, ind_bus, ind_branch)
     # val1 = result["objective"]/obj_tuning
