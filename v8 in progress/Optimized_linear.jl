@@ -45,8 +45,10 @@ end
 # tol = 1e-4   # convergence tolerance
 
 # operational conditions
-gen_inflation = 0.3 # defining range of loading conditions
-load_inflation = 0.3    # defining range of generation conditions
+# gen_inflation = 0.3 # defining range of loading conditions
+# load_inflation = 0.3    # defining range of generation conditions
+gen_inflation = inflation # defining range of loading conditions
+load_inflation = inflation    # d
 # v_inflation = 0.1
 
 tol = gen_inflation*1e-3
@@ -92,7 +94,7 @@ to_approx_list = Dict{Int64,Any}()
 
 
 # line_num = 18
-line_num = 100
+# line_num = 100
 
 to_approx = Dict{String,Any}()
 to_approx["quantity"] = "line_real_power"
