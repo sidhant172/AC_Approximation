@@ -7,7 +7,7 @@ using GLPKMathProgInterface
 using MAT
 
 
-algo = 2
+algo = 1
 num_samples = 100
 
 include("opf_mod.jl")
@@ -51,7 +51,7 @@ load_inflation = 0.2    # defining range of generation conditions
 
 tol = gen_inflation*1e-3
 
-obj_tuning = 1
+obj_tuning = 1e1
 
 # quantity = "line_real_power"
 # quantity_to_approx = "line_reactive_power"
@@ -92,7 +92,7 @@ to_approx_list = Dict{Int64,Any}()
 
 
 # line_num = 18
-line_num = 50
+line_num = 100
 
 to_approx = Dict{String,Any}()
 to_approx["quantity"] = "line_real_power"
