@@ -204,7 +204,7 @@ for iter = 1:cnst_gen_max_iter
     result = solve_generic_model(pm_0,solver_spec; solution_builder = PowerModels.get_solution)
     current_sol = get_current_solution(result["solution"], pm_0, to_approx, ind_gen, ind_bus, ind_branch)
     val0 = result["objective"]/obj_tuning
-    
+
 
     for i in gen_buses
         step_pb[i] = step_pb[i] - step_size*( sum(current_sol["pg"][j] for j in gens_at_bus[string(i)]) )
@@ -217,8 +217,8 @@ for iter = 1:cnst_gen_max_iter
 
     network_data["direction"] = 1
     pm_1 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
-    result = solve_generic_model(pm_0,solver_spec; solution_builder = PowerModels.get_solution)
-    current_sol = get_current_solution(result["solution"], pm_0, to_approx, ind_gen, ind_bus, ind_branch)
+    result = solve_generic_model(pm_1,solver_spec; solution_builder = PowerModels.get_solution)
+    current_sol = get_current_solution(result["solution"], pm_1, to_approx, ind_gen, ind_bus, ind_branch)
     val1 = result["objective"]/obj_tuning
 
     # result = solve_generic_model(pm_1, solver_spec; solution_builder = PowerModels.get_solution)
