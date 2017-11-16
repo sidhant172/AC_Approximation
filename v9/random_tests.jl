@@ -1,7 +1,7 @@
 using JuMP
 using Ipopt
-using Plots
-gr()
+# using Plots
+# gr()
 
 
 # thetavals =  0:0.1:10
