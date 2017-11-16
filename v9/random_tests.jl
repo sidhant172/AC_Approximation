@@ -26,12 +26,12 @@ using Ipopt
 # end
 
 
-c = 0.1
+# c = 0.1
 
 
 # for i=10:1000
-i = 10000
-    A = (1-c/i)*eye(i) + (c/i)*ones(i,i)
+# i = 10000
+    A = (1-c/(i-1))*eye(i) + (c/(i-1))*ones(i,i)
     @show minimum(eigvals(A))
 # end
 
