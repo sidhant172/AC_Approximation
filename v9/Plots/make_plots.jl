@@ -34,12 +34,14 @@ active_buses = [i for i=1:num_bus if norm(pp[:,i])>1e-5]
 
 # p = savefig(histogram2d(randn(10000),randn(10000),nbins=100),"mylot.pdf")
 
-p_error = zeros(num_branch,length(inflation_factors))
-q_error = zeros(num_branch,length(inflation_factors))
 
 
+p_error_dict = Dict{Int64,Any}()
+q_error_dict = Dict{Int64,Any}()
 
 for algo in algorithms
+    p_error = zeros(num_branch,length(inflation_factors))
+    q_error = zeros(num_branch,length(inflation_factors))
     ctr = 0
     for inflation in inflation_factors
         ctr = ctr+1
@@ -54,17 +56,19 @@ for algo in algorithms
         q_err = vars["approx_error"]
         q_error[:,ctr] = q_err
     end
+    p_error_dict[algo] = p_error
+    q_error_dict[algo] = q_error
+end
 
 
+for i = 1:num_branch
+    realfig = plot(inflation_factors,p_error_dict[1][i,:],xlabel="Radius",ylabel="Maximum approximation error",label="Algorithm 1")
+    plot!(inflation_factors,p_error_dict[2][i,:],color=:red,label="Algorithm 2")
+    # savefig(realfig,"plots"string(num_bus)"/approximation_error/approx_error_real_line_"string(i)"_algorithm_"string(algo)".pdf")
+    savefig(realfig,"plots"string(num_bus)"/approximation_error/approx_error_real_line_"string(i)".pdf")
 
-    for i = 1:num_branch
-        realfig = plot(inflation_factors,p_error[i,:],xlabel="Radius",ylabel="Maximum approximation error",label="Algorithm "string(algo))
-        # plot!(inflation_factors,p_error_old[i,:],color=:red,label="gd")
-        savefig(realfig,"plots"string(num_bus)"/approximation_error/approx_error_real_line_"string(i)"_algorithm_"string(algo)".pdf")
-
-        reactivefig = plot(inflation_factors,q_error[i,:],xlabel="Radius",ylabel="Maximum approximation error",label="Algorithm "string(algo))
-        # plot!(inflation_factors,q_error_old[i,:],color=:red,label="gd")
-        savefig(realfig,"plots"string(num_bus)"/approximation_error/approx_error_reactive_line_"string(i)"_algorithm_"string(algo)".pdf")
-    end
-
+    reactivefig = plot(inflation_factors,q_error_dict[1][i,:],xlabel="Radius",ylabel="Maximum approximation error",label="Algorithm 1")
+    plot!(inflation_factors,q_error_dict[2][i,:],color=:red,label="Algorithm 2")
+    # savefig(realfig,"plots"string(num_bus)"/approximation_error/approx_error_reactive_line_"string(i)"_algorithm_"string(algo)".pdf")
+    savefig(realfig,"plots"string(num_bus)"/approximation_error/approx_error_reactive_line_"string(i)".pdf")
 end
