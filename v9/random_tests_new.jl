@@ -8,6 +8,8 @@ gamma = 0.1
 
 
 minval = 100
+thetamin = eye(n)
+varmin = eye(n)
 
 for t23 = -gamma:0.02:gamma
     for t12 = -(1-abs(t23)):0.02:(1-abs(t23)), t13 = -(1-abs(t23)):0.02:(1-abs(t23))
@@ -30,10 +32,16 @@ for t23 = -gamma:0.02:gamma
 
         smallest_eig = minimum(eigvals(varmat))
 
-        minval = min(minval,smallest_eig)
+        if minval > smallest_eig
+            minval = smallest_eig
+            thetamin = theta
+            varmin = varmat
+        end
 
     end
 end
 
+
 @show minval
+@show theta
 @show 1 - tanh(gamma)
