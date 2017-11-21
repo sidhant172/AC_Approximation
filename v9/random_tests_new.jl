@@ -11,10 +11,10 @@ thetamin = eye(n)
 varmin = eye(n)
 
 for t23 = -gamma:0.02:gamma
-    for t12 = -(gamma-abs(t23)):0.02:(gamma-abs(t23)), t13 = -(gamma-abs(t23)):0.02:(gamma-abs(t23))
-        if (abs(t13)+abs(t12) > gamma)
-            continue
-        end
+    for t12 = -(gamma-abs(t23)):0.02:(gamma-abs(t23)), t13 = -(gamma-abs(t23)-abs(t12)):0.02:(gamma-abs(t23)-abs(t12))
+        # if (abs(t13)+abs(t12) > gamma)
+        #     continue
+        # end
         theta = eye(n)
         theta[2,3]=t23
         theta[3,2] = theta[2,3]
