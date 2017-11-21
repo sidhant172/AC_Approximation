@@ -43,5 +43,6 @@ end
 
 
 @show minval
-@show theta
+@show thetamin
+@show varmin
 @show 1 - tanh(gamma)
