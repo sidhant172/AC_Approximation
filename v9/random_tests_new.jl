@@ -96,7 +96,7 @@ end
 
 
 
-@show minval
-@show thetamin
-@show varmin
-@show 1 - tanh(gamma)
+println("Minimum eigenvalue = ",minval)
+println(thetamin)
+println(varmin)
+println("1-tanh(gamma)=",1 - tanh(gamma))
