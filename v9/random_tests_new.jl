@@ -9,8 +9,8 @@ gamma = 0.1
 
 minval = 100
 
-for t23 = -gamma:0.01:gamma
-    for t12 = -(1-abs(t23)):0.01:(1-abs(t23)), t13 = -(1-abs(t23)):0.01:(1-abs(t23))
+for t23 = -gamma:0.02:gamma
+    for t12 = -(1-abs(t23)):0.02:(1-abs(t23)), t13 = -(1-abs(t23)):0.02:(1-abs(t23))
         theta = eye(n)
         theta[2,3]=t23
         theta[1,3]=t13
