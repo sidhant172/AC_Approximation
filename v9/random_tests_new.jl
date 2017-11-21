@@ -4,7 +4,6 @@ using Ipopt
 # gr()
 
 n = 3
-gamma = 0.1
 
 
 minval = 100
