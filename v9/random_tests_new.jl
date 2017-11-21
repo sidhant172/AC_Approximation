@@ -36,4 +36,4 @@ for t23 = -gamma:0.02:gamma
 end
 
 @show minval
-@show tanh(gamma)
+@show 1 - tanh(gamma)
