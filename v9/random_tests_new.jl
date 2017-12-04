@@ -5,7 +5,6 @@ using Ipopt
 
 n = 3
 
-step = 0.05
 
 minval = 100
 thetamin = eye(n)
