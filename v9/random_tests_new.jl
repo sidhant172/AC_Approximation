@@ -1,7 +1,7 @@
 using JuMP
 using Ipopt
-# using Plots
-# gr()
+using Plots
+gr()
 
 n = 3
 
@@ -58,6 +58,7 @@ varmin = eye(n)
 
 
 d = Dict{Array{Float64,1},Float64}()
+logd = Dict{Array{Float64,1},Float64}()
 
 for t23 = -gamma:step:gamma
     for t12 = -(gamma-abs(t23)):step:(gamma-abs(t23)), t13 = -(gamma-abs(t23)):step:(gamma-abs(t23))
@@ -88,6 +89,7 @@ for t23 = -gamma:step:gamma
         smallest_eig = minimum(eigvals(varmat))
 
         d[[t23,t12,t13]] = smallest_eig
+        logd[[t23,t12,t13]] = log(smallest_eig)
 
         if minval > smallest_eig
             minval = smallest_eig
@@ -105,3 +107,29 @@ println("Minimum eigenvalue = ",minval)
 println(thetamin)
 println(varmin)
 println("1-tanh(gamma)=",1 - tanh(gamma))
+
+# for t23 = -gamma:step:gamma
+#     for t12 = -(gamma-abs(t23)):step:(gamma-abs(t23))
+#         lb = min(gamma-abs(t23),gamma-abs(t12))
+#         xaxis = -lb:step:lb
+#         yaxis = zeros(length(xaxis))
+#         for i=1:length(xaxis)
+#             yaxis[i] = logd[[t23,t12,xaxis[i]]]
+#         end
+#         myplot = plot(xaxis,yaxis)
+#         savefig(myplot,"random_tests/"string(t23)string(t12)".pdf")
+#     end
+# end
+
+for t23 = -gamma:step:gamma
+    # for t12 = -(gamma-abs(t23)):step:(gamma-abs(t23))
+        lb = min(gamma-abs(t23),gamma-abs(t12))
+        xaxis = -lb:step:lb
+        yaxis = zeros(length(xaxis))
+        for i=1:length(xaxis)
+            yaxis[i] = logd[[t23,t12,xaxis[i]]]
+        end
+        myplot = plot(xaxis,yaxis)
+        savefig(myplot,"random_tests/"string(t23)string(t12)".pdf")
+    # end
+end
