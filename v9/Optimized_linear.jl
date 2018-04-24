@@ -7,7 +7,7 @@ using GLPKMathProgInterface
 using MAT
 
 
-# algo = 1
+# algo = 2
 num_samples = 100
 
 include("opf_mod.jl")
@@ -37,7 +37,7 @@ if algo == 0
 elseif algo == 1
     cnst_gen_max_iter = 30
 elseif algo == 2
-    cnst_gen_max_iter = 5
+    cnst_gen_max_iter = 10
 end
 
 # algorithm parameters
@@ -79,6 +79,8 @@ network_data_old = deepcopy(network_data)
 # solver_ipopt = IpoptSolver()
 # solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
 solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
+# solver_ipopt = IpoptSolver(linear_solver="ma57",tol=1e-12)
+# solver_ipopt = IpoptSolver(linear_solver = "mumps")
 # solver_ipopt = IpoptSolver(linear_solver="ma97")
 
 solver_lp = GLPKSolverLP()

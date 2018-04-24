@@ -1,0 +1,31 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf400
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red49\green183\blue32;\red11\green11\blue11;\red255\green255\blue255;
+}
+{\*\expandedcolortbl;;\cssrgb\c21811\c75015\c16263;\cssrgb\c4421\c4421\c4421;\cssrgb\c100000\c100000\c100000;
+}
+\margl1440\margr1440\vieww17240\viewh8400\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs22 \cf2 \cb3 \CocoaLigature0 julia> \cf4 linear_approximations[1]\
+Dict\{String,Any\} with 5 entries:\
+  "l0"    => 0.0163901\
+  "l_pb"  => Dict("1"=>0.0,"2"=>-0.354575,"3"=>0.297533)\
+  "l_v"   => 0\
+  "error" => 0.00576162\
+\
+\
+This is for line number 2, active power with inflation = 30%, using gradient descent with IPOPT.\
+\
+But when I use also = 0, our original outer approximation in PSCC, I get the following (much higher error):\
+Dict\{String,Any\} with 7 entries:\
+  "l0"               => -0.00516816\
+  "l_pb"             => Dict("1"=>-0.0,"2"=>-0.36116,"3"=>0.296796)\
+  "worst_case_upper" => Dict\{String,Any\}(Pair\{String,Any\}("va", Dict\{Int64,Float64\}()),Pair\{String,Any\}("qg", Dict(2=>-0.094272,3=>-0.0490582,1=>0.566357)),Pair\{String,Any\}("pg", D\'85\
+  "l_v"              => -0.0\
+  "error"            => 0.00925354\
+  "worst_case_lower" => Dict\{String,Any\}(Pair\{String,Any\}("va", Dict\{Int64,Float64\}()),Pair\{String,Any\}("qg", Dict(2=>-0.08799,3=>-0.0482947,1=>0.549042)),Pair\{String,Any\}("pg", Di\'85\
+  "l_qb"             => Dict("1"=>0.0576435,"2"=>-0.0710824,"3"=>0.0129067)\
+\
+\
+So the top one is most likely some local solution it is stuck at. Is this enough information for you to check out? If there is something else you would like to see, let me know.}
