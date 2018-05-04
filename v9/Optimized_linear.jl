@@ -1,8 +1,8 @@
 using PowerModels
 using JuMP
 using Ipopt
-# using Clp
-using GLPKMathProgInterface
+using Clp
+# using GLPKMathProgInterface
 # using Gurobi
 using MAT
 
@@ -35,7 +35,7 @@ include("find_linearization_error.jl")
 if algo == 0
     cnst_gen_max_iter = 1000
 elseif algo == 1
-    cnst_gen_max_iter = 30
+    cnst_gen_max_iter = 50
 elseif algo == 2
     cnst_gen_max_iter = 10
 end
@@ -53,7 +53,7 @@ load_inflation = inflation    # d
 
 tol = gen_inflation*1e-3
 
-obj_tuning = 1
+obj_tuning = 1e4
 
 # quantity = "line_real_power"
 # quantity_to_approx = "line_reactive_power"
@@ -83,8 +83,8 @@ solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
 # solver_ipopt = IpoptSolver(linear_solver = "mumps")
 # solver_ipopt = IpoptSolver(linear_solver="ma97")
 
-solver_lp = GLPKSolverLP()
-# solver_lp = ClpSolver()
+# solver_lp = GLPKSolverLP()
+solver_lp = ClpSolver()
 # solver_lp = GurobiSolver(TuneOutput=0)
 
 
@@ -171,9 +171,10 @@ time = toc()
 #
 # @show find_monte_carlo_error(network_data, to_approx_list, linear_approximations, inflation_factors, solver_ipopt, num_samples)
 
-
-network_data = deepcopy(network_data_old)
-obj_tuning = 1
+solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
+# network_data = deepcopy(network_data_old)
+network_data = PowerModels.parse_file(filename)
+obj_tuning = 1e2
 for (i,approximation) in linear_approximations
     @show find_linearization_error(network_data, to_approx, solver_ipopt, approximation,inflation_factors,obj_tuning)
 end
