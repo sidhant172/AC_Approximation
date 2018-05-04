@@ -78,6 +78,7 @@ vars = matread("case"string(length(ind_bus))"_ptdf.mat")
 # vars = matread("case14_ptdf.mat")
 # vars = matread("case57_ptdf.mat")
 # vars = matread("case118_ptdf.mat")
+# vars = matread("E:\\Dans Files\\Grad\\Research\\Error Bounding Code\\Optimal_Approximations\\AC_Approximation\\v9\\case4_ptdf.mat")
 
 pp_jac = Dict{Int,Float64}()
 pq_jac = Dict{Int,Float64}()
@@ -133,7 +134,8 @@ val0 = 0
 val1 = 0
 
 
-
+err_by_iter = Dict{Int,Float64}()
+bt = Dict{Int,Int64}()
 
 
 ######## solve once at the beginning to get warm start point
@@ -159,6 +161,9 @@ val1 = result["objective"]/obj_tuning
 println("printing error of jacobian with symmetrization")
 @show err = 0.5*(val0+val1)
 @show l0_by_mean = 0.5*(val0-val1)
+
+err_by_iter[0] = err
+bt[0] = 0
 
 # solver_warm = IpoptSolver(linear_solver="ma97",print_level=0,mu_init = 1e-8)
 solver_warm = IpoptSolver(print_level=0,mu_init = 1e-5)
@@ -241,6 +246,9 @@ for iter = 1:cnst_gen_max_iter
         break
     end
 
+    err_by_iter[iter] = 0.5*(val0 + val1)
+    bt[iter] = 0
+    
     # if @show 0.5*(val0 + val1) > err   &&  backtrack == true
     if @show 0.5*(val0 + val1) > err + 1e-4
         @show step_factor = step_factor*2
@@ -254,6 +262,8 @@ for iter = 1:cnst_gen_max_iter
         warm = false
         # backtrack =  false
 
+        println("Backtrack is triggered! Check for local solution.")
+        bt[iter] = 1
 
         # if @show sqrt(sum(step_pb[i]^2 + step_qb[i]^2 for i in active_buses)) < 1e-6
         #     break
@@ -297,6 +307,8 @@ end
     approximation["l_pb"] = l_pb_val
     approximation["l_qb"] = l_qb_val
     approximation["error"] = err
+    approximation["err_by_iter"] = err_by_iter
+    approximation["backtrack"] = bt
 
     return approximation
 

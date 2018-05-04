@@ -1,13 +1,15 @@
 using PowerModels
 using JuMP
 using Ipopt
-# using Clp
-using GLPKMathProgInterface
+using Clp
+# using GLPKMathProgInterface
 # using Gurobi
 using MAT
 
 
-# algo = 1
+cd("E:\\Dans Files\\Grad\\Research\\Error Bounding Code\\Optimal_Approximations\\AC_Approximation\\v9")
+
+algo = 1
 num_samples = 100
 
 include("opf_mod.jl")
@@ -45,6 +47,7 @@ end
 # tol = 1e-4   # convergence tolerance
 
 # operational conditions
+inflation = 0.3
 # gen_inflation = 0.3 # defining range of loading conditions
 # load_inflation = 0.3    # defining range of generation conditions
 gen_inflation = inflation # defining range of loading conditions
@@ -59,6 +62,9 @@ obj_tuning = 1
 # quantity_to_approx = "line_reactive_power"
 # quantity_to_approx = "bus_voltage_magnitude"
 
+#filename = "E:\\Dans Files\\MATLAB\\nesta-0.7.0\\opf\\nesta_case4_gs.m"
+filename = "E:\\Dans Files\\MATLAB\\nesta-0.7.0\\opf\\nesta_case3_lmbd.m"
+#filename = "E:\\Dans Files\\MATLAB\\nesta-0.7.0\\opf\\nesta_case14_ieee.m"
 
 network_data = PowerModels.parse_file(filename)
 # network_data = PowerModels.parse_file("case24_ieee_rts.m")
@@ -76,13 +82,13 @@ network_data_old = deepcopy(network_data)
 
 
 # solver_ipopt = IpoptSolver(print_level=0)#
-# solver_ipopt = IpoptSolver()
+solver_ipopt = IpoptSolver()
 # solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
-solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
+# solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
 # solver_ipopt = IpoptSolver(linear_solver="ma97")
 
-solver_lp = GLPKSolverLP()
-# solver_lp = ClpSolver()
+# solver_lp = GLPKSolverLP()
+solver_lp = ClpSolver()
 # solver_lp = GurobiSolver(TuneOutput=0)
 
 
@@ -95,6 +101,7 @@ inflation_factors["load_inflation"] = load_inflation
 to_approx_list = Dict{Int64,Any}()
 
 
+line_num = 2
 # line_num = 18
 # line_num = 100
 
@@ -190,3 +197,12 @@ end
 # approximation = linear_approximations[2]
 # matwrite("results"string(num_bus)"/error_tracking_reactive_line1.mat",Dict("lp_err" => approximation["lp_err"], "nlp_err_pos" => approximation["nlp_err_pos"],
 #     "nlp_err_neg" => approximation["nlp_err_neg"], "lp_deltas" => approximation["lp_deltas"]))
+
+
+for i=0:length(linear_approximations[1]["err_by_iter"])-1
+    println(linear_approximations[1]["err_by_iter"][i])
+end
+
+for i=0:length(linear_approximations[1]["backtrack"])-1
+    println(linear_approximations[1]["backtrack"][i])
+end
