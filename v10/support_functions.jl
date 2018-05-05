@@ -9,7 +9,7 @@ function create_aux_data(network_data,inflation_factors, solver, obj_tuning)
     ############## Mapping generators to buses #####################################
     gen_buses = [network_data["gen"][i]["gen_bus"] for i in keys(network_data["gen"])]
     gen_buses = unique(gen_buses)
-    load_buses = [parse(Int64,i) for i in keys(network_data["bus"]) if abs(network_data["bus"][i]["pd"]) + abs(network_data["bus"][i]["qd"]) > 1e-3]
+    load_buses = [parse(Int64,i) for i in keys(network_data["bus"]) if abs(network_data["bus"][i]["pd"]) + abs(network_data["bus"][i]["qd"]) > 1e-6]
     active_buses = union(gen_buses,load_buses)
 
     # find load limits using load inflation_factors

@@ -96,8 +96,8 @@ function find_optimal_linearization_outer_approximation(network_data, aux_data, 
         ############################################################################
         aux_data["sign"] = 1   # direction of maximization
         model = JuMP.Model(solver = solver)
-        # model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
-        model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
+        model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
+        # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
         status = solve(model)
         current_sol = get_current_solution(network_data,model,var_refs,aux_data)
         @show current_sol["quantity_val"]
@@ -115,8 +115,8 @@ function find_optimal_linearization_outer_approximation(network_data, aux_data, 
         ################################################################################
         aux_data["sign"] = -1   # direction of maximization
         model = JuMP.Model(solver = solver)
-        # model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
-        model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
+        model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
+        # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
         status = solve(model)
         current_sol = get_current_solution(network_data,model,var_refs,aux_data)
         @show current_sol["quantity_val"]
@@ -212,16 +212,16 @@ function find_optimal_linearization_gradient_descent(network_data, aux_data, jac
     # find the error for the jacobian
     aux_data["sign"] = 1   # direction of maximization
     model = JuMP.Model(solver = solver)
-    # model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
-    model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
+    model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
+    # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
     status = solve(model)
     current_sol = get_current_solution(network_data,model,var_refs,aux_data)
     pos_error = current_sol["objval"]
 
     aux_data["sign"] = -1   # direction of maximization
     model = JuMP.Model(solver = solver)
-    # model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
-    model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
+    model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
+    # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
     status = solve(model)
     current_sol = get_current_solution(network_data,model,var_refs,aux_data)
     neg_error = current_sol["objval"]
@@ -253,8 +253,8 @@ function find_optimal_linearization_gradient_descent(network_data, aux_data, jac
         # computing gradient step
         aux_data["sign"] = 1   # direction of maximization
         model = JuMP.Model(solver = solver)
-        # model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
-        model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
+        model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
+        # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
         status = solve(model)
         current_sol = get_current_solution(network_data,model,var_refs,aux_data)
         pos_error = current_sol["objval"]
@@ -271,8 +271,8 @@ function find_optimal_linearization_gradient_descent(network_data, aux_data, jac
 
         aux_data["sign"] = -1   # direction of maximization
         model = JuMP.Model(solver = solver)
-        # model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
-        model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
+        model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
+        # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
         status = solve(model)
         current_sol = get_current_solution(network_data,model,var_refs,aux_data)
         neg_error = current_sol["objval"]
@@ -296,7 +296,7 @@ function find_optimal_linearization_gradient_descent(network_data, aux_data, jac
             l_qb_val[i] = l_qb_val[i] - step_qb[i]
         end
         l_pb_val[slack] = 0 # no coefficeint for active power injection at slack bus
-        l0_val = 0.5*(pos_error-neg_error)
+        # l0_val = 0.5*(pos_error-neg_error)
 
     end # end of gradient descent iterations
 
