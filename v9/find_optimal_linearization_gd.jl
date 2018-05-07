@@ -100,10 +100,6 @@ elseif to_approx["quantity"] == "line_reactive_power"
 else println("not supported")
 end
 
-# pp_jac = vars["Hac_f"][1:length(ind_bus),1:length(ind_bus)]
-# pp_jac = vars["Hac_f"][1:length(ind_bus),1:length(ind_bus)]
-# pp_jac = vars["Hac_f"][1:length(ind_bus),1:length(ind_bus)]
-
 ################################################################################
 
 l0_val = 0
@@ -180,8 +176,6 @@ l0_by_mean = 0
 
 ############# gradient descent iterations #############
 for iter = 1:cnst_gen_max_iter
-
-
     step_size = step_size_const/step_factor
 
     solver_spec = solver
