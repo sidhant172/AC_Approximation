@@ -15,7 +15,7 @@ load_inflation = inflation    # d
 # v_inflation = 0.1
 
 tol = gen_inflation*1e-3
-obj_tuning = 1e1
+obj_tuning = 1
 
 # quantity = "line_real_power"
 # quantity_to_approx = "line_reactive_power"
@@ -45,7 +45,7 @@ to_approx_list[1] = to_approx
 
 
 # testing outer approximation
-cnst_gen_max_iter = 5
+cnst_gen_max_iter = 1
 tic()
 linear_approximations = find_all_optimal_linearizations_outer_approximation(network_data, to_approx_list, inflation_factors, solver, solver_lp, cnst_gen_max_iter, tol, obj_tuning)
 time = toc()
@@ -53,7 +53,7 @@ time = toc()
 @show find_linearization_error(network_data,inflation_factors,to_approx_list[1],linear_approximations[1],solver,1.0)
 
 # # testing gradient descent
-max_iter = 20
+max_iter = 50
 step_size = 1e-4
 tic()
 linear_approximations = find_all_optimal_linearizations_gradient_descent(network_data, to_approx_list, inflation_factors, jacobian_filename, solver, solver_lp, max_iter, tol, obj_tuning)

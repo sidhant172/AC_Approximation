@@ -296,7 +296,7 @@ function find_optimal_linearization_gradient_descent(network_data, aux_data, jac
             l_qb_val[i] = l_qb_val[i] - step_qb[i]
         end
         l_pb_val[slack] = 0 # no coefficeint for active power injection at slack bus
-        # l0_val = 0.5*(pos_error-neg_error)
+        l0_val = 0.5*(pos_error-neg_error)
 
     end # end of gradient descent iterations
 

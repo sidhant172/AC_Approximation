@@ -35,7 +35,7 @@ function post_ac_opf_maxerror(data::Dict{String,Any}, model, aux_data)
             -  sum(aux_data["l_pb"][i]*pd[i] + aux_data["l_qb"][i]*qd[i]  for i in aux_data["load_buses"])  ) )
             )
     elseif aux_data["quantity"] == "line_reactive_power"
-        @objective(model, Max, aux_data["obj_tuning"]*(aux_data["sign"]*q[aux_data["quantity_index"]] - aux_data["sign"]*(aux_data["l0"] + 
+        @objective(model, Max, aux_data["obj_tuning"]*(aux_data["sign"]*q[aux_data["quantity_index"]] - aux_data["sign"]*(aux_data["l0"] +
             sum(aux_data["l_pb"][i]*(sum(pg[j] for j in ref[:bus_gens][i]))  +  aux_data["l_qb"][i]*(sum(qg[j] for j in ref[:bus_gens][i]))   for i in aux_data["gen_buses"])
             -  sum(aux_data["l_pb"][i]*pd[i] + aux_data["l_qb"][i]*qd[i]  for i in aux_data["load_buses"])  ) )
             )
