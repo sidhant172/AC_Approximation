@@ -121,17 +121,15 @@ println("1-tanh(gamma)=",1 - tanh(gamma))
 #     end
 # end
 
-# plotting
-# for t23 = -gamma:step:gamma
-#     # for t12 = -(gamma-abs(t23)):step:(gamma-abs(t23))
-#         lbt12 = gamma - abs[]
-#         lb = min(gamma-abs(t23),gamma-abs(t12))
-#         xaxis = -lb:step:lb
-#         yaxis = zeros(length(xaxis))
-#         for i=1:length(xaxis)
-#             yaxis[i] = logd[[t23,t12,xaxis[i]]]
-#         end
-#         myplot = plot(xaxis,yaxis)
-#         savefig(myplot,"random_tests/"string(t23)string(t12)".pdf")
-#     # end
-# end
+for t23 = -gamma:step:gamma
+    # for t12 = -(gamma-abs(t23)):step:(gamma-abs(t23))
+        lb = min(gamma-abs(t23),gamma-abs(t12))
+        xaxis = -lb:step:lb
+        yaxis = zeros(length(xaxis))
+        for i=1:length(xaxis)
+            yaxis[i] = logd[[t23,t12,xaxis[i]]]
+        end
+        myplot = plot(xaxis,yaxis)
+        savefig(myplot,"random_tests/"string(t23)string(t12)".pdf")
+    # end
+end

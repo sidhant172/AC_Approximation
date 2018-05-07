@@ -6,9 +6,7 @@ function find_linearization_error(network_data, to_approx, solver, linearation_c
     append_network_data(network_data,inflation_factors)   # append network_data with useful data structures
 
     ############# tighten generator and load limits around OPF solution based on inflation_factors ######################
-    solver_spec = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
-    network_data_copy = deepcopy(network_data)
-    output = run_ac_opf(network_data_copy, solver_spec)
+    output = run_ac_opf(network_data, solver_ipopt)
 
     gen_inflation = inflation_factors["gen_inflation"]
     pg_init = Dict{Int,Float64}()
@@ -44,16 +42,13 @@ function find_linearization_error(network_data, to_approx, solver, linearation_c
 
     @show val_nominal = network_data["l0"] + sum(network_data["l_pb"][string(i)]*(sum(pg_init[j] for j in network_data["gens_at_bus"][string(i)]))  +  network_data["l_qb"][string(i)]*(sum(qg_init[j] for j in network_data["gens_at_bus"][string(i)]))   for i in gen_buses) - sum(network_data["l_pb"][string(i)]*network_data["bus"][string(i)]["pd"] + network_data["l_qb"][string(i)]*network_data["bus"][string(i)]["qd"]  for i in load_buses)
 
-    network_data_copy = deepcopy(network_data)
-    network_data_copy["direction"] = 0
-    solver_spec = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
-    (result, pm) = run_ac_opf_mod(network_data_copy,solver_spec)
+
+    network_data["direction"] = 0
+    (result, pm) = run_ac_opf_mod(network_data,solver)
     negative_error = result["objective"]/network_data["obj_tuning"]
 
-    network_data_copy = deepcopy(network_data)
-    network_data_copy["direction"] = 1
-    solver_spec = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
-    (result, pm) = run_ac_opf_mod(network_data_copy,solver_spec)
+    network_data["direction"] = 1
+    (result, pm) = run_ac_opf_mod(network_data,solver)
     positive_error = result["objective"]/network_data["obj_tuning"]
 
     return negative_error, positive_error
