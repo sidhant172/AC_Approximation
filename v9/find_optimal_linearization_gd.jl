@@ -11,7 +11,9 @@ function find_optimal_linearizations(network_data, to_approx_list, inflation_fac
     append_network_data(network_data,inflation_factors)   # append network_data with useful data structures
 
     ############# tighten generator and load limits around OPF solution based on inflation_factors ######################
-    output = run_ac_opf(network_data, solver_ipopt)
+    solver_spec = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
+    network_data_copy = deepcopy(network_data)
+    output = run_ac_opf(network_data_copy, solver_spec)
 
     gen_inflation = inflation_factors["gen_inflation"]
     pg_init = Dict{Int,Float64}()
@@ -110,6 +112,7 @@ l0_val = 0
 l_v_val = 0
 l_pb_val = Dict{String,Float64}()
 l_qb_val = Dict{String,Float64}()
+l_v_val_old = 0
 l_pb_val_old = Dict{String,Float64}()
 l_qb_val_old = Dict{String,Float64}()
 for i in active_buses
@@ -145,14 +148,19 @@ network_data["l_pb"] = l_pb_val
 network_data["l_qb"] = l_qb_val
 
 
-network_data["direction"] = 0   # direction of maximization
-(result, pm_0_old) = run_ac_opf_mod(network_data,solver)
+# solver_spec = solver
+solver_spec = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
+network_data_copy = deepcopy(network_data)
+network_data_copy["direction"] = 0   # direction of maximization
+(result, pm_0_old) = run_ac_opf_mod(network_data_copy,solver_spec)
 current_sol = get_current_solution(result["solution"], pm_0_old, to_approx, ind_gen, ind_bus, ind_branch)
 val0 = result["objective"]/obj_tuning
 
-
-network_data["direction"] = 1
-(result, pm_1_old) = run_ac_opf_mod(network_data,solver)
+# solver_spec = solver
+solver_spec = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
+network_data_copy = deepcopy(network_data)
+network_data_copy["direction"] = 1
+(result, pm_1_old) = run_ac_opf_mod(network_data_copy,solver_spec)
 current_sol = get_current_solution(result["solution"], pm_1_old, to_approx, ind_gen, ind_bus, ind_branch)
 val1 = result["objective"]/obj_tuning
 
@@ -166,15 +174,15 @@ err_by_iter[0] = err
 bt[0] = 0
 
 # solver_warm = IpoptSolver(linear_solver="ma97",print_level=0,mu_init = 1e-8)
-solver_warm = IpoptSolver(print_level=0,mu_init = 1e-5)
+# solver_warm = IpoptSolver(print_level=0,mu_init = 1e-5)
 # solver_warm = IpoptSolver(print_level=0)
 
 # solver_warm = IpoptSolver(linear_solver="ma97",mu_init = 1e-7)
 
 step_factor = 1
 
-warm = true
-backtrack = true
+# warm = true
+# backtrack = true
 ctr = 0
 l0_by_mean = 0
 
@@ -206,8 +214,12 @@ for iter = 1:cnst_gen_max_iter
         step_qb[i] = 0.0
     end
 
-    network_data["direction"] = 0   # direction of maximization
-    pm_0 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
+
+    # solver_spec = solver
+    solver_spec = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
+    network_data_copy = deepcopy(network_data)
+    network_data_copy["direction"] = 0   # direction of maximization
+    pm_0 = build_generic_model(network_data_copy, ACPPowerModel, post_opf_mod)
     result = solve_generic_model(pm_0,solver_spec; solution_builder = PowerModels.get_solution)
     current_sol = get_current_solution(result["solution"], pm_0, to_approx, ind_gen, ind_bus, ind_branch)
     val0 = result["objective"]/obj_tuning
@@ -222,8 +234,11 @@ for iter = 1:cnst_gen_max_iter
         step_qb[i] = step_qb[i] + step_size*current_sol["qd"][i]
     end
 
-    network_data["direction"] = 1
-    pm_1 = build_generic_model(network_data, ACPPowerModel, post_opf_mod)
+    # solver_spec = solver
+    solver_spec = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
+    network_data_copy = deepcopy(network_data)
+    network_data_copy["direction"] = 1
+    pm_1 = build_generic_model(network_data_copy, ACPPowerModel, post_opf_mod)
     result = solve_generic_model(pm_1,solver_spec; solution_builder = PowerModels.get_solution)
     current_sol = get_current_solution(result["solution"], pm_1, to_approx, ind_gen, ind_bus, ind_branch)
     val1 = result["objective"]/obj_tuning
@@ -233,14 +248,17 @@ for iter = 1:cnst_gen_max_iter
     # val1 = result["objective"]/obj_tuning
 
     for i in gen_buses
-        step_pb[i] = step_pb[i] + step_size*( sum(current_sol["pg"][j] for j in gens_at_bus[string(i)]) )
+        @show step_pb[i] = step_pb[i] + step_size*( sum(current_sol["pg"][j] for j in gens_at_bus[string(i)]) )
         step_qb[i] = step_qb[i] + step_size*( sum(current_sol["qg"][j] for j in gens_at_bus[string(i)]) )
     end
     for i in load_buses
-        step_pb[i] = step_pb[i] - step_size*current_sol["pd"][i]
+        @show step_pb[i] = step_pb[i] - step_size*current_sol["pd"][i]
         step_qb[i] = step_qb[i] - step_size*current_sol["qd"][i]
     end
 
+    @show active_buses
+    @show step_pb
+    step_pb[slack] = 0
     @show step_norm = sqrt(sum(step_pb[i]^2 + step_qb[i]^2 for i in active_buses))
     if @show step_norm < 1e-6
         break
@@ -250,9 +268,10 @@ for iter = 1:cnst_gen_max_iter
     bt[iter] = 0
     
     # if @show 0.5*(val0 + val1) > err   &&  backtrack == true
-    if @show 0.5*(val0 + val1) > err + 1e-4
+    if @show 0.5*(val0 + val1) > err*1.01
         @show step_factor = step_factor*2
         # ctr = ctr + 1
+        l_v_val = l_v_val_old
         for i in active_buses
             # l_pb_val[string(i)] = l_pb_val_old[string(i)] + 1e-4*(2*rand()-1)
             # l_qb_val[string(i)] = l_qb_val_old[string(i)] + 1e-4*(2*rand()-1)
@@ -280,6 +299,8 @@ for iter = 1:cnst_gen_max_iter
     @show err = 0.5*(val0 + val1)
     @show l0_by_mean = 0.5*(val0-val1)
     @show step_factor
+
+    l_v_val_old = l_v_val
 
     for i in active_buses
         l_pb_val_old[string(i)] = l_pb_val[string(i)]

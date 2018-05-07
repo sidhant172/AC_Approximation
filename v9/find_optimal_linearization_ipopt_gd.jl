@@ -191,6 +191,8 @@ function find_optimal_linearization(network_data, to_approx, solver, solver_lp, 
 
 
     m = Model(solver=IpoptSolver(linear_solver="ma57",tol=1e-5,hessian_approximation="limited-memory",max_iter=cnst_gen_max_iter,warm_start_init_point="yes",max_soc=10))
+    # m = Model(solver=IpoptSolver(linear_solver="ma57",tol=1e-5,hessian_approximation="limited-memory", limited_memory_update_type = "sr1", max_iter=cnst_gen_max_iter,warm_start_init_point="yes",max_soc=10))
+
     # m = Model(solver=IpoptSolver(linear_solver="ma57",tol=1e-5,hessian_approximation="limited-memory",acceptable_obj_change_tol=1e-3,acceptable_iter=3,acceptable_dual_inf_tol=1e3))
 
     JuMP.register(m,:f,2*length(active_buses),f,gradf)
@@ -226,7 +228,7 @@ function find_optimal_linearization(network_data, to_approx, solver, solver_lp, 
     approximation["l_v"] = l_v_val
     approximation["l_pb"] = l_pb_val
     approximation["l_qb"] = l_qb_val
-    approximation["error"] = 0.5*(val0+val1)
+    approximation["error"] = JuMP.getobjectivevalue(m)
 
     return approximation
 

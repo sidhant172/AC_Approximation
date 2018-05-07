@@ -68,37 +68,37 @@ end     # end of get_current_solution
 
 
 
-# function to append network_data with useful data structures so that it can be passed and accessed within all functions
-function append_network_data(network_data,inflation_factors)
+# function to append network_data_scope with useful data structures so that it can be passed and accessed within all functions
+function append_network_data(network_data_scope,inflation_factors)
     ######### Defining indices and parameters ######################################
-    ind_bus = [parse(Int,key) for (key,b) in network_data["bus"]]
-    ind_branch = [parse(Int,key) for (key,b) in network_data["branch"]]
-    ind_gen = [parse(Int,key) for (key,b) in network_data["gen"]]
+    ind_bus = [parse(Int,key) for (key,b) in network_data_scope["bus"]]
+    ind_branch = [parse(Int,key) for (key,b) in network_data_scope["branch"]]
+    ind_gen = [parse(Int,key) for (key,b) in network_data_scope["gen"]]
     ################################################################################
-    slack = [bus["index"] for (i,bus) in network_data["bus"] if bus["bus_type"] == 3][1]
+    slack = [bus["index"] for (i,bus) in network_data_scope["bus"] if bus["bus_type"] == 3][1]
     ############## Mapping generators to buses #####################################
-    gen_buses = [network_data["gen"][i]["gen_bus"] for i in keys(network_data["gen"])]
+    gen_buses = [network_data_scope["gen"][i]["gen_bus"] for i in keys(network_data_scope["gen"])]
     gen_buses = unique(gen_buses)
-    load_buses = [parse(Int64,i) for i in keys(network_data["bus"]) if abs(network_data["bus"][i]["pd"]) + abs(network_data["bus"][i]["qd"]) > 1e-2]
+    load_buses = [parse(Int64,i) for i in keys(network_data_scope["bus"]) if abs(network_data_scope["bus"][i]["pd"]) + abs(network_data_scope["bus"][i]["qd"]) > 1e-2]
     active_buses = union(gen_buses,load_buses)
 
 
 
     gens_at_bus = Dict{String,Array{Int,1}}()
     for i in gen_buses
-        gens_at_bus[string(i)] = [network_data["gen"][j]["index"] for j in keys(network_data["gen"]) if network_data["gen"][j]["gen_bus"] == i]
+        gens_at_bus[string(i)] = [network_data_scope["gen"][j]["index"] for j in keys(network_data_scope["gen"]) if network_data_scope["gen"][j]["gen_bus"] == i]
     end
     ################################################################################
-    network_data["ind_gen"] = ind_gen
-    network_data["ind_bus"] = ind_bus
-    network_data["ind_branch"] = ind_branch
-    network_data["gen_buses"] = gen_buses
-    network_data["load_buses"] = load_buses
-    network_data["active_buses"] = active_buses
-    network_data["gen_inflation"] = inflation_factors["gen_inflation"]
-    network_data["load_inflation"] = inflation_factors["load_inflation"]
-    network_data["gens_at_bus"] = gens_at_bus
-    network_data["slack"] = slack
+    network_data_scope["ind_gen"] = ind_gen
+    network_data_scope["ind_bus"] = ind_bus
+    network_data_scope["ind_branch"] = ind_branch
+    network_data_scope["gen_buses"] = gen_buses
+    network_data_scope["load_buses"] = load_buses
+    network_data_scope["active_buses"] = active_buses
+    network_data_scope["gen_inflation"] = inflation_factors["gen_inflation"]
+    network_data_scope["load_inflation"] = inflation_factors["load_inflation"]
+    network_data_scope["gens_at_bus"] = gens_at_bus
+    network_data_scope["slack"] = slack
 end
 
 # function to create useful structure in network data
@@ -108,46 +108,46 @@ end
 
 
 
-function define_radius_bounds(network_data, inflation_factors, pg_init, qg_init)
-    # output = PowerModels.run_ac_opf(network_data, solver)
+function define_radius_bounds(network_data_scope, inflation_factors, pg_init, qg_init)
+    # output = PowerModels.run_ac_opf(network_data_scope, solver)
 
     gen_inflation = inflation_factors["gen_inflation"]
     # pg_init = Dict{Int,Float64}()
     # qg_init = Dict{Int,Float64}()
 
-    for i in network_data["ind_gen"]
+    for i in network_data_scope["ind_gen"]
         # pg_init[i] = output["solution"]["gen"][string(i)]["pg"]
         # qg_init[i] = output["solution"]["gen"][string(i)]["qg"]
-        network_data["gen"][string(i)]["pmax"] = max(pg_init[i]*(1+gen_inflation),pg_init[i]*(1-gen_inflation))
-        network_data["gen"][string(i)]["pmin"] = min(pg_init[i]*(1+gen_inflation),pg_init[i]*(1-gen_inflation))
-        network_data["gen"][string(i)]["qmax"] = max(qg_init[i]*(1+gen_inflation),qg_init[i]*(1-gen_inflation))
-        network_data["gen"][string(i)]["qmin"] = min(qg_init[i]*(1+gen_inflation),qg_init[i]*(1-gen_inflation))
+        network_data_scope["gen"][string(i)]["pmax"] = max(pg_init[i]*(1+gen_inflation),pg_init[i]*(1-gen_inflation))
+        network_data_scope["gen"][string(i)]["pmin"] = min(pg_init[i]*(1+gen_inflation),pg_init[i]*(1-gen_inflation))
+        network_data_scope["gen"][string(i)]["qmax"] = max(qg_init[i]*(1+gen_inflation),qg_init[i]*(1-gen_inflation))
+        network_data_scope["gen"][string(i)]["qmin"] = min(qg_init[i]*(1+gen_inflation),qg_init[i]*(1-gen_inflation))
     end
 end
 
 
 
 ############## degrees_of_freedom computation #########
-function find_degrees_of_freedom(network_data, solver)
-    gen_buses = unique(find_gen_buses(network_data))
-    load_buses = unique(find_load_buses(network_data))
-    active_buses = find_active_buses(network_data)
+function find_degrees_of_freedom(network_data_scope, solver)
+    gen_buses = unique(find_gen_buses(network_data_scope))
+    load_buses = unique(find_load_buses(network_data_scope))
+    active_buses = find_active_buses(network_data_scope)
 
     gen_only = setdiff(gen_buses,load_buses)
     load_only = setdiff(load_buses,gen_buses)
 
-    result = PowerModels.run_ac_opf(network_data,solver)
+    result = PowerModels.run_ac_opf(network_data_scope,solver)
 
     gens_at_bus = Dict{String,Array{Int,1}}()
     for i in gen_buses
-        gens_at_bus[string(i)] = [network_data["gen"][j]["index"] for j in keys(network_data["gen"]) if network_data["gen"][j]["gen_bus"] == i]
+        gens_at_bus[string(i)] = [network_data_scope["gen"][j]["index"] for j in keys(network_data_scope["gen"]) if network_data_scope["gen"][j]["gen_bus"] == i]
     end
 
     degrees_of_freedom = 0
 
     for i in gen_buses
         to_add_real = 0
-        if abs(network_data["bus"][string(i)]["pd"]) > 0
+        if abs(network_data_scope["bus"][string(i)]["pd"]) > 0
             to_add_real = 1
         end
         for j in gens_at_bus[string(i)]
@@ -158,7 +158,7 @@ function find_degrees_of_freedom(network_data, solver)
         degrees_of_freedom = degrees_of_freedom + to_add_real
 
         to_add_reactive = 0
-        if abs(network_data["bus"][string(i)]["qd"]) > 0
+        if abs(network_data_scope["bus"][string(i)]["qd"]) > 0
             to_add_reactive = 1
         end
         for j in gens_at_bus[string(i)]
@@ -170,10 +170,10 @@ function find_degrees_of_freedom(network_data, solver)
     end
 
     for i in load_only
-        if abs(network_data["bus"][string(i)]["pd"]) > 0
+        if abs(network_data_scope["bus"][string(i)]["pd"]) > 0
             degrees_of_freedom = degrees_of_freedom  + 1
         end
-        if abs(network_data["bus"][string(i)]["qd"]) > 0
+        if abs(network_data_scope["bus"][string(i)]["qd"]) > 0
             degrees_of_freedom = degrees_of_freedom  + 1
         end
     end
@@ -257,27 +257,27 @@ end
 ################################################################################
 ################################################################################
 # very low level support functions
-function find_active_buses(network_data)
-    active_buses = union(find_gen_buses(network_data),find_load_buses(network_data))
+function find_active_buses(network_data_scope)
+    active_buses = union(find_gen_buses(network_data_scope),find_load_buses(network_data_scope))
     return active_buses
 end
 
-function find_gen_buses(network_data)
-    gen_buses = [network_data["gen"][i]["gen_bus"] for i in keys(network_data["gen"])]
+function find_gen_buses(network_data_scope)
+    gen_buses = [network_data_scope["gen"][i]["gen_bus"] for i in keys(network_data_scope["gen"])]
     return gen_buses
 end
 
-function find_load_buses(network_data)
-    load_buses = [parse(Int64,i) for i in keys(network_data["bus"]) if abs(network_data["bus"][i]["pd"]) + abs(network_data["bus"][i]["qd"]) > 1e-2]
+function find_load_buses(network_data_scope)
+    load_buses = [parse(Int64,i) for i in keys(network_data_scope["bus"]) if abs(network_data_scope["bus"][i]["pd"]) + abs(network_data_scope["bus"][i]["qd"]) > 1e-2]
     return load_buses
 end
 
 
-function find_gens_at_bus(network_data)
+function find_gens_at_bus(network_data_scope)
     gens_at_bus = Dict{String,Array{Int,1}}()
-    gen_buses = find_gen_buses(network_data)
+    gen_buses = find_gen_buses(network_data_scope)
     for i in gen_buses
-        gens_at_bus[string(i)] = [network_data["gen"][j]["index"] for j in keys(network_data["gen"]) if network_data["gen"][j]["gen_bus"] == i]
+        gens_at_bus[string(i)] = [network_data_scope["gen"][j]["index"] for j in keys(network_data_scope["gen"]) if network_data_scope["gen"][j]["gen_bus"] == i]
     end
     return gens_at_bus
 end

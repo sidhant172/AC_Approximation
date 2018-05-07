@@ -7,9 +7,13 @@ using Clp
 using MAT
 
 
+<<<<<<< HEAD
 cd("E:\\Dans Files\\Grad\\Research\\Error Bounding Code\\Optimal_Approximations\\AC_Approximation\\v9")
 
 algo = 1
+=======
+# algo = 2
+>>>>>>> 561dbb533d07235bbc334796fa169074c8306e5e
 num_samples = 100
 
 include("opf_mod.jl")
@@ -37,9 +41,9 @@ include("find_linearization_error.jl")
 if algo == 0
     cnst_gen_max_iter = 1000
 elseif algo == 1
-    cnst_gen_max_iter = 30
+    cnst_gen_max_iter = 50
 elseif algo == 2
-    cnst_gen_max_iter = 5
+    cnst_gen_max_iter = 10
 end
 
 # algorithm parameters
@@ -56,7 +60,7 @@ load_inflation = inflation    # d
 
 tol = gen_inflation*1e-3
 
-obj_tuning = 1
+obj_tuning = 1e4
 
 # quantity = "line_real_power"
 # quantity_to_approx = "line_reactive_power"
@@ -84,7 +88,13 @@ network_data_old = deepcopy(network_data)
 # solver_ipopt = IpoptSolver(print_level=0)#
 solver_ipopt = IpoptSolver()
 # solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
+<<<<<<< HEAD
 # solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
+=======
+solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
+# solver_ipopt = IpoptSolver(linear_solver="ma57",tol=1e-12)
+# solver_ipopt = IpoptSolver(linear_solver = "mumps")
+>>>>>>> 561dbb533d07235bbc334796fa169074c8306e5e
 # solver_ipopt = IpoptSolver(linear_solver="ma97")
 
 # solver_lp = GLPKSolverLP()
@@ -176,9 +186,10 @@ time = toc()
 #
 # @show find_monte_carlo_error(network_data, to_approx_list, linear_approximations, inflation_factors, solver_ipopt, num_samples)
 
-
-network_data = deepcopy(network_data_old)
-obj_tuning = 1
+solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
+# network_data = deepcopy(network_data_old)
+network_data = PowerModels.parse_file(filename)
+obj_tuning = 1e2
 for (i,approximation) in linear_approximations
     @show find_linearization_error(network_data, to_approx, solver_ipopt, approximation,inflation_factors,obj_tuning)
 end
