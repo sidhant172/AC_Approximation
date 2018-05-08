@@ -98,6 +98,7 @@ function find_optimal_linearization_outer_approximation(network_data, aux_data, 
         model = JuMP.Model(solver = solver)
         model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
         # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
+        # println(model)
         status = solve(model)
         current_sol = get_current_solution(network_data,model,var_refs,aux_data)
         @show current_sol["quantity_val"]
@@ -108,8 +109,7 @@ function find_optimal_linearization_outer_approximation(network_data, aux_data, 
             approximation["worst_case_lower"] = current_sol
 
             @constraint(m, current_sol["quantity_val"] - (l0 +
-                sum(l_pb[i]*( sum(current_sol["pg"][j] for j in ref[:bus_gens][i]) ) + l_qb[i]*( sum(current_sol["qg"][j] for j in ref[:bus_gens][i]) ) for i in gen_buses)
-            -   sum(l_pb[i]*current_sol["pd"][i]  + l_qb[i]*current_sol["qd"][i] for i in load_buses) )
+                sum(l_pb[i]*current_sol["pb"][i] + l_qb[i]*current_sol["qb"][i] for i in active_buses))
                 <= z)
         end
         ################################################################################
@@ -127,8 +127,7 @@ function find_optimal_linearization_outer_approximation(network_data, aux_data, 
             approximation["worst_case_upper"] = current_sol
 
             @constraint(m, -current_sol["quantity_val"] + (l0 +
-                sum(l_pb[i]*( sum(current_sol["pg"][j] for j in ref[:bus_gens][i]) ) + l_qb[i]*( sum(current_sol["qg"][j] for j in ref[:bus_gens][i]) ) for i in gen_buses)
-                -   sum(l_pb[i]*current_sol["pd"][i]  + l_qb[i]*current_sol["qd"][i] for i in load_buses) )
+                sum(l_pb[i]*current_sol["pb"][i] + l_qb[i]*current_sol["qb"][i] for i in active_buses))
                 <= z)
         end
     ################################################################################
@@ -260,13 +259,9 @@ function find_optimal_linearization_gradient_descent(network_data, aux_data, jac
         pos_error = current_sol["objval"]
 
         # update gradient step from positive part of the objective
-        for i in gen_buses
-            step_pb[i] = step_pb[i] - step_size*( sum(current_sol["pg"][j] for j in ref[:bus_gens][i]) )
-            step_qb[i] = step_qb[i] - step_size*( sum(current_sol["qg"][j] for j in ref[:bus_gens][i]) )
-        end
-        for i in load_buses
-            step_pb[i] = step_pb[i] + step_size*current_sol["pd"][i]
-            step_qb[i] = step_qb[i] + step_size*current_sol["qd"][i]
+        for i in active_buses
+            step_pb[i] = step_pb[i] - step_size*current_sol["pb"][i]
+            step_qb[i] = step_qb[i] - step_size*current_sol["qb"][i]
         end
 
         aux_data["sign"] = -1   # direction of maximization
@@ -281,19 +276,15 @@ function find_optimal_linearization_gradient_descent(network_data, aux_data, jac
         @show err = 0.5*(pos_error + neg_error)
 
         # update gradient step from negative part of the objective
-        for i in gen_buses
-            step_pb[i] = step_pb[i] + step_size*( sum(current_sol["pg"][j] for j in ref[:bus_gens][i]) )
-            step_qb[i] = step_qb[i] + step_size*( sum(current_sol["qg"][j] for j in ref[:bus_gens][i]) )
-        end
-        for i in load_buses
-            step_pb[i] = step_pb[i] - step_size*current_sol["pd"][i]
-            step_qb[i] = step_qb[i] - step_size*current_sol["qd"][i]
+        for i in active_buses
+            step_pb[i] = step_pb[i] + step_size*current_sol["pb"][i]
+            step_qb[i] = step_qb[i] + step_size*current_sol["qb"][i]
         end
 
         # perform the gradient descent step
         for i in active_buses
-            l_pb_val[i] = l_pb_val[i] - step_pb[i]
-            l_qb_val[i] = l_qb_val[i] - step_qb[i]
+            l_pb_val[i] = l_pb_val[i] - step_pb[i]*1/iter
+            l_qb_val[i] = l_qb_val[i] - step_qb[i]*1/iter
         end
         l_pb_val[slack] = 0 # no coefficeint for active power injection at slack bus
         l0_val = 0.5*(pos_error-neg_error)

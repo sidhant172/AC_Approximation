@@ -11,9 +11,9 @@ function post_ac_opf_maxerror(data::Dict{String,Any}, model, aux_data)
     @variable(model, va[i in keys(ref[:bus])])
     @variable(model, ref[:bus][i]["vmin"] <= vm[i in keys(ref[:bus])] <= ref[:bus][i]["vmax"], start=1.0)
 
-    # modified gen limits
-    @variable(model, aux_data["pgmin"][i] <= pg[i in keys(ref[:gen])] <= aux_data["pgmax"][i])
-    @variable(model, aux_data["qgmin"][i] <= qg[i in keys(ref[:gen])] <= aux_data["qgmax"][i])
+    # bus injection variables
+    @variable(model, aux_data["pbmin"][i] <= pb[i in aux_data["active_buses"]] <= aux_data["pbmax"][i])
+    @variable(model, aux_data["qbmin"][i] <= qb[i in aux_data["active_buses"]] <= aux_data["qbmax"][i])
 
     # branch power flow variables
     @variable(model, -ref[:branch][l]["rate_a"] <= p[(l,i,j) in ref[:arcs]] <= ref[:branch][l]["rate_a"])
@@ -23,21 +23,15 @@ function post_ac_opf_maxerror(data::Dict{String,Any}, model, aux_data)
     @variable(model, ref[:arcs_dc_param][a]["pmin"] <= p_dc[a in ref[:arcs_dc]] <= ref[:arcs_dc_param][a]["pmax"])
     @variable(model, ref[:arcs_dc_param][a]["qmin"] <= q_dc[a in ref[:arcs_dc]] <= ref[:arcs_dc_param][a]["qmax"])
 
-    # load variables
-	@variable(model, aux_data["pdmin"][i] <= pd[i in aux_data["load_buses"]] <= aux_data["pdmax"][i])
-    @variable(model, aux_data["qdmin"][i] <= qd[i in aux_data["load_buses"]] <= aux_data["qdmax"][i])
-
     # objective
     slack = aux_data["slack"]
     if aux_data["quantity"] == "line_real_power"
         @objective(model, Max, aux_data["obj_tuning"]*(aux_data["sign"]*p[aux_data["quantity_index"]] - aux_data["sign"]*(aux_data["l0"] +
-            sum(aux_data["l_pb"][i]*(sum(pg[j] for j in ref[:bus_gens][i]))  +  aux_data["l_qb"][i]*(sum(qg[j] for j in ref[:bus_gens][i]))   for i in aux_data["gen_buses"])
-            -  sum(aux_data["l_pb"][i]*pd[i] + aux_data["l_qb"][i]*qd[i]  for i in aux_data["load_buses"])  ) )
+            sum(aux_data["l_pb"][i]*pb[i] + aux_data["l_qb"][i]*qb[i] for i in aux_data["active_buses"]) ))
             )
     elseif aux_data["quantity"] == "line_reactive_power"
         @objective(model, Max, aux_data["obj_tuning"]*(aux_data["sign"]*q[aux_data["quantity_index"]] - aux_data["sign"]*(aux_data["l0"] +
-            sum(aux_data["l_pb"][i]*(sum(pg[j] for j in ref[:bus_gens][i]))  +  aux_data["l_qb"][i]*(sum(qg[j] for j in ref[:bus_gens][i]))   for i in aux_data["gen_buses"])
-            -  sum(aux_data["l_pb"][i]*pd[i] + aux_data["l_qb"][i]*qd[i]  for i in aux_data["load_buses"])  ) )
+            sum(aux_data["l_pb"][i]*pb[i] + aux_data["l_qb"][i]*qb[i] for i in aux_data["active_buses"]) ))
             )
     else println("is not supported.")
     end
@@ -48,34 +42,33 @@ function post_ac_opf_maxerror(data::Dict{String,Any}, model, aux_data)
         @constraint(model, va[i] == 0)
     end
 
-    # modifying KCL constraints to accommodate for load as variables
+
+
     for (i,bus) in ref[:bus]
         # Bus KCL
-        if i in aux_data["load_buses"]
+        if i in aux_data["active_buses"]
             @constraint(model,
                 sum(p[a] for a in ref[:bus_arcs][i]) +
-                sum(p_dc[a_dc] for a_dc in ref[:bus_arcs_dc][i]) ==
-                sum(pg[g] for g in ref[:bus_gens][i]) - pd[i] - bus["gs"]*vm[i]^2
+                sum(p_dc[a_dc] for a_dc in ref[:bus_arcs_dc][i]) == pb[i] - bus["gs"]*vm[i]^2
             )
+
             @constraint(model,
                 sum(q[a] for a in ref[:bus_arcs][i]) +
-                sum(q_dc[a_dc] for a_dc in ref[:bus_arcs_dc][i]) ==
-                sum(qg[g] for g in ref[:bus_gens][i]) - qd[i] + bus["bs"]*vm[i]^2
+                sum(q_dc[a_dc] for a_dc in ref[:bus_arcs_dc][i]) == qb[i] + bus["bs"]*vm[i]^2
             )
         else
-            # load is 0
             @constraint(model,
                 sum(p[a] for a in ref[:bus_arcs][i]) +
-                sum(p_dc[a_dc] for a_dc in ref[:bus_arcs_dc][i]) ==
-                sum(pg[g] for g in ref[:bus_gens][i])  - bus["gs"]*vm[i]^2
+                sum(p_dc[a_dc] for a_dc in ref[:bus_arcs_dc][i]) == -bus["gs"]*vm[i]^2
             )
+
             @constraint(model,
                 sum(q[a] for a in ref[:bus_arcs][i]) +
-                sum(q_dc[a_dc] for a_dc in ref[:bus_arcs_dc][i]) ==
-                sum(qg[g] for g in ref[:bus_gens][i])  + bus["bs"]*vm[i]^2
+                sum(q_dc[a_dc] for a_dc in ref[:bus_arcs_dc][i]) == bus["bs"]*vm[i]^2
             )
         end
     end
+
 
     # branch PF constraints
     for (i,branch) in ref[:branch]
@@ -124,14 +117,10 @@ function post_ac_opf_maxerror(data::Dict{String,Any}, model, aux_data)
 
     var_refs = Dict{String,Any}()
 
-    # var_refs["va"] = va
-    # var_refs["vm"] = vm
     var_refs["p"] = p
     var_refs["q"] = q
-    var_refs["pg"] = pg
-    var_refs["qg"] = qg
-    var_refs["pd"] = pd
-    var_refs["qd"] = qd
+    var_refs["pb"] = pb
+    var_refs["qb"] = qb
 
     return model, var_refs
 
@@ -154,9 +143,9 @@ function post_soc_opf_maxerror(data::Dict{String,Any}, model, aux_data)
     @variable(model, wr_min[bp] <= wr[bp in keys(ref[:buspairs])] <= wr_max[bp], start=1.0)
     @variable(model, wi_min[bp] <= wi[bp in keys(ref[:buspairs])] <= wi_max[bp])
 
-    # adjusting generation limits
-    @variable(model, aux_data["pgmin"][i] <= pg[i in keys(ref[:gen])] <= aux_data["pgmax"][i])
-    @variable(model, aux_data["qgmin"][i] <= qg[i in keys(ref[:gen])] <= aux_data["qgmax"][i])
+    # bus injection variables
+    @variable(model, aux_data["pbmin"][i] <= pb[i in aux_data["active_buses"]] <= aux_data["pbmax"][i])
+    @variable(model, aux_data["qbmin"][i] <= qb[i in aux_data["active_buses"]] <= aux_data["qbmax"][i])
 
     # line flow variables
     @variable(model, -ref[:branch][l]["rate_a"] <= p[(l,i,j) in ref[:arcs]] <= ref[:branch][l]["rate_a"])
@@ -166,22 +155,15 @@ function post_soc_opf_maxerror(data::Dict{String,Any}, model, aux_data)
     @variable(model, ref[:arcs_dc_param][a]["pmin"] <= p_dc[a in ref[:arcs_dc]] <= ref[:arcs_dc_param][a]["pmax"])
     @variable(model, ref[:arcs_dc_param][a]["qmin"] <= q_dc[a in ref[:arcs_dc]] <= ref[:arcs_dc_param][a]["qmax"])
 
-    # load variables
-	@variable(model, aux_data["pdmin"][i] <= pd[i in aux_data["load_buses"]] <= aux_data["pdmax"][i])
-    @variable(model, aux_data["qdmin"][i] <= qd[i in aux_data["load_buses"]] <= aux_data["qdmax"][i])
-
-
     # objective
     slack = aux_data["slack"]
     if aux_data["quantity"] == "line_real_power"
         @objective(model, Max, aux_data["obj_tuning"]*(aux_data["sign"]*p[aux_data["quantity_index"]] - aux_data["sign"]*(aux_data["l0"] +
-            sum(aux_data["l_pb"][i]*(sum(pg[j] for j in ref[:bus_gens][i]))  +  aux_data["l_qb"][i]*(sum(qg[j] for j in ref[:bus_gens][i]))   for i in aux_data["gen_buses"])
-            -  sum(aux_data["l_pb"][i]*pd[i] + aux_data["l_qb"][i]*qd[i]  for i in aux_data["load_buses"])  ) )
+            sum(aux_data["l_pb"][i]*pb[i] + aux_data["l_qb"][i]*qb[i] for i in aux_data["active_buses"]) ))
             )
     elseif aux_data["quantity"] == "line_reactive_power"
         @objective(model, Max, aux_data["obj_tuning"]*(aux_data["sign"]*q[aux_data["quantity_index"]] - aux_data["sign"]*(aux_data["l0"] +
-            sum(aux_data["l_pb"][i]*(sum(pg[j] for j in ref[:bus_gens][i]))  +  aux_data["l_qb"][i]*(sum(qg[j] for j in ref[:bus_gens][i]))   for i in aux_data["gen_buses"])
-            -  sum(aux_data["l_pb"][i]*pd[i] + aux_data["l_qb"][i]*qd[i]  for i in aux_data["load_buses"])  ) )
+            sum(aux_data["l_pb"][i]*pb[i] + aux_data["l_qb"][i]*qb[i] for i in aux_data["active_buses"]) ))
             )
     else println("is not supported.")
     end
@@ -192,19 +174,33 @@ function post_soc_opf_maxerror(data::Dict{String,Any}, model, aux_data)
         @constraint(model, wr[(i,j)]^2 + wi[(i,j)]^2 <= w[i]*w[j])
     end
 
+
+
     for (i,bus) in ref[:bus]
         # Bus KCL
-        @constraint(model,
-            sum(p[a] for a in ref[:bus_arcs][i]) +
-            sum(p_dc[a_dc] for a_dc in ref[:bus_arcs_dc][i]) ==
-            sum(pg[g] for g in ref[:bus_gens][i]) - bus["pd"] - bus["gs"]*w[i]
-        )
-        @constraint(model,
-            sum(q[a] for a in ref[:bus_arcs][i]) +
-            sum(q_dc[a_dc] for a_dc in ref[:bus_arcs_dc][i]) ==
-            sum(qg[g] for g in ref[:bus_gens][i]) - bus["qd"] + bus["bs"]*w[i]
-        )
+        if i in aux_data["active_buses"]
+            @constraint(model,
+                sum(p[a] for a in ref[:bus_arcs][i]) +
+                sum(p_dc[a_dc] for a_dc in ref[:bus_arcs_dc][i]) == pb[i] - bus["gs"]*w[i]
+            )
+
+            @constraint(model,
+                sum(q[a] for a in ref[:bus_arcs][i]) +
+                sum(q_dc[a_dc] for a_dc in ref[:bus_arcs_dc][i]) == qb[i] + bus["bs"]*w[i]
+            )
+        else
+            @constraint(model,
+                sum(p[a] for a in ref[:bus_arcs][i]) +
+                sum(p_dc[a_dc] for a_dc in ref[:bus_arcs_dc][i]) == -bus["gs"]*w[i]
+            )
+
+            @constraint(model,
+                sum(q[a] for a in ref[:bus_arcs][i]) +
+                sum(q_dc[a_dc] for a_dc in ref[:bus_arcs_dc][i]) == bus["bs"]*w[i]
+            )
+        end
     end
+
 
     for (i,branch) in ref[:branch]
         f_idx = (i, branch["f_bus"], branch["t_bus"])
@@ -253,14 +249,10 @@ function post_soc_opf_maxerror(data::Dict{String,Any}, model, aux_data)
 
     var_refs = Dict{String,Any}()
 
-    # var_refs["va"] = va
-    # var_refs["vm"] = vm
     var_refs["p"] = p
     var_refs["q"] = q
-    var_refs["pg"] = pg
-    var_refs["qg"] = qg
-    var_refs["pd"] = pd
-    var_refs["qd"] = qd
+    var_refs["pb"] = pb
+    var_refs["qb"] = qb
 
     return model, var_refs
 end
