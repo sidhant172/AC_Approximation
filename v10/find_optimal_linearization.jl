@@ -96,8 +96,8 @@ function find_optimal_linearization_outer_approximation(network_data, aux_data, 
         ############################################################################
         aux_data["sign"] = 1   # direction of maximization
         model = JuMP.Model(solver = solver)
-        model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
-        # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
+        # model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
+        model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
         # println(model)
         status = solve(model)
         current_sol = get_current_solution(network_data,model,var_refs,aux_data)
@@ -115,8 +115,8 @@ function find_optimal_linearization_outer_approximation(network_data, aux_data, 
         ################################################################################
         aux_data["sign"] = -1   # direction of maximization
         model = JuMP.Model(solver = solver)
-        model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
-        # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
+        # model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
+        model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
         status = solve(model)
         current_sol = get_current_solution(network_data,model,var_refs,aux_data)
         @show current_sol["quantity_val"]
