@@ -305,6 +305,8 @@ end
 
 function find_linearization_error(network_data, inflation_factors, to_approx, approximation, solver, obj_tuning)
 
+    solver = KnitroSolver()
+
     aux_data = create_aux_data(network_data,inflation_factors, solver, obj_tuning)
     aux_data["quantity"] = to_approx["quantity"]
     aux_data["quantity_index"] = to_approx["quantity_index"]
