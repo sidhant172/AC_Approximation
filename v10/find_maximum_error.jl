@@ -26,11 +26,11 @@ function post_ac_opf_maxerror(data::Dict{String,Any}, model, aux_data)
     # objective
     slack = aux_data["slack"]
     if aux_data["quantity"] == "line_real_power"
-        @objective(model, Max, aux_data["obj_tuning"]*(aux_data["sign"]*p[aux_data["quantity_index"]] - aux_data["sign"]*(aux_data["l0"] +
+        @NLobjective(model, Max, aux_data["obj_tuning"]*(aux_data["sign"]*p[aux_data["quantity_index"]] - aux_data["sign"]*(aux_data["l0"] +
             sum(aux_data["l_pb"][i]*pb[i] + aux_data["l_qb"][i]*qb[i] for i in aux_data["active_buses"]) ))
             )
     elseif aux_data["quantity"] == "line_reactive_power"
-        @objective(model, Max, aux_data["obj_tuning"]*(aux_data["sign"]*q[aux_data["quantity_index"]] - aux_data["sign"]*(aux_data["l0"] +
+        @NLobjective(model, Max, aux_data["obj_tuning"]*(aux_data["sign"]*q[aux_data["quantity_index"]] - aux_data["sign"]*(aux_data["l0"] +
             sum(aux_data["l_pb"][i]*pb[i] + aux_data["l_qb"][i]*qb[i] for i in aux_data["active_buses"]) ))
             )
     else println("is not supported.")

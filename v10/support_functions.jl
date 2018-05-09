@@ -24,6 +24,8 @@ function create_aux_data(network_data,inflation_factors, solver, obj_tuning)
         pdmax[i] = max((1-load_inflation)*ref[:bus][i]["pd"],(1+load_inflation)*ref[:bus][i]["pd"])
         qdmin[i] = min((1-load_inflation)*ref[:bus][i]["qd"],(1+load_inflation)*ref[:bus][i]["qd"])
         qdmax[i] = max((1-load_inflation)*ref[:bus][i]["qd"],(1+load_inflation)*ref[:bus][i]["qd"])
+        # qdmin[i] = ref[:bus][i]["qd"]
+        # qdmax[i] = ref[:bus][i]["qd"]
     end
 
     # find gen limits using gen inflation_factors
@@ -44,6 +46,8 @@ function create_aux_data(network_data,inflation_factors, solver, obj_tuning)
         pgmin[i] = min(pg_init[i]*(1+gen_inflation),pg_init[i]*(1-gen_inflation))
         qgmax[i] = max(qg_init[i]*(1+gen_inflation),qg_init[i]*(1-gen_inflation))
         qgmin[i] = min(qg_init[i]*(1+gen_inflation),qg_init[i]*(1-gen_inflation))
+        # qgmax[i] = qg_init[i]
+        # qgmin[i] = qg_init[i]
     end
     #######
 
