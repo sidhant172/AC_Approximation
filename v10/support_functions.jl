@@ -47,20 +47,53 @@ function create_aux_data(network_data,inflation_factors, solver, obj_tuning)
     end
     #######
 
+
+    pbmax = Dict{Int,Float64}()
+    pbmin = Dict{Int,Float64}()
+    qbmax = Dict{Int,Float64}()
+    qbmin = Dict{Int,Float64}()
+    for i in active_buses
+        pbmax[i] = 0
+        pbmin[i] = 0
+        qbmax[i] = 0
+        qbmin[i] = 0
+    end
+
+    @show active_buses
+    for i in active_buses
+        if i in gen_buses
+            pbmax[i] = sum(pgmax[j] for j in ref[:bus_gens][i])
+            pbmin[i] = sum(pgmin[j] for j in ref[:bus_gens][i])
+            qbmax[i] = sum(qgmax[j] for j in ref[:bus_gens][i])
+            qbmin[i] = sum(qgmin[j] for j in ref[:bus_gens][i])
+        end
+        if i in load_buses
+            pbmax[i] = pbmax[i] - pdmin[i]
+            pbmin[i] = pbmin[i] - pdmax[i]
+            qbmax[i] = qbmax[i] - qdmin[i]
+            qbmin[i] = qbmin[i] - qdmax[i]
+        end
+    end
+
+
     slack = [i for (i,bus) in ref[:ref_buses]][1]
 
     aux_data = Dict{String,Any}()
     aux_data["gen_buses"] = gen_buses
     aux_data["load_buses"] = load_buses
     aux_data["active_buses"] = active_buses
-    aux_data["pgmin"] = pgmin
-    aux_data["pgmax"] = pgmax
-    aux_data["qgmin"] = qgmin
-    aux_data["qgmax"] = qgmax
-    aux_data["pdmin"] = pdmin
-    aux_data["pdmax"] = pdmax
-    aux_data["qdmin"] = qdmin
-    aux_data["qdmax"] = qdmax
+    aux_data["pbmax"] = pbmax
+    aux_data["pbmin"] = pbmin
+    aux_data["qbmax"] = qbmax
+    aux_data["qbmin"] = qbmin
+    # aux_data["pgmin"] = pgmin
+    # aux_data["pgmax"] = pgmax
+    # aux_data["qgmin"] = qgmin
+    # aux_data["qgmax"] = qgmax
+    # aux_data["pdmin"] = pdmin
+    # aux_data["pdmax"] = pdmax
+    # aux_data["qdmin"] = qdmin
+    # aux_data["qdmax"] = qdmax
     aux_data["slack"] = slack
     aux_data["obj_tuning"] = obj_tuning
     aux_data["ref"] = ref
@@ -78,27 +111,16 @@ function get_current_solution(network_data, model, var_refs, aux_data)
     current_sol["objval"] = getobjectivevalue(model)/aux_data["obj_tuning"]
     ref = aux_data["ref"]
 
-    pg_curr = Dict{Int,Float64}()
-    qg_curr = Dict{Int,Float64}()
-    # vm_curr = Dict{Int,Float64}()
-    # va_curr = Dict{Int,Float64}()
+    pb_curr = Dict{Int,Float64}()
+    qb_curr = Dict{Int,Float64}()
+
     p_curr = Dict{Any,Float64}()
     q_curr = Dict{Any,Float64}()
-    pd_curr = Dict{Int,Float64}()
-    qd_curr = Dict{Int,Float64}()
 
-    for i in keys(ref[:gen])
-        pg_curr[i] = getvalue(var_refs["pg"][i])
-        qg_curr[i] = getvalue(var_refs["qg"][i])
+    for i in aux_data["active_buses"]
+        pb_curr[i] = getvalue(var_refs["pb"][i])
+        qb_curr[i] = getvalue(var_refs["qb"][i])
     end
-    for i in aux_data["load_buses"]
-        pd_curr[i] = getvalue(var_refs["pd"][i])
-        qd_curr[i] = getvalue(var_refs["qd"][i])
-    end
-    # for i in keys(ref[:bus])
-    #     vm_curr[i] = getvalue(var_refs["vm"][i])
-    #     va_curr[i] = getvalue(var_refs["va"][i])
-    # end
 
     for (l,i,j) in ref[:arcs]
         p_curr[(l,i,j)] = getvalue(var_refs["p"][(l,i,j)])
@@ -112,15 +134,13 @@ function get_current_solution(network_data, model, var_refs, aux_data)
         quantity_val = getvalue(var_refs["q"][aux_data["quantity_index"]])
     else println("Approximating ", aux_data["quantity"], " is not supported.")
     end
+    #
 
-    current_sol["pg"] = pg_curr
-    current_sol["qg"] = qg_curr
-    current_sol["pd"] = pd_curr
-    current_sol["qd"] = qd_curr
+    current_sol["pb"] = pb_curr
+    current_sol["qb"] = qb_curr
     current_sol["p"] = p_curr
     current_sol["q"] = q_curr
-    # current_sol["vm"] = vm_curr
-    # current_sol["va"] = va_curr
+
     current_sol["quantity_val"] = quantity_val
 
     return current_sol
