@@ -252,8 +252,8 @@ function find_optimal_linearization_gradient_descent(network_data, aux_data, jac
         # computing gradient step
         aux_data["sign"] = 1   # direction of maximization
         model = JuMP.Model(solver = solver)
-        # model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
-        model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
+        model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
+        # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
         status = solve(model)
         current_sol = get_current_solution(network_data,model,var_refs,aux_data)
         pos_error = current_sol["objval"]
@@ -266,8 +266,8 @@ function find_optimal_linearization_gradient_descent(network_data, aux_data, jac
 
         aux_data["sign"] = -1   # direction of maximization
         model = JuMP.Model(solver = solver)
-        # model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
-        model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
+        model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
+        # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
         status = solve(model)
         current_sol = get_current_solution(network_data,model,var_refs,aux_data)
         neg_error = current_sol["objval"]
@@ -316,8 +316,8 @@ function find_linearization_error(network_data, inflation_factors, to_approx, ap
     aux_data["sign"] = 1
     # model = JuMP.Model(solver = solver)
     model = JuMP.Model(solver = KnitroSolver())
-    # model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
-    model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
+    model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
+    # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
     status = solve(model)
     current_sol = get_current_solution(network_data,model,var_refs,aux_data)
     pos_error = current_sol["objval"]
@@ -325,8 +325,8 @@ function find_linearization_error(network_data, inflation_factors, to_approx, ap
     aux_data["sign"] = -1
     # model = JuMP.Model(solver = solver)
     model = JuMP.Model(solver = KnitroSolver())
-    # model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
-    model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
+    model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
+    # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
     status = solve(model)
     current_sol = get_current_solution(network_data,model,var_refs,aux_data)
     neg_error = current_sol["objval"]
