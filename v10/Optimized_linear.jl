@@ -48,7 +48,7 @@ to_approx_list[1] = to_approx
 
 
 # testing outer approximation
-cnst_gen_max_iter = 5
+cnst_gen_max_iter = 0
 tic()
 linear_approximations = find_all_optimal_linearizations_outer_approximation(network_data, to_approx_list, inflation_factors, solver, solver_lp, cnst_gen_max_iter, tol, obj_tuning)
 time = toc()

@@ -305,8 +305,6 @@ end
 
 function find_linearization_error(network_data, inflation_factors, to_approx, approximation, solver, obj_tuning)
 
-    solver = KnitroSolver()
-
     aux_data = create_aux_data(network_data,inflation_factors, solver, obj_tuning)
     aux_data["quantity"] = to_approx["quantity"]
     aux_data["quantity_index"] = to_approx["quantity_index"]
@@ -316,14 +314,16 @@ function find_linearization_error(network_data, inflation_factors, to_approx, ap
     aux_data["l_qb"] = approximation["l_qb"]
 
     aux_data["sign"] = 1
-    model = JuMP.Model(solver = solver)
+    # model = JuMP.Model(solver = solver)
+    model = JuMP.Model(solver = KnitroSolver())
     model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
     status = solve(model)
     current_sol = get_current_solution(network_data,model,var_refs,aux_data)
     pos_error = current_sol["objval"]
 
     aux_data["sign"] = -1
-    model = JuMP.Model(solver = solver)
+    # model = JuMP.Model(solver = solver)
+    model = JuMP.Model(solver = KnitroSolver())
     model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
     status = solve(model)
     current_sol = get_current_solution(network_data,model,var_refs,aux_data)
