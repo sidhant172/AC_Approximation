@@ -57,7 +57,7 @@ time = toc()
 
 # testing gradient descent
 max_iter = 1500
-step_size = 1e-3
+step_size = 1e-2
 tic()
 linear_approximations = find_all_optimal_linearizations_gradient_descent(network_data, to_approx_list, inflation_factors, jacobian_filename, solver, solver_lp, max_iter, tol, obj_tuning, step_size)
 time = toc()
