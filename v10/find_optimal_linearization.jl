@@ -244,7 +244,7 @@ function find_optimal_linearization_gradient_descent(network_data, aux_data, jac
 
 
         # add linearization coefficients to aux_data
-        aux_data["l0"] = l0_val
+        aux_data["l0"] = 0
         # aux_data["l_v"] = l_v_val
         aux_data["l_pb"] = l_pb_val
         aux_data["l_qb"] = l_qb_val
