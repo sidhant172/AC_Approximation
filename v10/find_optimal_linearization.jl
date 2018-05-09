@@ -291,7 +291,7 @@ function find_optimal_linearization_gradient_descent(network_data, aux_data, jac
 
     end # end of gradient descent iterations
 
-    approximation["l0"] = -0.5*(pos_error-neg_error)
+    approximation["l0"] = 0.5*(pos_error-neg_error)
     # approximation["l_v"] = l_v_val
     approximation["l_pb"] = l_pb_val
     approximation["l_qb"] = l_qb_val
