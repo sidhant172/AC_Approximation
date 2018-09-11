@@ -96,8 +96,8 @@ function find_optimal_linearization_outer_approximation(network_data, aux_data, 
         ############################################################################
         aux_data["sign"] = 1   # direction of maximization
         model = JuMP.Model(solver = solver)
-        model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
-        # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
+        # model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
+        model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
         # println(model)
         status = solve(model)
         current_sol = get_current_solution(network_data,model,var_refs,aux_data)
@@ -115,8 +115,8 @@ function find_optimal_linearization_outer_approximation(network_data, aux_data, 
         ################################################################################
         aux_data["sign"] = -1   # direction of maximization
         model = JuMP.Model(solver = solver)
-        model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
-        # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
+        # model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
+        model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
         status = solve(model)
         current_sol = get_current_solution(network_data,model,var_refs,aux_data)
         @show current_sol["quantity_val"]
@@ -244,7 +244,7 @@ function find_optimal_linearization_gradient_descent(network_data, aux_data, jac
 
 
         # add linearization coefficients to aux_data
-        aux_data["l0"] = l0_val
+        aux_data["l0"] = 0
         # aux_data["l_v"] = l_v_val
         aux_data["l_pb"] = l_pb_val
         aux_data["l_qb"] = l_qb_val
@@ -283,8 +283,8 @@ function find_optimal_linearization_gradient_descent(network_data, aux_data, jac
 
         # perform the gradient descent step
         for i in active_buses
-            l_pb_val[i] = l_pb_val[i] - step_pb[i]*1/iter
-            l_qb_val[i] = l_qb_val[i] - step_qb[i]*1/iter
+            l_pb_val[i] = l_pb_val[i] - step_pb[i]*1
+            l_qb_val[i] = l_qb_val[i] - step_qb[i]*1
         end
         l_pb_val[slack] = 0 # no coefficeint for active power injection at slack bus
         l0_val = 0.5*(pos_error-neg_error)
@@ -315,14 +315,18 @@ function find_linearization_error(network_data, inflation_factors, to_approx, ap
 
     aux_data["sign"] = 1
     model = JuMP.Model(solver = solver)
+    # model = JuMP.Model(solver = KnitroSolver())
     model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
+    # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
     status = solve(model)
     current_sol = get_current_solution(network_data,model,var_refs,aux_data)
     pos_error = current_sol["objval"]
 
     aux_data["sign"] = -1
     model = JuMP.Model(solver = solver)
+    # model = JuMP.Model(solver = KnitroSolver())
     model, var_refs = post_ac_opf_maxerror(network_data, model, aux_data)
+    # model, var_refs = post_soc_opf_maxerror(network_data, model, aux_data)
     status = solve(model)
     current_sol = get_current_solution(network_data,model,var_refs,aux_data)
     neg_error = current_sol["objval"]
