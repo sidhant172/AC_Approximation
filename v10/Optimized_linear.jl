@@ -47,19 +47,19 @@ to_approx["quantity_index"] = (line_num,network_data["branch"][string(line_num)]
 to_approx_list[1] = to_approx
 
 
-# testing outer approximation
-# cnst_gen_max_iter = 500
-# tic()
-# linear_approximations = find_all_optimal_linearizations_outer_approximation(network_data, to_approx_list, inflation_factors, solver, solver_lp, cnst_gen_max_iter, tol, obj_tuning)
-# time = toc()
-#
-# @show find_linearization_error(network_data,inflation_factors,to_approx_list[1],linear_approximations[1],solver,1.0)
-
-# testing gradient descent
-max_iter = 1500
-step_size = 1e-3
+testing outer approximation
+cnst_gen_max_iter = 500
 tic()
-linear_approximations = find_all_optimal_linearizations_gradient_descent(network_data, to_approx_list, inflation_factors, jacobian_filename, solver, solver_lp, max_iter, tol, obj_tuning, step_size)
+linear_approximations = find_all_optimal_linearizations_outer_approximation(network_data, to_approx_list, inflation_factors, solver, solver_lp, cnst_gen_max_iter, tol, obj_tuning)
 time = toc()
 
 @show find_linearization_error(network_data,inflation_factors,to_approx_list[1],linear_approximations[1],solver,1.0)
+
+# testing gradient descent
+# max_iter = 1500
+# step_size = 1e-3
+# tic()
+# linear_approximations = find_all_optimal_linearizations_gradient_descent(network_data, to_approx_list, inflation_factors, jacobian_filename, solver, solver_lp, max_iter, tol, obj_tuning, step_size)
+# time = toc()
+#
+# @show find_linearization_error(network_data,inflation_factors,to_approx_list[1],linear_approximations[1],solver,1.0)

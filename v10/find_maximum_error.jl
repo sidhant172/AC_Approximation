@@ -3,7 +3,7 @@ using PowerModels
 function post_ac_opf_maxerror(data::Dict{String,Any}, model, aux_data)
     PMs = PowerModels
 
-    @assert !(data["multinetwork"])
+    # @assert !(data["multinetwork"])
     # ref = PowerModels.build_ref(data)[:nw][0]
     ref = aux_data["ref"]
 
@@ -131,7 +131,7 @@ end
 function post_soc_opf_maxerror(data::Dict{String,Any}, model, aux_data)
     PMs = PowerModels
 
-    @assert !(data["multinetwork"])
+    # @assert !(data["multinetwork"])
     ref = aux_data["ref"]
 
     # voltage squared w variables
