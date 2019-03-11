@@ -7,7 +7,9 @@ using Clp
 using MAT
 
 
-# algo = 2
+cd("E:\\Dans Files\\Grad\\Research\\Error Bounding Code\\Optimal_Approximations\\AC_Approximation\\v9")
+
+algo = 1
 num_samples = 100
 
 include("opf_mod.jl")
@@ -35,9 +37,9 @@ include("find_linearization_error.jl")
 if algo == 0
     cnst_gen_max_iter = 1000
 elseif algo == 1
-    cnst_gen_max_iter = 50
+    cnst_gen_max_iter = 30
 elseif algo == 2
-    cnst_gen_max_iter = 10
+    cnst_gen_max_iter = 5
 end
 
 # algorithm parameters
@@ -45,6 +47,7 @@ end
 # tol = 1e-4   # convergence tolerance
 
 # operational conditions
+inflation = 0.3
 # gen_inflation = 0.3 # defining range of loading conditions
 # load_inflation = 0.3    # defining range of generation conditions
 gen_inflation = inflation # defining range of loading conditions
@@ -53,12 +56,15 @@ load_inflation = inflation    # d
 
 tol = gen_inflation*1e-3
 
-obj_tuning = 1e4
+obj_tuning = 1
 
 # quantity = "line_real_power"
 # quantity_to_approx = "line_reactive_power"
 # quantity_to_approx = "bus_voltage_magnitude"
 
+#filename = "E:\\Dans Files\\MATLAB\\nesta-0.7.0\\opf\\nesta_case4_gs.m"
+filename = "E:\\Dans Files\\MATLAB\\nesta-0.7.0\\opf\\nesta_case3_lmbd.m"
+#filename = "E:\\Dans Files\\MATLAB\\nesta-0.7.0\\opf\\nesta_case14_ieee.m"
 
 network_data = PowerModels.parse_file(filename)
 # network_data = PowerModels.parse_file("case24_ieee_rts.m")
@@ -76,11 +82,9 @@ network_data_old = deepcopy(network_data)
 
 
 # solver_ipopt = IpoptSolver(print_level=0)#
-# solver_ipopt = IpoptSolver()
+solver_ipopt = IpoptSolver()
 # solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma97")
-solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
-# solver_ipopt = IpoptSolver(linear_solver="ma57",tol=1e-12)
-# solver_ipopt = IpoptSolver(linear_solver = "mumps")
+# solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
 # solver_ipopt = IpoptSolver(linear_solver="ma97")
 
 # solver_lp = GLPKSolverLP()
@@ -97,6 +101,7 @@ inflation_factors["load_inflation"] = load_inflation
 to_approx_list = Dict{Int64,Any}()
 
 
+line_num = 2
 # line_num = 18
 # line_num = 100
 
@@ -171,10 +176,9 @@ time = toc()
 #
 # @show find_monte_carlo_error(network_data, to_approx_list, linear_approximations, inflation_factors, solver_ipopt, num_samples)
 
-solver_ipopt = IpoptSolver(print_level=0, linear_solver="ma57",tol=1e-12)
-# network_data = deepcopy(network_data_old)
-network_data = PowerModels.parse_file(filename)
-obj_tuning = 1e2
+
+network_data = deepcopy(network_data_old)
+obj_tuning = 1
 for (i,approximation) in linear_approximations
     @show find_linearization_error(network_data, to_approx, solver_ipopt, approximation,inflation_factors,obj_tuning)
 end
@@ -193,3 +197,12 @@ end
 # approximation = linear_approximations[2]
 # matwrite("results"string(num_bus)"/error_tracking_reactive_line1.mat",Dict("lp_err" => approximation["lp_err"], "nlp_err_pos" => approximation["nlp_err_pos"],
 #     "nlp_err_neg" => approximation["nlp_err_neg"], "lp_deltas" => approximation["lp_deltas"]))
+
+
+for i=0:length(linear_approximations[1]["err_by_iter"])-1
+    println(linear_approximations[1]["err_by_iter"][i])
+end
+
+for i=0:length(linear_approximations[1]["backtrack"])-1
+    println(linear_approximations[1]["backtrack"][i])
+end
